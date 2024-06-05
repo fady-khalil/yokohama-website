@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+.rb-light {
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+.rb-regular {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+.rb-medium {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+.rb-bold {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+.rb-black {
+  font-family: "Roboto", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+/* reusable */
+.shop-bg {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+.geo-bg {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: left;
+}
+
+.roadmap-bg {
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* background-position: center top; */
+}
+
+.product-container {
+  display: grid;
+  align-items: stretch;
+  grid-template-columns: 1fr 1fr; /* Two equal columns */
+}
+
+.product-container img {
+  width: 100%; /* Fills its grid cell */
+  object-fit: cover; /* Scales image to fit */
+}
