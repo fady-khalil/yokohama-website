@@ -13,7 +13,7 @@ const footerLinks = [
   },
   {
     name: "About",
-    path: "",
+    path: "/about-us",
   },
   {
     name: "Dealers",

@@ -51,6 +51,12 @@ body {
   /* background-position: center top; */
 }
 
+.brand-bg {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: right;
+}
+
 .product-container {
   display: grid;
   align-items: stretch;

@@ -17,7 +17,7 @@ const Footer = () => {
               className=" min-w-[fit-content] uppercase rb-bold text-sm"
               key={index}
             >
-              <Link>{name}</Link>
+              <Link to={path}>{name}</Link>
             </li>
           ))}
         </ul>

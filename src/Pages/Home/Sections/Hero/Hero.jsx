@@ -6,7 +6,7 @@ import heroImage from "assests/hero.jpg";
 const Hero = () => {
   return (
     <section
-      className="bg-cover bg-center h-[100vh] relative z-[10]"
+      className="bg-cover bg-center h-[100vh] relative z-[10] border-b border-primary"
       style={{ backgroundImage: `url(${heroImage})` }}
     >
       <div className="absolute top-0 left-0 w-full h-full bg-[#00000044] z-[-1]"></div>

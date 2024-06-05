@@ -6,7 +6,7 @@ import Shop from "./Sections/Shop/Shop";
 import Offer from "./Sections/Offer/Offer";
 import BestSeller from "./Sections/BestSeller/BestSeller";
 import Oil from "./Sections/Oil/Oil";
-import Geo from "./Geo/Geo";
+import Geo from "./Sections/Geo/Geo";
 import RoadMap from "./Sections/RoadMap/RoadMap";
 import FindDealer from "./Sections/FindDealer/FindDealer";
 const Home = () => {
