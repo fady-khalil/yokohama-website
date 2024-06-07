@@ -16,7 +16,7 @@ const Hero = () => {
             WE BRING YOU PERFORMANCE YOU'VE BEEN DREAMING OF, ON AND OFF THE
             TRACK
           </h1>
-          <div className="flex items-center gap-x-10">
+          <div className="flex items-center gap-x-6">
             <MainButton>Shop Yokohama Tires</MainButton>
             <WhiteButton>Learn More</WhiteButton>
           </div>

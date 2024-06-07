@@ -33,6 +33,16 @@ body {
   font-style: normal;
 }
 
+.test {
+  background: rgb(229 231 235) !important;
+  padding-block: 0.7rem !important;
+  padding-inline: 0.5rem !important;
+  height: auto !important;
+  padding-left: 64px !important;
+}
+.test-2 {
+  padding-inline: 0.4rem !important;
+}
 /* reusable */
 .shop-bg {
   background-repeat: no-repeat;

@@ -17,12 +17,12 @@ const Input = (props) => {
   } = props;
 
   return (
-    <span className={"flex gap-y-1 flex-col  w-full"}>
-      {/* <label htmlFor={id} className="text-sm font-segu font-[700] capitalize">
+    <span className={"flex-1 flex gap-y-1 flex-col  w-full"}>
+      <label htmlFor={id} className="text-sm rb-bold capitalize">
         {label}
-      </label> */}
+      </label>
       <input
-        className={" text-black px-2 py-3 rounded-sm"}
+        className={" text-black px-2 py-3 rounded-sm bg-gray-200"}
         id={id}
         type={type}
         name={name}
