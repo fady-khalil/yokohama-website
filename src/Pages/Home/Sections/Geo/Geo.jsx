@@ -8,7 +8,7 @@ import OutlineButton from "Components/Buttons/OutlineButton";
 const Geo = () => {
   return (
     <section className="py-primary relative ">
-      <div className="flex items-center">
+      <div className="flex flex-col lg:flex-row items-center">
         <div className="flex-1">
           <img src={geoImage} alt="" className="w-full object-cover" />
         </div>
@@ -16,7 +16,7 @@ const Geo = () => {
           <Container>
             <Description />
             <Features />
-            <div className="mt-8 flex items-center gap-x-6">
+            <div className="mt-8 flex flex-col sm:flex-row sm:items-center gap-6">
               <MainButton>Shop Now</MainButton>
               <OutlineButton>Ask an Expert</OutlineButton>
             </div>

@@ -89,7 +89,7 @@ const DealerLocator = () => {
           value={location}
           onChange={(e) => setLocation(e.target.value)}
           placeholder="Enter dealer name or your location"
-          className="border w-[28rem] rounded-l px-4 py-3"
+          className="border lg:w-[28rem] rounded-l px-4 py-3"
         />
         <button
           onClick={handleSearch}

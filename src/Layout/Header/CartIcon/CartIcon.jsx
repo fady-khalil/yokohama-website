@@ -1,10 +1,14 @@
 import React from "react";
 import { ShoppingCart } from "@phosphor-icons/react";
-const CartIcon = () => {
+import { Link } from "react-router-dom";
+const CartIcon = ({ isHomePage }) => {
   return (
-    <button className="bg-lightGrey p-2.5 text-lg  rounded-full">
-      <ShoppingCart weight="bold" color="black" />
-    </button>
+    <Link
+      to={"/my-cart"}
+      className=" text-lg py-6 h-full border-r border-l border-[#777] px-6"
+    >
+      <ShoppingCart weight="fill" color={isHomePage ? "black" : "white"} />
+    </Link>
   );
 };
 

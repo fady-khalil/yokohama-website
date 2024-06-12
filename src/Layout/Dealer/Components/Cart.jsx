@@ -8,13 +8,21 @@ const CartIcon = ({ onMouseLeft }) => {
   const { handleCartModalVisible } = useContext(DealerCartContext);
 
   return (
-    <button
+    <Link
+      to={"/my-cart"}
       onClick={handleCartModalVisible}
       onMouseEnter={onMouseLeft}
-      className="text-white text-lg  flex items-center"
+      className="text-white text-lg   items-center hidden lg:flex"
     >
       <ShoppingCart weight="fill" />
-    </button>
+    </Link>
+    // <button
+    //   onClick={handleCartModalVisible}
+    //   onMouseEnter={onMouseLeft}
+    //   className="text-white text-lg  flex items-center"
+    // >
+    //   <ShoppingCart weight="fill" />
+    // </button>
   );
 };
 

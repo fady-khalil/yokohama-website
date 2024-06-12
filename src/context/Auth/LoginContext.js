@@ -9,6 +9,15 @@ export const LoginProvider = ({ children }) => {
   const [forgotModalIsActive, setForgotModalIsActvie] = useState(false);
   const [dealderModalIsActive, setDealerModalIsActive] = useState(false);
 
+  const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
+  const handleUserLogin = () => {
+    setUserIsLoggedIn(true);
+  };
+
+  const handleUserLogout = () => {
+    setUserIsLoggedIn(false);
+  };
+
   const openModalHandeler = () => {
     setModalIsActive(true);
   };
@@ -41,6 +50,11 @@ export const LoginProvider = ({ children }) => {
         openDealerModalHandeler,
         closeDealerModalHandeler,
         dealderModalIsActive,
+
+        // user
+        userIsLoggedIn,
+        handleUserLogin,
+        handleUserLogout,
       }}
     >
       {children}

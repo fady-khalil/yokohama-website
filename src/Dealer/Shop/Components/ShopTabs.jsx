@@ -12,7 +12,7 @@ const ShopTabs = ({ activeTabs, onSelectingTabs }) => {
     },
     {
       id: 3,
-      name: "Why Us",
+      name: "Batteries",
     },
   ];
   return (

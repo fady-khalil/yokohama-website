@@ -37,8 +37,8 @@ const SearchTires = () => {
   return (
     <section className="py-primary" style={{ backgroundImage: `url(${bg})` }}>
       <Container>
-        <div className=" text-white flex items-center justify-center flex-col">
-          <h2 className="text-5xl rb-bold">Find your tires</h2>
+        <div className=" text-white flex items-center justify-center text-center flex-col">
+          <h2 className="text-4xl lg:text-5xl rb-bold">Find your tires</h2>
           <div className="flex items-center justify-center w-3/4 mx-auto gap-x-4 mt-6">
             <span className="flex items-center gap-x-1">
               <Circle ne />
@@ -51,7 +51,7 @@ const SearchTires = () => {
           </div>
         </div>
 
-        <div className="mt-10 flex items-center justify-center gap-x-1 w-3/4 mx-auto">
+        <div className="mt-10 flex flex-col lg:flex-row lg:items-center lg:justify-center gap-x-1 lg:w-3/4 mx-auto">
           {/* Select Inputs */}
           <SelectInput
             placeholder={"Type"}
@@ -74,7 +74,7 @@ const SearchTires = () => {
             options={trimOptions}
           />
 
-          <button className="bg-primary px-4 py-3 mt-[4px]  text-white ">
+          <button className="bg-primary px-4 py-3 mt-[4px] flex items-center justify-center  text-white ">
             <CaretDoubleRight size={20} />
           </button>
         </div>

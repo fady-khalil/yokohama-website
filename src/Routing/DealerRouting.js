@@ -19,14 +19,15 @@ const DealerRouting = () => {
       <DealerSiginModal />
       <ScrollToTop />
       <DealderHeader />
-      <Cart />
+      {/* <Cart /> */}
       <Routes>
         <Route index element={<Home />} />
         <Route path="gift" element={<Gift />} />
         <Route path="loyality" element={<Loyality />} />
         <Route path="my-orders" element={<MyOrders />} />
         <Route path="shop" element={<Shop />} />
-        <Route path="cart-detailed" element={<CartDetailed />} />
+        <Route path="my-cart" element={<Cart />} />
+        <Route path="product-detailed" element={<CartDetailed />} />
       </Routes>
       {/* <Footer /> */}
     </ContextProvider>

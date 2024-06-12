@@ -52,7 +52,7 @@ const BestSeller = () => {
           pagination={{
             clickable: true,
           }}
-          slidesPerView={2}
+          slidesPerView={1}
           modules={[Pagination, Navigation]}
           breakpoints={{
             578: {
@@ -96,7 +96,7 @@ const BestSeller = () => {
           ))}
         </Swiper>
 
-        <div className="flex items-center gap-x-6 pt-secondary justify-center w-1/2 mx-auto">
+        <div className="flex flex-col md:flex-row md:items-center gap-6 pt-secondary md:justify-center lg:w-1/2 mx-auto">
           <MainButton>Shop All Yokohama</MainButton>
           <WhiteButton>Find Your Tires</WhiteButton>
         </div>

@@ -25,10 +25,10 @@ const Shop = () => {
   return (
     <section className="bg-dark pt-x pb-mega">
       <Container>
-        <div className="flex gap-x-6">
+        <div className="flex flex-col lg:flex-row gap-6">
           {data.map((item, index) => (
             <div
-              className="flex-1 shop-bg py-40 px-24 flex items-center justify-center"
+              className="flex-1 shop-bg py-20 lg:py-40 px-24 flex items-center justify-center"
               style={{ backgroundImage: `url(${item.image})` }}
               key={index}
             >

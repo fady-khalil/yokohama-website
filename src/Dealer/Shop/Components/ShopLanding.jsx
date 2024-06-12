@@ -1,6 +1,7 @@
 import React from "react";
 import Container from "Components/Container/Container";
 import { Info, DotsThreeVertical } from "@phosphor-icons/react";
+import { Link } from "react-router-dom";
 const ShopLanding = ({ data }) => {
   return (
     <div className="mb-primary">
@@ -69,20 +70,21 @@ const ShopLanding = ({ data }) => {
                 <th className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 uppercase rb-bold text-sm"></th>
               </tr>
             </thead>
+
             <tbody className="">
               {data.map((order, index) => (
                 <tr key={index}>
                   <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm">
-                    {order.tireSize}
+                    <Link to={"/product-detailed"}>{order.tireSize}</Link>
                   </td>
                   <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm">
-                    {order.brand}
+                    <Link to={"/product-detailed"}>{order.brand}</Link>
                   </td>
                   <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm">
-                    {order.pattern}
+                    <Link to={"/product-detailed"}>{order.pattern}</Link>
                   </td>
                   <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm">
-                    {order.price}
+                    <Link to={"/product-detailed"}>{order.price}</Link>
                   </td>
                   <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm">
                     <p>{order.discount[0]}</p>

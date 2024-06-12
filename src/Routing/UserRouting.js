@@ -12,6 +12,8 @@ import Safety from "Pages/Safety/Safety";
 import Contact from "Pages/Contact/Contact";
 import NewAndEvent from "Pages/NewAndEvent/NewAndEvent";
 import ContextProvider from "context/ContextProvider";
+import ScrollToTop from "Hooks/ScrollToTop";
+import MyCart from "Pages/MyCart/MyCart";
 import Shop from "Pages/Shop/Shop";
 import ProductDetailed from "Pages/Shop/ProductDetailed/ProductDetailed";
 
@@ -26,7 +28,7 @@ const UserRouting = () => {
       <AuthModal />
       <ForgetPasswordModal />
       <DealerSiginModal />
-      {/* <ScrollToTop /> */}
+      <ScrollToTop />
       <Header />
       <Routes>
         <Route index element={<Home />} />
@@ -39,6 +41,7 @@ const UserRouting = () => {
         <Route path="news-and-event" element={<NewAndEvent />} />
         <Route path="shop" element={<Shop />} />
         <Route path="product-detailed" element={<ProductDetailed />} />
+        <Route path="my-cart" element={<MyCart />} />
       </Routes>
       <Footer />
     </div>

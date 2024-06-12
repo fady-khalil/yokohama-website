@@ -18,7 +18,7 @@ const Features = () => {
     },
   ];
   return (
-    <div className="flex border-t border-b py-6 mt-6 items-center ">
+    <div className="flex border-t border-b py-6 mt-6 items-center flex-wrap ">
       {data.map(({ icon, name }, index) => (
         <div className="flex-1" key={index}>
           <img className="w-1/3" src={icon} alt="" />

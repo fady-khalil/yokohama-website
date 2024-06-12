@@ -7,7 +7,7 @@ const DealerDetails = ({ isVisible, onMouseEnter, onMouseLeft }) => {
   return (
     <div
       onMouseEnter={onMouseEnter}
-      className="relative  px-8 text-white bg-primary flex items-center py-5  items-center"
+      className="relative  px-8 text-white bg-primary hidden lg:flex items-center py-5  items-center"
     >
       <button
         onMouseEnter={onMouseEnter}

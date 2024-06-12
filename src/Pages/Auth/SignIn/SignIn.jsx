@@ -8,7 +8,7 @@ import MainButton from "Components/Buttons/MainButton";
 import WhiteButton from "Components/Buttons/WhiteButton";
 import { LoginContext } from "context/Auth/LoginContext";
 const SignIn = ({ onToggleForms, onHandleClose }) => {
-  const { openForgotModalHandeler } = useContext(LoginContext);
+  const { openForgotModalHandeler, handleUserLogin } = useContext(LoginContext);
 
   const handleForgotPasswordModal = (e) => {
     e.preventDefault();
@@ -78,7 +78,9 @@ const SignIn = ({ onToggleForms, onHandleClose }) => {
           </button>
         </form>
         <div className="mt-6 px-10 flex">
-          <MainButton isSmall={true}>SIGN IN</MainButton>
+          <MainButton onClick={handleUserLogin} isSmall={true}>
+            SIGN IN
+          </MainButton>
         </div>
       </div>
       <div className="flex-1 relative">

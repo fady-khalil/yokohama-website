@@ -35,7 +35,7 @@ const Gift = () => {
         {/* hedaer */}
 
         {/* bodt */}
-        <div className="grid grid-cols-4 gap-x-6 gap-y-24 my-secondary">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4   gap-x-6 gap-y-14 lg:gap-y-24 my-secondary">
           {giftData.map(({ id, image, point, text }, index) => (
             <div
               key={index}
@@ -59,14 +59,14 @@ const Gift = () => {
       </Container>
 
       <Modal onHandleClose={handleCloseModal} isActive={modalIsVisible}>
-        <div className="p-6">
+        <div className=" p-4">
           <div className="flex items-center justify-between text-lg rb-bold pb-2 mb-4 border-b">
             <p>Are You sure you want to request this gift?</p>
             <button onClick={handleCloseModal}>
               <X />
             </button>
           </div>
-          <div className="flex  gap-x-4">
+          <div className="flex flex-col md:flex-row  gap-4">
             <div className="w-[16rem] h-full ">
               <img className="h-full w-full" src={image2} alt="" />
             </div>
@@ -77,7 +77,7 @@ const Gift = () => {
                 </p>
                 <p className="capitalize text-primary rb-bold">200 Points</p>
               </div>
-              <div className="mt-auto mb-2">
+              <div className="mt-6 lg:mt-auto lg:mb-2">
                 <MainButton isSmall={true}>Request</MainButton>
               </div>
             </div>

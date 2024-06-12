@@ -1,14 +1,20 @@
 import { Link } from "react-router-dom";
 
-const DesktopNav = () => {
+const DesktopNav = ({ isHomePage }) => {
   return (
-    <ul className="flex items-center  gap-x-6  text-black">
+    <ul
+      className={`hidden lg:flex items-center  rb-medium uppercase gap-x-6  ${
+        isHomePage ? "text-black" : "text-white"
+      }`}
+    >
       <li>
         <Link to={"/shop"}>Shop Tires</Link>
       </li>
+      <span className="block bg-primary h-2 w-2 rounded-full"></span>
       <li>
         <Link to={"/shop"}>Shop Lubricants</Link>
       </li>
+      <span className="block bg-primary h-2 w-2 rounded-full"></span>
       <li>
         <Link to={"/shop"}>Shop Batteries</Link>
       </li>

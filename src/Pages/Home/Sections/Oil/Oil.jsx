@@ -13,7 +13,7 @@ const Oil = () => {
     <section className="bg-lightBlue py-primary">
       <Container>
         <div>
-          <h4 className="br-bold text-5xl text-center mb-10">
+          <h4 className="br-bold text-4xl lg:text-5xl text-center mb-10">
             Essentials for your vehicle
           </h4>
         </div>
@@ -28,7 +28,7 @@ const Oil = () => {
           pagination={{
             clickable: true,
           }}
-          slidesPerView={2}
+          slidesPerView={1}
           modules={[Pagination, Navigation]}
           breakpoints={{
             578: {

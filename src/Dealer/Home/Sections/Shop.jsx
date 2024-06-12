@@ -25,7 +25,7 @@ const Shop = () => {
           pagination={{
             clickable: true,
           }}
-          slidesPerView={2}
+          slidesPerView={1}
           modules={[Pagination, Navigation]}
           breakpoints={{
             578: {

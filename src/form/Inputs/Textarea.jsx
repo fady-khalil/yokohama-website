@@ -30,7 +30,7 @@ const Textarea = (props) => {
         value={value}
         onChange={onChange}
         onBlur={onBlur}
-        rows={"6"}
+        rows={"7"}
         wrap="soft"
       />
 

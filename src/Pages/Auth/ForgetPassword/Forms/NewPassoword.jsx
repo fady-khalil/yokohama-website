@@ -1,5 +1,5 @@
 import { useState } from "react";
-import image from "assests/Auth/2.jpg";
+import image from "assests/listing/bg.jpg";
 import useInput from "form/Hooks/user-input";
 import { X } from "@phosphor-icons/react";
 import PasswordInput from "form/Inputs/PasswordInput";
@@ -48,7 +48,7 @@ const NewPassoword = ({ onHandleClose, onToggleForms }) => {
       <div className="absolute left-0 top-0 w-full h-full z-[10]">
         <img className="w-full h-full object-cover" src={image} alt="" />
       </div>
-      <div className="absolute w-full min-h-full top-0 left-0 bg-[#000000a2] z-[100]"></div>
+      <div className="absolute w-full min-h-full top-0 left-0 bg-[#0000003e] z-[100]"></div>
 
       {passwordIsDone ? (
         <div className="px-36 py-12 text-white relative z-[100]">

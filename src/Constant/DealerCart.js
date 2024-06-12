@@ -9,6 +9,7 @@ import p3 from "assests/product-3-removebg-preview.png";
 const myCartData = {
   catLogo: brand,
   brandLogo: cat,
+  desc: "Summer",
   sku: "87128371",
   description:
     " Lorem ipsum dolor, sit amet consectetur adipisicing elit. Deleniti perspiciatis magnam facilis quidem adipisci non et facere beatae, nihil provident sunt est, obcaecati dicta quia mollitia maxime commodi dolorem totam.",
