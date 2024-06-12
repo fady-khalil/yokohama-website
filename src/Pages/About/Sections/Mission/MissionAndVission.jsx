@@ -7,7 +7,7 @@ const MissionAndVission = () => {
     <section className="my-secondary">
       <Container>
         {aboutData?.mission.map(({ image, title, text }, index) => (
-          <div className="flex flex-col lg:flex-row gap-x-16 items-center lg:even:flex-row-reverse mb-14">
+          <div className="flex flex-col lg:flex-row gap-x-16 gap-y-8 items-center lg:even:flex-row-reverse mb-14">
             <div className="flex-1">
               <img className="w-full" src={image} alt="" />
             </div>

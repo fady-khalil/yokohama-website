@@ -8,8 +8,8 @@ const Hero = ({ data }) => {
       style={{ backgroundImage: `url(${data.image})` }}
     >
       <Container className={"h-full"}>
-        <div className="py-secondary h-full flex flex-col items-center justify-center text-center w-1/2 mx-auto">
-          <h2 className="rb-bold text-5xl mb-4">{data?.title}</h2>
+        <div className="py-secondary h-full flex flex-col items-center justify-center text-center lg:w-1/2 mx-auto">
+          <h2 className="rb-bold text-4xl lg:text-5xl mb-4">{data?.title}</h2>
           <p className="rb-medium">{data?.text}</p>
         </div>
       </Container>

@@ -22,7 +22,7 @@ const Contact = () => {
                 href=""
               >
                 <MapPin weight="fill" size={26} />
-                <p className="rb-bold w-3/4 mt-2">
+                <p className="rb-bold w-1/2 lg:w-3/4 mt-2">
                   M. Howayek SARL - An HMG holding company address: Jounieh
                   Highway , Dama Center
                 </p>

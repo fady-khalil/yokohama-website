@@ -55,8 +55,8 @@ const ContactForm = () => {
         <div className="py-secondary text-center">
           <h2 className="rb-bold text-3xl ">Message us</h2>
         </div>
-        <form className="w-1/2 mx-auto mb-secondary">
-          <span className="flex items-center gap-x-6">
+        <form className="lg:w-1/2 mx-auto mb-secondary">
+          <span className="flex flex-col lg:flex-row items-center gap-x-6">
             <Input
               type="text"
               label={`First Name`}
@@ -84,7 +84,7 @@ const ContactForm = () => {
               errorMessage={``}
             />
           </span>
-          <span className="flex items-center gap-x-6">
+          <span className="flex flex-col lg:flex-row items-center gap-x-6">
             <Input
               type="email"
               label={`Email`}

@@ -12,7 +12,7 @@ const Safety = () => {
         <div className="flex flex-col gap-y-6">
           {safetyData.map(({ image, title, text }, index) => (
             <div
-              className="flex items-end even:flex-row-reverse gap-x-10"
+              className="flex flex-col lg:flex-row lg:items-end lg:even:flex-row-reverse gap-10"
               key={index}
             >
               <div className="flex-1 min-full border-b-4 border-primary pb-14">

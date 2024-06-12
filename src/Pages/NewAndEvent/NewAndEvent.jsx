@@ -8,7 +8,7 @@ const NewAndEvent = () => {
         <div className="my-secondary">
           <h1 className="text-center text-3xl rb-bold">News And Events</h1>
         </div>
-        <div className="grid grid-cols-2 gap-6 relative">
+        <div className="grid grid-col-1 md:grid-cols-2 gap-6 relative">
           {newsAndEvent.map(({ title, image, date }, index) => (
             <div
               className="h-[45vh] about-bg p-10 flex flex-col justify-end relative z-[10]"

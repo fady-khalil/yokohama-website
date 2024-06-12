@@ -26,15 +26,19 @@ const Celebrating = ({ data }) => {
           {data?.map(({ title, num, text }, index) => (
             <SwiperSlide key={index}>
               <div
-                className={`w-1/2 mx-auto bg-white px-16 py-32 text-center ${
+                className={`lg:w-1/2 mx-auto bg-white p-10 lg:px-16 lg:py-32 text-center ${
                   activeIndex === index
                     ? "border-r-[6px] border-b-[6px] border-primary"
                     : ""
                 }`}
               >
-                <p className="rb-bold text-5xl text-primary">{title}</p>
-                <p className="rb-bold text-5xl text-font my-4">{num}</p>
-                <p className="rb-light w-1/2 mx-auto">{text}</p>
+                <p className="rb-bold text-4xl lg:text-5xl text-primary">
+                  {title}
+                </p>
+                <p className="rb-bold text-4xl lg:text-5xl text-font my-4">
+                  {num}
+                </p>
+                <p className="rb-light lg:w-1/2 mx-auto">{text}</p>
               </div>
             </SwiperSlide>
           ))}

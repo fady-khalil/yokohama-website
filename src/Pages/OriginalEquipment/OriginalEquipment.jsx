@@ -48,7 +48,7 @@ const OriginalEquipment = () => {
             pagination={{
               clickable: true,
             }}
-            slidesPerView={2}
+            slidesPerView={1}
             modules={[Pagination, Navigation]}
             breakpoints={{
               578: {
@@ -81,8 +81,11 @@ const OriginalEquipment = () => {
           </Swiper>
 
           {selectedContent && (
-            <div ref={contentRef} className="flex pt-14 items-stretch gap-20 ">
-              <div className="flex-1 text-white relative border-b-4 border-primary flex flex-col justify-center min-h-full">
+            <div
+              ref={contentRef}
+              className="flex flex-col lg:flex-row pt-14 items-stretch gap-y-10 gap-x-20 "
+            >
+              <div className="flex-1 text-white relative pb-6 lg:pb-0 border-b-4 border-primary flex flex-col justify-center min-h-full">
                 <h3 className="text-3xl rb-bold">{selectedContent.title}</h3>
                 <p className="mt-4">{selectedContent.text}</p>
               </div>
