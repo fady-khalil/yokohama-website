@@ -96,7 +96,7 @@ const BestSeller = () => {
           ))}
         </Swiper>
 
-        <div className="flex items-center gap-x-6 pt-secondary justify-center">
+        <div className="flex items-center gap-x-6 pt-secondary justify-center w-1/2 mx-auto">
           <MainButton>Shop All Yokohama</MainButton>
           <WhiteButton>Find Your Tires</WhiteButton>
         </div>

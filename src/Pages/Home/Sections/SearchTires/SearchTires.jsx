@@ -51,7 +51,7 @@ const SearchTires = () => {
           </div>
         </div>
 
-        <div className="mt-10 flex items-stretch justify-center gap-x-1 w-3/4 mx-auto">
+        <div className="mt-10 flex items-center justify-center gap-x-1 w-3/4 mx-auto">
           {/* Select Inputs */}
           <SelectInput
             placeholder={"Type"}
@@ -74,8 +74,8 @@ const SearchTires = () => {
             options={trimOptions}
           />
 
-          <button className="bg-primary text-white text-2xl px-4">
-            <CaretDoubleRight />
+          <button className="bg-primary px-4 py-3 mt-[4px]  text-white ">
+            <CaretDoubleRight size={20} />
           </button>
         </div>
       </Container>

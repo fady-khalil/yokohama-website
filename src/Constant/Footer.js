@@ -17,15 +17,15 @@ const footerLinks = [
   },
   {
     name: "Dealers",
-    path: "",
+    path: "/dealers",
   },
   {
     name: "Safety",
-    path: "",
+    path: "safety",
   },
   {
     name: "Contact",
-    path: "",
+    path: "contact-us",
   },
   {
     name: "Videos",
@@ -33,11 +33,11 @@ const footerLinks = [
   },
   {
     name: "Original Equipment",
-    path: "",
+    path: "original-equipment",
   },
   {
-    name: "Blogs and news",
-    path: "",
+    name: "News and news",
+    path: "news-and-event",
   },
 ];
 

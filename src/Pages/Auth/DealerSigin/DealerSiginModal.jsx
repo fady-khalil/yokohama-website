@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import { LoginContext } from "context/Auth/LoginContext";
+import { DealerLoginContext } from "context/Auth/DealerContext";
 import Modal from "Components/Modal/Modal";
 import useInput from "form/Hooks/user-input";
 import Input from "form/Inputs/Input";
@@ -9,6 +10,13 @@ import { X } from "@phosphor-icons/react";
 import MainButton from "Components/Buttons/MainButton";
 
 const DealerSiginModal = () => {
+  const { handleDealderSignIn } = useContext(DealerLoginContext);
+  const {
+    openDealerModalHandeler,
+    closeDealerModalHandeler,
+    dealderModalIsActive,
+  } = useContext(LoginContext);
+
   const {
     value: emailInput,
     isValid: emailIsValid,
@@ -32,11 +40,6 @@ const DealerSiginModal = () => {
     const isValid = value.trim() !== "" && value.length >= 1;
     return isValid;
   });
-  const {
-    openDealerModalHandeler,
-    closeDealerModalHandeler,
-    dealderModalIsActive,
-  } = useContext(LoginContext);
 
   return (
     <Modal
@@ -87,7 +90,9 @@ const DealerSiginModal = () => {
         </form>
 
         <div className="mt-8 flex">
-          <MainButton isSmall={true}>SIGN IN</MainButton>
+          <MainButton onClick={handleDealderSignIn} isSmall={true}>
+            SIGN IN
+          </MainButton>
         </div>
       </div>
     </Modal>

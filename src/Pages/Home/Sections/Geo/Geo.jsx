@@ -1,5 +1,5 @@
 import React from "react";
-import geoImage from "assests/geo-removebg-preview.png";
+import geoImage from "assests/b22.jpg";
 import Container from "Components/Container/Container";
 import Features from "./components/Features";
 import Description from "./components/Description";
@@ -8,21 +8,21 @@ import OutlineButton from "Components/Buttons/OutlineButton";
 const Geo = () => {
   return (
     <section className="py-primary relative ">
-      <Container>
-        <div className="flex items-center">
-          <div className="flex-1">
-            <img src={geoImage} alt="" className="w-full object-cover" />
-          </div>
-          <div className="flex-1">
+      <div className="flex items-center">
+        <div className="flex-1">
+          <img src={geoImage} alt="" className="w-full object-cover" />
+        </div>
+        <div className="flex-1">
+          <Container>
             <Description />
             <Features />
             <div className="mt-8 flex items-center gap-x-6">
               <MainButton>Shop Now</MainButton>
               <OutlineButton>Ask an Expert</OutlineButton>
             </div>
-          </div>
+          </Container>
         </div>
-      </Container>
+      </div>
     </section>
   );
 };

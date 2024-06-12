@@ -15,9 +15,12 @@ const SelectInput = (props) => {
   } = props;
 
   return (
-    <span className="flex gap-y-1 flex-col  w-full">
+    <span className="flex-1 flex gap-y-1 flex-col  w-full">
+      <label htmlFor={id} className="text-sm rb-bold capitalize">
+        {label}
+      </label>
       <select
-        className="bg-[#3A3A3A] text-white flex-1  px-10 flex items-center justify-center py-4 rounded-sm"
+        className="text-black px-2 py-3 rounded-sm bg-gray-200 placeholder:text-sm"
         onChange={onChange}
         name={name}
         value={value}

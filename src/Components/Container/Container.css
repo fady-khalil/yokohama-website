@@ -5,11 +5,6 @@
 
 @media (min-width: 768px) {
   .Container {
-    width: min(100% - 12.2rem, 120rem);
-  }
-}
-@media (min-width: 1140px) {
-  .Container {
-    width: min(100% - 12rem, 120rem);
+    width: min(100% - 6rem, 120rem);
   }
 }

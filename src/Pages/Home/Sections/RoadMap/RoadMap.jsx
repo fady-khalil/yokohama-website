@@ -9,7 +9,10 @@ const RoadMap = () => {
       <Container>
         <div className="flex">
           {roadMapData.map(({ icon, name }, index) => (
-            <div className="flex-1 flex items-center justify-center flex-col even:mt-32">
+            <div
+              key={index}
+              className="flex-1 flex items-center justify-center flex-col even:mt-32"
+            >
               <img className="w-1/2" src={icon} alt="" />
               <p className="rb-bold">{name}</p>
             </div>
@@ -45,7 +48,7 @@ const RoadMap = () => {
               </div>
             </div>
 
-            <div className=" flex items-center justify-center pt-32 pb-[10rem]">
+            <div className=" flex items-center justify-center pt-32 pb-[10rem] w-1/4 mx-auto">
               <MainButton>Find tires</MainButton>
             </div>
           </div>

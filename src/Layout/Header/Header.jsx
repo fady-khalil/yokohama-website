@@ -12,7 +12,7 @@ const Header = () => {
   return (
     <header>
       <Container>
-        <div className="flex items-center justify-between">
+        <div className="hidden lg:flex items-center justify-between">
           <div className="flex items-center gap-x-8">
             <Logo />
             <DesktopNav />

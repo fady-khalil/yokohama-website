@@ -11,7 +11,7 @@ const Footer = () => {
   return (
     <footer className="bg-dark text-white py-16">
       <Container>
-        <ul className="flex items-center justify-between gap-x-10 border-b border-[#eeeeee67] pb-6">
+        <ul className="flex flex-col lg:flex-row lg:items-center justify-between gap-y-4 gap-x-10 border-b border-[#eeeeee67] pb-6">
           {footerLinks.map(({ name, path }, index) => (
             <li
               className=" min-w-[fit-content] uppercase rb-bold text-sm"
@@ -21,7 +21,7 @@ const Footer = () => {
             </li>
           ))}
         </ul>
-        <div className="flex items-center justify-between pt-6">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between pt-6">
           <ul className="flex items-center gap-x-4">
             <li className="bg-white p-1 text-xl rounded-full">
               <a href="">
@@ -40,7 +40,7 @@ const Footer = () => {
             </li>
           </ul>
 
-          <p className="flex items-center gap-x-2 text-[#555] rb-bold">
+          <p className="flex items-center mt-2 lg:mt-0 gap-x-2 text-[#555] rb-bold">
             All Right Reserved 2024
             <a
               target="_blank"

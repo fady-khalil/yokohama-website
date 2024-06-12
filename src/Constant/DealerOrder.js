@@ -1,0 +1,58 @@
+const dealerOrderHistory = [
+  {
+    orderNumber: "8427348",
+    date: "12/02/2024",
+    amount: "200$",
+    credit_used: "200$",
+    status: "Processed",
+    track_id: 12,
+    receipt_id: 82,
+  },
+  {
+    orderNumber: "8427391",
+    date: "02/14/2024",
+    amount: "150$",
+    credit_used: "150$",
+    status: "Delivered",
+    track_id: 34,
+    receipt_id: 95,
+  },
+  {
+    orderNumber: "8427402",
+    date: "03/10/2024",
+    amount: "220",
+    credit_used: "--",
+    status: "Processed",
+    track_id: 45,
+    receipt_id: 104,
+  },
+  {
+    orderNumber: "8427415",
+    date: "04/05/2024",
+    amount: "180$",
+    credit_used: "180$",
+    status: "Delivered",
+    track_id: 53,
+    receipt_id: 119,
+  },
+  {
+    orderNumber: "8427433",
+    date: "05/22/2024",
+    amount: "250$",
+    credit_used: "--",
+    status: "Processed",
+    track_id: 67,
+    receipt_id: 130,
+  },
+  {
+    orderNumber: "8427456",
+    date: "06/15/2024",
+    amount: "300$",
+    credit_used: "--",
+    status: "Delivered",
+    track_id: 81,
+    receipt_id: 145,
+  },
+];
+
+export default dealerOrderHistory;

@@ -39,7 +39,6 @@ const bestSellerData = [
         image: product3,
         type: "ALL-SEASON",
         price: "70$",
-        carType: "Passenger cars / minivan",
       },
       {
         name: "TR797",

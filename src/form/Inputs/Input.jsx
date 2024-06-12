@@ -22,7 +22,9 @@ const Input = (props) => {
         {label}
       </label>
       <input
-        className={" text-black px-2 py-3 rounded-sm bg-gray-200"}
+        className={
+          " text-black px-2 py-3 rounded-sm bg-gray-200 placeholder:text-sm"
+        }
         id={id}
         type={type}
         name={name}

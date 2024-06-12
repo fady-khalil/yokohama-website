@@ -9,9 +9,9 @@ import MainButton from "Components/Buttons/MainButton";
 import { Link } from "react-router-dom";
 import OutlineButton from "Components/Buttons/OutlineButton";
 const Registration = ({ onToggleForms, onHandleClose }) => {
-  const [phone, setPhone] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [emailMarketing, setEmailMarketing] = useState(false);
+  const [phone, setPhone] = useState("");
 
   const {
     value: fullNameInput,

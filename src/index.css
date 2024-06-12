@@ -32,16 +32,20 @@ body {
   font-weight: 900;
   font-style: normal;
 }
-
+.css-13cymwt-control {
+  /* background: rgb(229 231 235) !important; */
+}
 .test {
   background: rgb(229 231 235) !important;
   padding-block: 0.7rem !important;
   padding-inline: 0.5rem !important;
   height: auto !important;
   padding-left: 64px !important;
+  flex: 1;
 }
 .test-2 {
   padding-inline: 0.4rem !important;
+  /* width: 100%; */
 }
 /* reusable */
 .shop-bg {
@@ -67,6 +71,12 @@ body {
   background-position: right;
 }
 
+.about-bg {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
 .product-container {
   display: grid;
   align-items: stretch;
@@ -76,4 +86,13 @@ body {
 .product-container img {
   width: 100%; /* Fills its grid cell */
   object-fit: cover; /* Scales image to fit */
+}
+
+.sticky-tabs {
+  position: -webkit-sticky; /* For Safari */
+  position: sticky;
+  height: auto;
+  top: 10px;
+  z-index: 1000; /* Adjust as needed to ensure it stays above other elements */
+  background-color: #efefef; /* Same background color as the tabs */
 }

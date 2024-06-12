@@ -1,3 +1,6 @@
+import { useContext } from "react";
+import { DealerLoginContext } from "context/Auth/DealerContext";
+// sections
 import Hero from "./Sections/Hero/Hero";
 import SearchTires from "./Sections/SearchTires/SearchTires";
 import About from "./Sections/About/About";
@@ -10,6 +13,8 @@ import Geo from "./Sections/Geo/Geo";
 import RoadMap from "./Sections/RoadMap/RoadMap";
 import FindDealer from "./Sections/FindDealer/FindDealer";
 const Home = () => {
+  // const { dealderIsSignIn } = useContext(DealerLoginContext);
+
   return (
     <main>
       <Hero />
