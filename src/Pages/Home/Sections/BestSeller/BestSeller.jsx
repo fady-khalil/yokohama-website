@@ -97,7 +97,7 @@ const BestSeller = () => {
         </Swiper>
 
         <div className="flex flex-col md:flex-row md:items-center gap-6 pt-secondary md:justify-center lg:w-1/2 mx-auto">
-          <MainButton>Shop All Yokohama</MainButton>
+          <MainButton to={"/shop"}>Shop All Yokohama</MainButton>
           <WhiteButton>Find Your Tires</WhiteButton>
         </div>
       </Container>

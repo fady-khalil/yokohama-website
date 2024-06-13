@@ -17,7 +17,7 @@ const Geo = () => {
             <Description />
             <Features />
             <div className="mt-8 flex flex-col sm:flex-row sm:items-center gap-6">
-              <MainButton>Shop Now</MainButton>
+              <MainButton to={"/shop"}>Shop Now</MainButton>
               <OutlineButton>Ask an Expert</OutlineButton>
             </div>
           </Container>

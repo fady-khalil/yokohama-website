@@ -28,6 +28,7 @@ const Header = () => {
               <Search isHomePage={isHomePage} />
               {userIsLoggedIn && (
                 <Link
+                  to={"/Account"}
                   className={` flex bg-primary items-center  h-full border-r  border-[#777] px-6 gap-x-2 ${
                     isHomePage ? "text-white" : "text-white"
                   }`}

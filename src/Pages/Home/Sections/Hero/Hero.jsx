@@ -87,8 +87,8 @@ const Hero = () => {
             TRACK
           </h1>
           <div className="flex flex-col lg:flex-row items-center gap-6">
-            <MainButton>Shop Yokohama Tires</MainButton>
-            <WhiteButton>Learn More</WhiteButton>
+            <MainButton to={"/shop"}>Shop Yokohama Tires</MainButton>
+            <WhiteButton to={"/about-us"}>Learn More</WhiteButton>
           </div>
         </div>
       </Container>

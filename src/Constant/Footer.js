@@ -1,15 +1,15 @@
 const footerLinks = [
   {
     name: "Tires",
-    path: "",
+    path: "/shop",
   },
   {
     name: "Lubricants",
-    path: "",
+    path: "/shop",
   },
   {
     name: "Batteries",
-    path: "",
+    path: "/shop",
   },
   {
     name: "About",

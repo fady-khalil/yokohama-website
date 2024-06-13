@@ -23,7 +23,7 @@ const About = () => {
             conditions.
           </p>
 
-          <MainButton>About us</MainButton>
+          <MainButton to={"/about-us"}>About us</MainButton>
         </div>
       </Container>
     </section>

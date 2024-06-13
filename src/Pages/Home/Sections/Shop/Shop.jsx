@@ -32,7 +32,7 @@ const Shop = () => {
               style={{ backgroundImage: `url(${item.image})` }}
               key={index}
             >
-              <MainButton>{item.name}</MainButton>
+              <MainButton to={"/shop"}>{item.name}</MainButton>
             </div>
           ))}
         </div>

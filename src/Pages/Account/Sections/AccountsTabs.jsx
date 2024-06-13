@@ -27,9 +27,9 @@ const AccountsTabs = ({ onSelectingTabs, activeTabs }) => {
   return (
     <section className="lg:pt-primary">
       <Container>
-        {/* <div>
-          <h1 className="text-4xl rb-bold lg:text-center">User Name</h1>
-        </div> */}
+        <div>
+          <h1 className="text-4xl rb-bold lg:text-center">Hello User Name</h1>
+        </div>
 
         <div className="bg-dark text-white flex lg:items-center lg:justify-center   gap-x-16 my-10 lg:mt-14 overflow-scroll lg:overflow-hidden">
           {accountTabs.map(({ id, name }, index) => (
