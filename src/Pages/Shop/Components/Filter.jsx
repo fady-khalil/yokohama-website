@@ -11,7 +11,7 @@ const Filter = () => {
   const titleHeader = "rb-bold text-lg uppercase ";
   const checkBox = "text-gray-500 rb-medium";
   return (
-    <div className="lg:mt-[-120px] z-[10]  flex lg:flex-col gap-8 border-r bg-white overflow-scroll">
+    <div className="lg:mt-[-120px] z-[10] sticky top-2 h-[max-content]  flex  lg:flex-col gap-8 border-r bg-white overflow-scroll lg:overflow-auto">
       <div className="flex items-center justify-between bg-primary p-6 text-white">
         <p className="rb-medium text-lg hidden">Search</p>
         <MagnifyingGlass />

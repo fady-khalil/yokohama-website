@@ -11,7 +11,7 @@ const NewAndEvent = () => {
         <div className="grid grid-col-1 md:grid-cols-2 gap-6 relative">
           {newsAndEvent.map(({ title, image, date }, index) => (
             <div
-              className="h-[45vh] about-bg p-10 flex flex-col justify-end relative z-[10]"
+              className="h-[45vh] about-bg p-3 md:p-6 lg:p-10 flex flex-col justify-end relative z-[10]"
               key={index}
               style={{ backgroundImage: `url(${image})` }}
             >

@@ -59,7 +59,7 @@ const Hero = () => {
           <div className="flex items-stretch mt-14">
             <input
               className={
-                " text-black p-2 rounded-tl-md rounded-bl-md bg-gray-700 placeholder:text-sm min-w-[25vw]"
+                " text-white p-2 rounded-tl-md rounded-bl-md bg-gray-700 placeholder:text-sm min-w-[25vw]"
               }
               type="email"
               placeholder={`Email`}
@@ -81,12 +81,12 @@ const Hero = () => {
       </div>
       <div className="absolute top-0 left-0 w-full h-full bg-[#00000044] z-[-1]"></div>
       <Container className={"h-full"}>
-        <div className="flex flex-col items-center justify-center h-full gap-y-14 w-[90%] lg:w-[70%] mx-auto">
-          <h1 className="rb-bold text-white text-4xl lg:text-5xl text-center">
+        <div className="flex flex-col items-center justify-center h-full gap-y-14 w-[95%] md:w-[80%] lg:w-[70%] mx-auto">
+          <h1 className="rb-bold text-white text-3xl ss:text-4xl lg:text-5xl text-center">
             WE BRING YOU PERFORMANCE YOU'VE BEEN DREAMING OF, ON AND OFF THE
             TRACK
           </h1>
-          <div className="flex flex-col lg:flex-row items-center gap-6">
+          <div className="flex flex-col lg:flex-row items-center gap-3 md:gap-6">
             <MainButton to={"/shop"}>Shop Yokohama Tires</MainButton>
             <WhiteButton to={"/about-us"}>Learn More</WhiteButton>
           </div>

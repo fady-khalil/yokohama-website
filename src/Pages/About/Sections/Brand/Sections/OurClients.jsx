@@ -41,7 +41,7 @@ const OurClients = ({ data }) => {
         >
           {data?.map((image, index) => (
             <SwiperSlide key={index}>
-              <div className={"w-3/4 flex items-center justify-center"}>
+              <div className={"w-3/4 flex items-center justify-center mx-auto"}>
                 <img className="" src={image} alt="" />
               </div>
             </SwiperSlide>
