@@ -8,12 +8,10 @@ const Shop = () => {
   return (
     <main>
       <Header header={"Shop"} />
-      {/* <Container> */}
-      <div className="grid grid-cols-4 ">
+      <div className="grid grid-cols-1 lg:grid-cols-4 ">
         <Filter />
         <Listing />
       </div>
-      {/* </Container> */}
     </main>
   );
 };

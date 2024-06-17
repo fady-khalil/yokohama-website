@@ -11,24 +11,24 @@ const Filter = () => {
   const titleHeader = "rb-bold text-lg uppercase ";
   const checkBox = "text-gray-500 rb-medium";
   return (
-    <div className="mt-[-120px] z-[1000] flex flex-col gap-y-8 border-r bg-white">
+    <div className="lg:mt-[-120px] z-[10]  flex lg:flex-col gap-8 border-r bg-white overflow-scroll">
       <div className="flex items-center justify-between bg-primary p-6 text-white">
-        <p className="rb-medium text-lg">Search</p>
+        <p className="rb-medium text-lg hidden">Search</p>
         <MagnifyingGlass />
       </div>
 
       {/* sort by */}
-      <div className="px-6">
+      <div className="px-6 min-w-[fit-content] py-2 lg:py-0">
         <p className={titleHeader}>Sort By </p>
 
-        <div className="p-4 flex flex-col gap-y-3">
+        <div className="lg:p-4 flex flex-col gap-y-3 ">
           <div className="mb-2">
             <label className="flex items-center space-x-2 ">
               <input type="checkbox" className="form-checkbox h-4 w-4 " />
               <span className={checkBox}>Price (high to low)</span>
             </label>
           </div>
-          <div>
+          <div className="">
             <label className="flex items-center space-x-2">
               <input type="checkbox" className="form-checkbox h-4 w-4" />
               <span className={checkBox}>Price (low to high)</span>
@@ -38,7 +38,7 @@ const Filter = () => {
       </div>
 
       {/* price ranfe */}
-      <div className="px-6">
+      <div className="px-6  min-w-[fit-content] py-2 lg:py-0">
         <p className={titleHeader}>Price Range</p>
 
         <div className="p-4">
@@ -61,7 +61,7 @@ const Filter = () => {
       </div>
 
       {/* offers */}
-      <div className="px-6">
+      <div className="px-6  min-w-[fit-content] py-2 lg:py-0 ">
         <label className="flex items-center space-x-2">
           <input type="checkbox" className="form-checkbox h-4 w-4 " />
           <span className="rb-bold">Special Offers</span>
@@ -69,7 +69,7 @@ const Filter = () => {
       </div>
 
       {/* brand */}
-      <div className="px-6">
+      <div className="px-6  min-w-[fit-content] py-2 lg:py-0">
         <div className="flex items-center justify-between  mb-4">
           <p className={titleHeader}>Brand</p>
           {/* <button>x</button> */}
@@ -97,7 +97,7 @@ const Filter = () => {
       </div>
 
       {/* category */}
-      <div className="px-6">
+      <div className="px-6  min-w-[fit-content] py-2 lg:py-0">
         <div className="flex items-center justify-between mb-4">
           <p className={titleHeader}>Category</p>
           {/* <button>x</button> */}
@@ -125,7 +125,7 @@ const Filter = () => {
       </div>
 
       {/* sub category */}
-      <div className="px-6 mb-secondary">
+      <div className="px-6 mb-secondary  min-w-[fit-content] py-2 lg:py-0">
         <div className="flex items-center justify-between mb-4">
           <p className={titleHeader}>Subcategory</p>
           {/* <button>x</button> */}

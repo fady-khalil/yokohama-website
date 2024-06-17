@@ -9,7 +9,7 @@ const Listing = () => {
   return (
     <div className="col-span-3 my-secondary">
       <Container>
-        <div className="grid grid-cols-3 gap-x-14 gap-y-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-14 gap-y-24 ">
           {productsData.map(({ catImage, type, name, image }, index) => (
             <Link
               to={"/product-detailed"}
