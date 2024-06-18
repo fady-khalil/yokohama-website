@@ -4,12 +4,16 @@ import ReactSlider from "react-slider";
 import Container from "Components/Container/Container";
 import Input from "form/Inputs/Input";
 import useInput from "form/Hooks/user-input";
+import MainButton from "Components/Buttons/MainButton";
 const Filter = () => {
   const [priceRange, setPriceRange] = useState([20, 5000]);
 
   const [filterIsVisible, setFilterIsVisible] = useState(false);
   const openFilterHandler = () => {
     setFilterIsVisible(true);
+  };
+  const closeFilterHandler = () => {
+    setFilterIsVisible(false);
   };
 
   const handleChange = (values) => {
@@ -30,8 +34,7 @@ const Filter = () => {
   } = useInput((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value));
   return (
     <>
-      {/* <Container className="lg:hidden"> */}
-      <div className="flex lg:hidden items-center justify-between  bg-primary  gap-x-10 border-b px-2 sm:px-8 sticky top-4 min-h-[100px] py-2 sm:py-6">
+      <div className="flex lg:hidden items-center justify-between  bg-primary  gap-x-6 border-b px-6 sm:px-8 sticky top-4 min-h-[100px] py-2 sm:py-6">
         <div className="flex items-center justify-center flex-1  text-white">
           <input
             className={
@@ -53,7 +56,6 @@ const Filter = () => {
           </button>
         </div>
       </div>
-      {/* </Container> */}
       {filterIsVisible && (
         <div className="fixed top-0 left-0 bg-[#000000a3] w-[100vw] h-[100vh] z-[10]"></div>
       )}
@@ -201,6 +203,8 @@ const Filter = () => {
             </div>
           </div>
         </div>
+
+        <MainButton onClick={closeFilterHandler}>Apply</MainButton>
       </div>
     </>
   );
