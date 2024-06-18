@@ -92,7 +92,7 @@ body {
   position: -webkit-sticky; /* For Safari */
   position: sticky;
   height: auto;
-  top: 10px;
+  top: 0px;
   z-index: 1000; /* Adjust as needed to ensure it stays above other elements */
   background-color: #efefef; /* Same background color as the tabs */
 }

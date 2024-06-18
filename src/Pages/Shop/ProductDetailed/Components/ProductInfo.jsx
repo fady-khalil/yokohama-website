@@ -18,7 +18,7 @@ const ProductInfo = () => {
 
   return (
     <Container>
-      <div className="flex items-center gap-x-32 py-primary">
+      <div className="flex flex-col flex-col-reverse lg:flex-row items-center gap-y-6 gap-x-32 py-secondary lg:py-primary">
         <div className="flex-1">
           <div className="flex items-center justify-between border-b pb-4">
             <img src={myCartData?.catLogo} alt="" />
@@ -36,8 +36,12 @@ const ProductInfo = () => {
           <div className="flex items-center justify-between py-3 border-t border-b">
             {myCartData.feature.map(({ image, text }, index) => (
               <div className="flex flex-col" key={index}>
-                <img className="w-10 h-10 mb-2" src={image} alt="" />
-                <p className="rb-bold">{text}</p>
+                <img
+                  className="w-6 h-6 lg:w-10 lg:h-10 mb-2"
+                  src={image}
+                  alt=""
+                />
+                <p className="rb-bold text-sm sm:text-base">{text}</p>
               </div>
             ))}
           </div>

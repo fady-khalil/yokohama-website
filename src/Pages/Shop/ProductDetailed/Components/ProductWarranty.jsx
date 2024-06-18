@@ -3,7 +3,7 @@ import React from "react";
 
 const ProductWarranty = () => {
   return (
-    <div className=" pt-primary bg-[#efefef]">
+    <div className="pt-secondary lg:pt-primary bg-[#efefef]">
       <Container>
         <div className="border-b border-[#777] pb-4">
           <h4 className="rb-bold text-center text-3xl ">
@@ -11,7 +11,7 @@ const ProductWarranty = () => {
           </h4>
         </div>
 
-        <div className="py-secondary w-[60%] mx-auto">
+        <div className="py-secondary lg:w-[60%] mx-auto">
           <div className="text-center ">
             <h6 className="rb-bold text-lg uppercase">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima,

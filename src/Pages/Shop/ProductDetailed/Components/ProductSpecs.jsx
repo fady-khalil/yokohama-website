@@ -10,7 +10,7 @@ const ProductSpecs = () => {
         </h2>
 
         <div>
-          <img src={image} className="w-3/4 mx-auto" alt="" />
+          <img src={image} className="lg:w-3/4 mx-auto" alt="" />
         </div>
       </Container>
     </div>

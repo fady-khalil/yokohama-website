@@ -17,20 +17,24 @@ import { size } from "Constant/ProductSize";
 const SizeInfo = () => {
   const images = [i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11];
   return (
-    <section className="pt-primary mt-primary bg-[#efefef]">
+    <section className="pt-secondary lg:pt-primary mt-secondary lg:mt-primary bg-[#efefef]">
       <Container>
-        <div className="flex items-center gap-x-4 ">
+        <div className="flex items-center justify-center flex-wrap gap-4 ">
           {images.map((i, index) => (
             <div
-              className="flex-1 flex items-center justify-center"
+              className=" md:flex-1 flex items-center justify-center"
               key={index}
             >
-              <img className="object-contain w-3/4" src={i} alt="" />
+              <img
+                className="object-contain w-[3rem] md:w-auto"
+                src={i}
+                alt=""
+              />
             </div>
           ))}
         </div>
 
-        <div className="flex items-stretch justify-between mt-primary gap-x-6">
+        {/* <div className="flex items-stretch justify-between mt-primary gap-x-6">
           {productInfoSize.map(({ boxHeader, image, text, title }, index) => (
             <div className="flex-1 bg-white" key={index}>
               <div className="bg-dark text-white rb-bold text-center py-2 ">
@@ -88,7 +92,7 @@ const SizeInfo = () => {
               </tbody>
             </table>
           </div>
-        </div>
+        </div> */}
       </Container>
     </section>
   );
