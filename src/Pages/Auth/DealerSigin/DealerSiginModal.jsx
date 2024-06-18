@@ -46,7 +46,7 @@ const DealerSiginModal = () => {
       isActive={dealderModalIsActive}
       onHandleClose={closeDealerModalHandeler}
     >
-      <div className="p-10 min-w-[30vw]">
+      <div className="p-4 lg:p-10 min-w-[90vw] sm:min-w-[60vw] lg:min-w-[30vw]">
         <div className="flex items-center justify-between items-center">
           <h5 className="text-2xl rb-bold">Dealer Login</h5>
           <button onClick={closeDealerModalHandeler} className="text-2xl ">
