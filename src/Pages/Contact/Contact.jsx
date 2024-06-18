@@ -1,6 +1,6 @@
 import React from "react";
 import Container from "Components/Container/Container";
-import bgImage from "assests/about/why-2.jpg";
+import bgImage from "assests/contact.jpg";
 import { MapPin, Phone, Storefront, Envelope } from "@phosphor-icons/react";
 import ContactForm from "./ContactForm";
 const Contact = () => {
@@ -12,7 +12,6 @@ const Contact = () => {
       >
         <Container>
           <div className="relative py-primary flex flex-col items-center justify-center text-white text-center ">
-            <div className="absolute inset-0 bg-[#dc0c177f] z-[1]"></div>
             <div className="relative z-[10]">
               <h1 className="rb-bold text-3xl mb-secondary">Contact us</h1>
             </div>

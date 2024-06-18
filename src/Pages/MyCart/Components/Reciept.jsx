@@ -18,7 +18,7 @@ const Reciept = () => {
     },
   ];
   return (
-    <div className="my-secondary">
+    <div className="hidden lg:block my-secondary">
       <Container>
         <div className=" w-3/4 mx-auto ">
           <div className="flex items-center justify-between bg-[#efefef] px-6 py-4">

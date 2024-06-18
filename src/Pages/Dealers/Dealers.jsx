@@ -165,15 +165,18 @@ const Dealers = () => {
         </div>
         <div className="flex flex-col gap-y-10 my-secondary ">
           {dealers?.map(({ name, location, number, image }, index) => (
-            <div className="bg-dark flex flex-col lg:flex-row items-center border-t-[4px] border-primary">
-              <div className="flex-1 p-10">
+            <div
+              key={index}
+              className="bg-dark flex flex-col lg:flex-row items-center border-t-[4px] border-primary"
+            >
+              <div className="flex-1 p-4 lg:p-10">
                 <p className="text-2xl rb-bold text-white border-b border-[#ccc] pb-2">
                   {name}
                 </p>
 
                 <div className="flex items-center text-white gap-x-4 mt-6">
                   <MapPin size={28} />
-                  <p className="rb-bold text-sm w-1/2">{location}</p>
+                  <p className="rb-bold text-sm flex-1  lg:w-1/2">{location}</p>
                 </div>
                 <div className="flex items-center text-white gap-x-4 mt-6">
                   <Phone size={28} />
