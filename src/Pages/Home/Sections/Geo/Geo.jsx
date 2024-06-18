@@ -7,7 +7,7 @@ import MainButton from "Components/Buttons/MainButton";
 import OutlineButton from "Components/Buttons/OutlineButton";
 const Geo = () => {
   return (
-    <section className="py-primary relative ">
+    <section className=" relative ">
       <div className="flex flex-col lg:flex-row items-center">
         <div className="flex-1">
           <img src={geoImage} alt="" className="w-full object-cover" />

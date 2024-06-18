@@ -1,5 +1,3 @@
-import { useContext } from "react";
-import { DealerLoginContext } from "context/Auth/DealerContext";
 // sections
 import Hero from "./Sections/Hero/Hero";
 import SearchTires from "./Sections/SearchTires/SearchTires";

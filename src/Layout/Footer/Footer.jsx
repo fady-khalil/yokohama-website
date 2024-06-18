@@ -11,7 +11,7 @@ const Footer = () => {
   return (
     <footer className="bg-dark text-white py-16">
       <Container>
-        <ul className="flex flex-col lg:flex-row lg:items-center justify-between gap-y-4 gap-x-10 border-b border-[#eeeeee67] pb-6">
+        <ul className="flex flex-col xl:flex-row lg:items-center justify-between gap-y-4 gap-x-10 border-b border-[#eeeeee67] pb-6">
           {footerLinks.map(({ name, path }, index) => (
             <li
               className=" min-w-[fit-content] uppercase rb-bold text-sm"
