@@ -1,5 +1,5 @@
 import React from "react";
-import image from "assests/Auth/2.jpg";
+import image from "assests/bg3.jpg";
 import Input from "form/Inputs/Input";
 import useInput from "form/Hooks/user-input";
 import { X } from "@phosphor-icons/react";
@@ -17,13 +17,13 @@ const SubmitEmail = ({ onHandleClose, onToggleForms }) => {
     reset: emailReset,
   } = useInput((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value));
   return (
-    <div className="relative  z-[1000]">
+    <div className="relative w-[90vw] md:w-[60vw] lg:w-auto  z-[1000]">
       <div className="absolute left-0 top-0 w-full h-full z-[10]">
         <img className="w-full h-full object-cover" src={image} alt="" />
       </div>
-      <div className="absolute w-full min-h-full top-0 left-0 bg-[#000000a2] z-[100]"></div>
+      <div className="absolute w-full min-h-full top-0 left-0 bg-[#00000057] z-[100]"></div>
 
-      <div className="px-10 py-10 text-white relative z-[100]">
+      <div className="p-4 lg:p-10 text-white relative z-[100]">
         <button
           onClick={onHandleClose}
           className="text-2xl w-max mx-auto mb-4 flex items-center justify-center text-center "

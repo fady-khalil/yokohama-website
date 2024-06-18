@@ -44,21 +44,21 @@ const NewPassoword = ({ onHandleClose, onToggleForms }) => {
     return isNotEmpty && isMatching;
   });
   return (
-    <div className="relative  z-[1000]">
+    <div className="relative w-[90vw] md:w-[60vw] lg:w-auto  z-[1000]">
       <div className="absolute left-0 top-0 w-full h-full z-[10]">
         <img className="w-full h-full object-cover" src={image} alt="" />
       </div>
       <div className="absolute w-full min-h-full top-0 left-0 bg-[#0000003e] z-[100]"></div>
 
       {passwordIsDone ? (
-        <div className="px-36 py-12 text-white relative z-[100]">
+        <div className="lg:px-36 py-12 text-white relative z-[100]">
           <button
             onClick={finalCloseHandler}
             className="text-2xl w-max mx-auto mb-4 flex items-center justify-center text-center "
           >
             <X weight="bold" />
           </button>
-          <div className="mt-10">
+          <div className="lg:mt-10">
             <h5 className="text-center rb-bold text-3xl">Thank You</h5>
             <p className="text-center rb-light text-sm ">
               Your Password have been changed{" "}
@@ -66,7 +66,7 @@ const NewPassoword = ({ onHandleClose, onToggleForms }) => {
           </div>
         </div>
       ) : (
-        <div className="px-10 py-10 text-white relative z-[100]">
+        <div className="p-4 lg:p10 text-white relative z-[100]">
           <button
             onClick={onHandleClose}
             className="text-2xl w-max mx-auto mb-4 flex items-center justify-center text-center "
