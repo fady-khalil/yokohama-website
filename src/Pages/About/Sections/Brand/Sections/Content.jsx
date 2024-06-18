@@ -13,7 +13,7 @@ const Content = ({ data }) => {
               <img className="w-full" src={image} alt="" />
             </div>
             <div className="flex-1">
-              <p className="rb-bold text-4xl">{title}</p>
+              <p className="rb-bold text-4xl mt-2">{title}</p>
               <p className="mt-4">{text}</p>
             </div>
           </div>

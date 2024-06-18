@@ -21,7 +21,7 @@ const HeroTabs = ({ activeTabs, onSelectingTabs }) => {
   ];
 
   return (
-    <section className="pt-primary">
+    <section className="pt-secondary lg:pt-primary">
       <Container>
         <div>
           <h1 className="text-4xl rb-bold text-center">About us</h1>

@@ -60,7 +60,7 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
     return isNotEmpty && isMatching;
   });
   return (
-    <div className="p-10">
+    <div className="p-4  h-[90vh] overflow-scroll w-[90vw]  lg:h-auto lg:w-auto lg:overflow-auto lg:p-10">
       <div className="border-b border-[#ccc] pb-2 flex items-center justify-between mb-14">
         <h5 className="text-3xl rb-bold">Sign up</h5>
 
@@ -69,7 +69,7 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
         </button>
       </div>
       <form>
-        <span className="flex items-center gap-x-4 mb-14">
+        <span className="flex flex-col lg:flex-row items-center gap-x-4 mb-8 lg:mb-14">
           <Input
             type="text"
             label={`Full Name`}
@@ -115,7 +115,7 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
           </div>
         </span>
 
-        <span className="flex items-center gap-x-4 mb-14">
+        <span className="flex flex-col lg:flex-row items-center gap-x-4 mb-8 lg:mb-14">
           <PasswordInput
             id="register-password"
             value={passwordInput}
@@ -173,10 +173,10 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
           </span>
         </div>
       </form>
-      <div className="mt-16 flex f items-center gap-y-2">
+      <div className="mt-8 lg:mt-16 flex flex-col lg:flex-row lg:items-center gap-y-2">
         <MainButton isSmall={true}>Register</MainButton>
 
-        <p className="text-center w-[100px]">or</p>
+        <p className="text-center lg:w-[100px]">or</p>
         <OutlineButton isSmall={true} onClick={onToggleForms}>
           Sign in
         </OutlineButton>
