@@ -30,30 +30,30 @@ const Filter = () => {
   } = useInput((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value));
   return (
     <>
-      <Container className="lg:hidden">
-        <div className="flex items-center justify-between  bg-primary  gap-x-32 border-b px-8 sticky top-4 min-h-[100px] py-6">
-          <div className="flex items-center justify-center flex-1  text-white">
-            <input
-              className={
-                " text-white px-2 py-3 rounded-sm bg-white placeholder:text-sm flex-1"
-              }
-              id={"shop-search"}
-              type={"search"}
-              name={"shop-search"}
-              placeholder={"Search"}
-              value={searchInput}
-              onChange={searchChangeHandler}
-              onBlur={searchBlurHanlder}
-            />
-          </div>
-
-          <div>
-            <button onClick={openFilterHandler}>
-              <Faders color="white" size={32} />
-            </button>
-          </div>
+      {/* <Container className="lg:hidden"> */}
+      <div className="flex lg:hidden items-center justify-between  bg-primary  gap-x-10 border-b px-2 sm:px-8 sticky top-4 min-h-[100px] py-2 sm:py-6">
+        <div className="flex items-center justify-center flex-1  text-white">
+          <input
+            className={
+              " text-white px-2 py-3 rounded-sm bg-white placeholder:text-sm flex-1"
+            }
+            id={"shop-search"}
+            type={"search"}
+            name={"shop-search"}
+            placeholder={"Search"}
+            value={searchInput}
+            onChange={searchChangeHandler}
+            onBlur={searchBlurHanlder}
+          />
         </div>
-      </Container>
+
+        <div>
+          <button onClick={openFilterHandler}>
+            <Faders color="white" size={32} />
+          </button>
+        </div>
+      </div>
+      {/* </Container> */}
       {filterIsVisible && (
         <div className="fixed top-0 left-0 bg-[#000000a3] w-[100vw] h-[100vh] z-[10]"></div>
       )}
