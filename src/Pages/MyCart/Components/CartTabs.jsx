@@ -18,7 +18,7 @@ const CartTabs = ({ onSelectingTabs, activeTabs }) => {
   ];
 
   return (
-    <section className="lg:pt-primary">
+    <section className="pt-secondary lg:pt-primary">
       <Container>
         <div>
           <h1 className="text-4xl rb-bold lg:text-center">Your Cart</h1>

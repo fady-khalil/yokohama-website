@@ -6,12 +6,13 @@ import {
   FacebookLogo,
   InstagramLogo,
   YoutubeLogo,
+  User,
 } from "@phosphor-icons/react";
 import { useContext } from "react";
 import { LoginContext } from "context/Auth/LoginContext";
 
 const Drawer = ({ onHandleClose, isActive }) => {
-  const { openModalHandeler, openDealerModalHandeler } =
+  const { openModalHandeler, openDealerModalHandeler, userIsLoggedIn } =
     useContext(LoginContext);
   return (
     <>
@@ -49,28 +50,43 @@ const Drawer = ({ onHandleClose, isActive }) => {
                 </Link>
               </li>
             ))}
+
+            <li className="text-white border-b border-white pb-2">
+              <Link onClick={onHandleClose} to={"my-cart"}>
+                My Cart
+              </Link>
+            </li>
           </ul>
 
-          <div className="px-4 flex item-center gap-x-4 lg:hidden">
-            <button
-              onClick={() => {
-                onHandleClose();
-                openModalHandeler();
-              }}
-              className="flex-1 border border-black rounded-md py-2 bg-white"
-            >
-              Sign in
+          {!userIsLoggedIn && (
+            <div className="px-4 flex item-center gap-x-4 lg:hidden">
+              <button
+                onClick={() => {
+                  onHandleClose();
+                  openModalHandeler();
+                }}
+                className="flex-1 border border-black rounded-md py-2 bg-white"
+              >
+                Sign in
+              </button>
+              <button
+                onClick={() => {
+                  onHandleClose();
+                  openDealerModalHandeler();
+                }}
+                className="flex-1 border border-black rounded-md py-2 bg-white"
+              >
+                Dealer login
+              </button>
+            </div>
+          )}
+
+          {userIsLoggedIn && (
+            <button className="py-4 bg-white text-primary rb-bold border border-white w-[90%] mx-auto flex items-center  justify-center gap-x-2">
+              <User weight="bold" size={22} />
+              <Link to={"/Account"}>User Name</Link>
             </button>
-            <button
-              onClick={() => {
-                onHandleClose();
-                openDealerModalHandeler();
-              }}
-              className="flex-1 border border-black rounded-md py-2 bg-white"
-            >
-              Dealer login
-            </button>
-          </div>
+          )}
 
           <div className="flex flex-col items-center justify-center   mb-10">
             <span className="mb-4 text-white border-b border-white pb-1">

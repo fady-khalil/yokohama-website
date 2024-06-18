@@ -31,8 +31,8 @@ const OriginalEquipment = () => {
   return (
     <section style={{ backgroundImage: `url(${bg})` }}>
       <Container>
-        <div className="py-40">
-          <div className="mb-24">
+        <div className="py-secondary lg:py-40">
+          <div className="mb-12 lg:mb-24">
             <h2 className="text-3xl rb-bold text-center text-white">
               Original Equipment
             </h2>

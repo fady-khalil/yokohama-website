@@ -3,7 +3,7 @@ import newsAndEvent from "Constant/newsAndEvent";
 import Container from "Components/Container/Container";
 const NewAndEvent = () => {
   return (
-    <main className="my-primary">
+    <main className="my-secondary lg:my-primary">
       <Container>
         <div className="my-secondary">
           <h1 className="text-center text-3xl rb-bold">News And Events</h1>
