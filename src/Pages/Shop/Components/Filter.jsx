@@ -34,7 +34,7 @@ const Filter = () => {
   } = useInput((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value));
   return (
     <>
-      <div className="flex lg:hidden items-center justify-between  bg-primary  gap-x-6 border-b px-6 sm:px-8 sticky top-0 min-h-[100px] py-2 sm:py-6">
+      <div className="flex lg:hidden items-center justify-between  bg-primary  gap-x-6  border-b px-3 ss:px-6 sm:px-8 sticky top-0 py-3 sm:py-6">
         <div className="flex items-center justify-center flex-1  text-white">
           <input
             className={
