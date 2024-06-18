@@ -6,7 +6,7 @@ import Listing from "./Components/Listing";
 import Container from "Components/Container/Container";
 const Shop = () => {
   return (
-    <main>
+    <main className="relative">
       <Header header={"Shop"} />
       <div className="grid grid-cols-1 lg:grid-cols-4 ">
         <Filter />
