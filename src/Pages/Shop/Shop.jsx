@@ -2,8 +2,7 @@ import React from "react";
 import Header from "./Components/Header";
 import Filter from "./Components/Filter";
 import Listing from "./Components/Listing";
-
-import Container from "Components/Container/Container";
+import { useState } from "react";
 const Shop = () => {
   return (
     <main className="relative">
