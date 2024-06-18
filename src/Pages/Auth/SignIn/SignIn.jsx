@@ -39,9 +39,9 @@ const SignIn = ({ onToggleForms, onHandleClose }) => {
     return isValid;
   });
   return (
-    <div className="flex">
-      <div className="flex-1 py-10">
-        <h5 className="text-3xl rb-bold mb-10 px-10">Sign up</h5>
+    <div className="flex flex-col flex-col-reverse w-[90vw] md:w-[60vw] lg:flex-row lg:w-auto">
+      <div className="flex-1 p-4 lg:py-10">
+        <h5 className="text-3xl rb-bold mb-10 px-10">Sign in</h5>
         <form className="px-10 flex flex-col gap-y-4">
           <Input
             type="email"
