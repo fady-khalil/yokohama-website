@@ -41,6 +41,7 @@ const Drawer = ({ onHandleClose, isActive }) => {
           </button>
         </div>
 
+        {/* drawer */}
         <div className=" flex flex-col  justify-between mb-10 h-[94vh]">
           <ul className="px-4 mt-secondary flex flex-col gap-y-4">
             {footerLinks.map(({ name, path }, index) => (

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 const DesktopNav = ({ isHomePage }) => {
   return (
     <ul
-      className={`hidden lg:flex items-center  rb-medium uppercase gap-x-6  ${
+      className={`hidden xsl:flex items-center  rb-medium uppercase gap-x-6  ${
         isHomePage ? "text-black" : "text-white"
       }`}
     >
