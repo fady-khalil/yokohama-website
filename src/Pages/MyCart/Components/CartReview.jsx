@@ -91,39 +91,22 @@ const CartReview = () => {
           </div>
           <div className="flex-1 h-fit lg:sticky lg:top-10 bg-dark border-t-4 border-primary p-6">
             <div className="border-b border-white pb-4">
-              <label className="flex items-center space-x-2 ">
-                <input
-                  type="checkbox"
-                  className="form-checkbox h-4 w-4 text-white"
-                />
-                <span className={"text-white"}>Use my credits (200$)</span>
-              </label>
-              <p className="text-[#aaa]">
-                each credit is equivalent to 1 litres
-              </p>
-            </div>
-
-            <div className="border-b border-white pb-4">
-              <p className="text-white text-xl rb-bold mt-4 mb-2">
+              <p className="text-white text-lg rb-bold mt-4 mb-2 uppercase">
                 Order Summury
               </p>
 
               <div className="mt-3">
-                <span className="flex items-center justify-between text-[#aaa]">
+                <span className="flex items-center justify-between text-[#ddd]">
                   <p>Subtotal</p>
                   <p>5000$</p>
                 </span>
-                <span className="flex items-center justify-between text-[#aaa]">
+                <span className="flex items-center justify-between text-[#ddd]">
                   <p>Tax Vat</p>
                   <p>200$</p>
                 </span>
-                <span className="flex items-center justify-between text-[#aaa]">
+                <span className="flex items-center justify-between text-[#ddd]">
                   <p>Shipping Charge</p>
                   <p>0</p>
-                </span>
-                <span className="flex items-center justify-between text-[#aaa]">
-                  <p>Discount 10%</p>
-                  <p>-1000$</p>
                 </span>
               </div>
             </div>
@@ -135,13 +118,11 @@ const CartReview = () => {
                 </p>
                 <p className="text-white text-xl rb-bold mt-4 mb-2">5000$</p>
               </span>
-              <p className="text-[#aaa] text-sm">
-                By completing this order you will earn 520 pts
-              </p>
+
               <div className="mt-6 w-full flex-1 flex">
                 <MainButton isSmall={true}>Continue to checkout</MainButton>
               </div>
-              <button className="text-white rb-bold text-center underline mt-6 mx-auto flex items-center justify-center">
+              <button className="text-white rb-bold text-center underline mt-3 mx-auto flex items-center justify-center">
                 Continue Shopping
               </button>
             </div>

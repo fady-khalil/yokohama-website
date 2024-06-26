@@ -109,19 +109,19 @@ const CartReview = () => {
               </p>
 
               <div className="mt-3">
-                <span className="flex items-center justify-between text-[#aaa]">
+                <span className="flex items-center justify-between text-[#ddd]">
                   <p>Subtotal</p>
                   <p>5000$</p>
                 </span>
-                <span className="flex items-center justify-between text-[#aaa]">
+                <span className="flex items-center justify-between text-[#ddd]">
                   <p>Tax Vat</p>
                   <p>200$</p>
                 </span>
-                <span className="flex items-center justify-between text-[#aaa]">
+                <span className="flex items-center justify-between text-[#ddd]">
                   <p>Shipping Charge</p>
                   <p>0</p>
                 </span>
-                <span className="flex items-center justify-between text-[#aaa]">
+                <span className="flex items-center justify-between text-[#ddd]">
                   <p>Discount 10%</p>
                   <p>-1000$</p>
                 </span>
@@ -141,7 +141,7 @@ const CartReview = () => {
               <div className="mt-6 w-full flex-1 flex">
                 <MainButton isSmall={true}>Continue to checkout</MainButton>
               </div>
-              <button className="text-white rb-bold text-center underline mt-6 mx-auto flex items-center justify-center">
+              <button className="text-white rb-bold text-center underline mt-3 mx-auto flex items-center justify-center">
                 Continue Shopping
               </button>
             </div>
