@@ -25,7 +25,7 @@ const Drawer = ({ onHandleClose, isActive }) => {
         }`}
       ></div>
       <div
-        className={`fixed  w-[80vw] lg:w-[30vw] h-[100vh] bg-[#dc0c178a] top-0 bottom-0 right-0 z-[100000] transition ease-in duration-300  ${
+        className={`fixed  w-[90vw] lg:w-[30vw] h-[100vh] bg-[#dc0c178a] top-0 bottom-0 right-0 z-[100000] transition ease-in duration-300  ${
           isActive
             ? "translate-x-[0] select-auto visible opacity-100"
             : "select-none invisible translate-x-[100%] opacity-0"

@@ -6,12 +6,15 @@ export const DealerLoginContext = createContext();
 // Provider component
 export const DealerLoginProvider = ({ children }) => {
   const [dealerIsSignIn, setDealerIsSignIn] = useState(false);
+
   const handleDealderSignIn = () => {
     setDealerIsSignIn(true);
   };
+
   const handleDealderLogout = () => {
     setDealerIsSignIn(false);
   };
+
   return (
     <DealerLoginContext.Provider
       value={{

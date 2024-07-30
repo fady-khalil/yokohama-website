@@ -8,7 +8,28 @@ import "react-phone-input-2/lib/style.css";
 import MainButton from "Components/Buttons/MainButton";
 import { Link } from "react-router-dom";
 import OutlineButton from "Components/Buttons/OutlineButton";
+
+import usePostData from "Hooks/Fetching/usePostData";
+
 const Registration = ({ onToggleForms, onHandleClose }) => {
+  const [formData, setFormData] = useState({
+    full_name: "asdas",
+    email: "fady123@hotmail.com",
+    password: "Fady@123",
+    confirm_password: "Fady@123",
+    phone: "71121461",
+  });
+  const { response, loading, error, postData } = usePostData();
+
+  const submitForm = async () => {
+    try {
+      const result = await postData("yokohama/auth/register", formData);
+      console.log(result, "result");
+    } catch (err) {
+      console.error("Error:", err.message);
+    }
+  };
+
   const [rememberMe, setRememberMe] = useState(false);
   const [emailMarketing, setEmailMarketing] = useState(false);
   const [phone, setPhone] = useState("");
@@ -174,7 +195,9 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
         </div>
       </form>
       <div className="mt-8 lg:mt-16 flex flex-col lg:flex-row lg:items-center gap-y-2">
-        <MainButton isSmall={true}>Register</MainButton>
+        <MainButton onClick={submitForm} isSmall={true}>
+          Register
+        </MainButton>
 
         <p className="text-center lg:w-[100px]">or</p>
         <OutlineButton isSmall={true} onClick={onToggleForms}>

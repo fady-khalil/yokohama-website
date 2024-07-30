@@ -1,7 +1,4 @@
-import { Routes, Route } from "react-router-dom";
-import ContextProvider from "context/ContextProvider";
-import ScrollToTop from "Hooks/ScrollToTop";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { DealerLoginContext } from "context/Auth/DealerContext";
 
 //
