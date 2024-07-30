@@ -55,8 +55,10 @@ const Hero = () => {
           >
             x
           </button>
-          <p className="text-3xl rb-bold">Subscribe to our newsletter</p>
-          <div className="flex items-stretch mt-14">
+          <p className="text-2xl sm:text-3xl rb-bold">
+            Subscribe to our newsletter
+          </p>
+          <div className="flex items-stretch mt-6 lg:mt-14">
             <input
               className={
                 " text-white p-2 rounded-tl-md rounded-bl-md bg-gray-700 placeholder:text-sm min-w-[25vw]"
