@@ -1,15 +1,12 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import logo from "assests/logo.png";
-
 import MainButton from "Components/Buttons/MainButton";
 import { DealerLoginContext } from "context/Auth/DealerContext";
-import Logo from "../Components/Logo";
-
-import { List, X, ShoppingCart } from "@phosphor-icons/react";
+import { X, ShoppingCart } from "@phosphor-icons/react";
 
 const Drawer = ({ drawerIsVisible, ClosedrawerMenu }) => {
-  const { handleDealderLogout } = useContext(DealerLoginContext);
+  const { handleDealderLogout, dealerLoading } = useContext(DealerLoginContext);
   return (
     <>
       <div
@@ -65,6 +62,7 @@ const Drawer = ({ drawerIsVisible, ClosedrawerMenu }) => {
         </ul>
         <div className="mt-14 flex p-6">
           <MainButton
+            isLoading={dealerLoading}
             onClick={handleDealderLogout}
             border={true}
             isWhite={true}

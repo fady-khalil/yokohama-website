@@ -6,7 +6,7 @@ import MainButton from "Components/Buttons/MainButton";
 import Modal from "Components/Modal/Modal";
 import { X } from "@phosphor-icons/react";
 import image2 from "assests/about/mission/m2.jpg";
-
+import IsLoading from "Components/RequestHandler/IsLoading";
 const Gift = () => {
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const handleOpenModal = () => {
@@ -15,7 +15,11 @@ const Gift = () => {
   const handleCloseModal = () => {
     setModalIsVisible(false);
   };
-  return (
+
+  const isLoading = false;
+  return isLoading ? (
+    <IsLoading />
+  ) : (
     <main>
       <div
         className="about-bg relative"

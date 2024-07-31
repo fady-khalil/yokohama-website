@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { LoginContext } from "context/Auth/LoginContext";
+import { ModalContext } from "context/Auth/ModalContext";
 import Modal from "Components/Modal/Modal";
 
 // inner
@@ -7,7 +7,7 @@ import SignIn from "./SignIn/SignIn";
 import Registration from "./Registration/Registration";
 
 const AuthModal = () => {
-  const { modalIsActive, closeModalHandeler } = useContext(LoginContext);
+  const { modalIsActive, closeModalHandeler } = useContext(ModalContext);
   const [toggleForms, setToggleForms] = useState(false);
   const toggleFormHandler = () => {
     setToggleForms((cur) => !cur);

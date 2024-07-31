@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Input from "form/Inputs/Input";
 import PasswordInput from "form/Inputs/PasswordInput";
 import useInput from "form/Hooks/user-input";
@@ -10,24 +10,25 @@ import { Link } from "react-router-dom";
 import OutlineButton from "Components/Buttons/OutlineButton";
 
 import usePostData from "Hooks/Fetching/usePostData";
+import { UserLoginContext } from "context/Auth/UserLoginContext";
 
 const Registration = ({ onToggleForms, onHandleClose }) => {
-  const [formData, setFormData] = useState({
-    full_name: "asdas",
-    email: "fady123@hotmail.com",
-    password: "Fady@123",
-    confirm_password: "Fady@123",
-    phone: "71121461",
-  });
-  const { response, loading, error, postData } = usePostData();
+  const { handleUerData, setUserIsSignIn } = useContext(UserLoginContext);
+  const { loading, error, postData } = usePostData();
+  const [notValid, setNotValid] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
 
-  const submitForm = async () => {
-    try {
-      const result = await postData("yokohama/auth/register", formData);
-      console.log(result, "result");
-    } catch (err) {
-      console.error("Error:", err.message);
-    }
+  const clearErrors = () => {
+    setNotValid(false);
+    setErrorMessage(null);
+  };
+
+  const clearInputs = () => {
+    fullNameReset();
+    passwordReset();
+    confirmPasswordReset();
+    emailReset();
+    setPhone("");
   };
 
   const [rememberMe, setRememberMe] = useState(false);
@@ -80,10 +81,57 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
     const isMatching = value === passwordInput;
     return isNotEmpty && isMatching;
   });
+
+  const formIsValid =
+    fullNameIsValid &&
+    emailIsValid &&
+    phone.length !== 0 &&
+    passwordIsValid &&
+    confirmPasswordIsValid;
+
+  const submitForm = async () => {
+    setErrorMessage(null);
+    if (!formIsValid) {
+      setNotValid(true);
+      return;
+    }
+    const formData = {
+      full_name: fullNameInput,
+      password: passwordInput,
+      confirm_password: confirmPasswordInput,
+      email: emailInput,
+      phone: phone,
+    };
+    try {
+      const result = await postData("yokohama/auth/register", formData);
+      if (result && result?.is_success) {
+        handleUerData(result?.data);
+        setUserIsSignIn(true);
+        onHandleClose();
+        clearInputs();
+      } else {
+        setErrorMessage(result?.message);
+      }
+    } catch (err) {
+      console.error("Error:", err.message);
+    }
+  };
   return (
     <div className="p-4  h-[90vh] overflow-scroll w-[90vw]  lg:h-auto lg:w-auto lg:overflow-auto lg:p-10">
       <div className="border-b border-[#ccc] pb-2 flex items-center justify-between mb-14">
-        <h5 className="text-3xl rb-bold">Sign up</h5>
+        <div>
+          <h5 className="text-3xl rb-bold">Sign up</h5>
+          {notValid && (
+            <p className="text-red-600 text-sm">
+              Please make sure inputs are valid
+            </p>
+          )}
+          {errorMessage && (
+            <p className="text-red-600 text-sm">{errorMessage}</p>
+          )}
+
+          {error && <p className="text-red-600 text-sm">{error}</p>}
+        </div>
 
         <button onClick={onHandleClose} className="text-2xl">
           <X weight="bold" />
@@ -98,7 +146,7 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
             value={fullNameInput}
             onChange={(e) => {
               fullNameChangeHandler(e);
-              // clearErrors();
+              clearErrors();
             }}
             onBlur={fullNameBlurHanlder}
             hasError={fullNameHasError}
@@ -111,7 +159,7 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
             value={emailInput}
             onChange={(e) => {
               emailChangeHandler(e);
-              // clearErrors();
+              clearErrors();
             }}
             onBlur={emailBlurHanlder}
             hasError={emailHasError}
@@ -126,7 +174,10 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
               buttonClass="test-2"
               country={"lb"}
               value={phone}
-              onChange={(phone) => setPhone(phone)}
+              onChange={(phone) => {
+                setPhone(phone);
+                clearErrors();
+              }}
               inputProps={{
                 name: "phone",
                 required: true,
@@ -143,7 +194,7 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
             label={`Password`}
             onChange={(e) => {
               passwordChangeHandler(e);
-              // clearErrors();
+              clearErrors();
             }}
             onBlur={passwordBlurHandler}
             hasError={passwordHasError}
@@ -156,7 +207,7 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
             label={`Confirm Password`}
             onChange={(e) => {
               confirmPasswordChangeHandler(e);
-              // clearErrors();
+              clearErrors();
             }}
             onBlur={confirmPasswordBlurHandler}
             hasError={confirmPasswordHasError}
@@ -195,7 +246,7 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
         </div>
       </form>
       <div className="mt-8 lg:mt-16 flex flex-col lg:flex-row lg:items-center gap-y-2">
-        <MainButton onClick={submitForm} isSmall={true}>
+        <MainButton isLoading={loading} onClick={submitForm} isSmall={true}>
           Register
         </MainButton>
 

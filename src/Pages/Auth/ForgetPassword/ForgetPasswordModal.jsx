@@ -1,6 +1,6 @@
 import Modal from "Components/Modal/Modal";
 import { useContext, useState } from "react";
-import { LoginContext } from "context/Auth/LoginContext";
+import { ModalContext } from "context/Auth/ModalContext";
 
 import SubmitEmail from "./Forms/SubmitEmail";
 import NewPassoword from "./Forms/NewPassoword";
@@ -9,7 +9,7 @@ const ForgetPasswordModal = () => {
     forgotModalIsActive,
     openForgotModalHandeler,
     closeForgotModalHandeler,
-  } = useContext(LoginContext);
+  } = useContext(ModalContext);
 
   const [toggleForms, setToggleForms] = useState(false);
   const toggleFormHandler = () => {

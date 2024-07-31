@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import image from "assests/Auth/2.jpg";
 import Input from "form/Inputs/Input";
 import useInput from "form/Hooks/user-input";
@@ -6,10 +6,28 @@ import PasswordInput from "form/Inputs/PasswordInput";
 import { X } from "@phosphor-icons/react";
 import MainButton from "Components/Buttons/MainButton";
 import WhiteButton from "Components/Buttons/WhiteButton";
-import { LoginContext } from "context/Auth/LoginContext";
-const SignIn = ({ onToggleForms, onHandleClose }) => {
-  const { openForgotModalHandeler, handleUserLogin } = useContext(LoginContext);
+import { ModalContext } from "context/Auth/ModalContext";
+import { UserLoginContext } from "context/Auth/UserLoginContext";
+import usePostData from "Hooks/Fetching/usePostData";
 
+const SignIn = ({ onToggleForms, onHandleClose }) => {
+  const { handleUerData, setUserIsSignIn } = useContext(UserLoginContext);
+  const { loading, error, postData } = usePostData();
+  const [notValid, setNotValid] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+
+  const clearErrors = () => {
+    setNotValid(false);
+    setErrorMessage(null);
+  };
+
+  const clearInputs = () => {
+    emailReset();
+    passwordReset();
+  };
+
+  // forgot modal
+  const { openForgotModalHandeler } = useContext(ModalContext);
   const handleForgotPasswordModal = (e) => {
     e.preventDefault();
     openForgotModalHandeler();
@@ -38,10 +56,50 @@ const SignIn = ({ onToggleForms, onHandleClose }) => {
     const isValid = value.trim() !== "" && value.length >= 1;
     return isValid;
   });
+
+  const submitForm = async () => {
+    setErrorMessage(null);
+    if (!emailIsValid && !passwordIsValid) {
+      setNotValid(true);
+      return;
+    }
+
+    const formData = {
+      email: emailInput,
+      password: passwordInput,
+    };
+
+    try {
+      const result = await postData("yokohama/auth/login", formData);
+      if (result && result?.is_success) {
+        handleUerData(result?.data);
+        setUserIsSignIn(true);
+        onHandleClose();
+        clearInputs();
+      } else {
+        setErrorMessage(result?.message);
+      }
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  };
+
   return (
     <div className="flex flex-col flex-col-reverse w-[90vw] md:w-[60vw] lg:flex-row lg:w-auto">
       <div className="flex-1 p-4 lg:py-10">
-        <h5 className="text-3xl rb-bold mb-10 px-10">Sign in</h5>
+        <div className="mb-10 px-10">
+          <h5 className="text-3xl rb-bold  ">Sign in</h5>
+          {notValid && (
+            <p className="text-red-600 text-sm">
+              Please make sure inputs are valid
+            </p>
+          )}
+          {errorMessage && (
+            <p className="text-red-600 text-sm">{errorMessage}</p>
+          )}
+
+          {error && <p className="text-red-600 text-sm">{error}</p>}
+        </div>
         <form className="px-10 flex flex-col gap-y-4">
           <Input
             type="email"
@@ -50,11 +108,11 @@ const SignIn = ({ onToggleForms, onHandleClose }) => {
             value={emailInput}
             onChange={(e) => {
               emailChangeHandler(e);
-              // clearErrors();
+              clearErrors();
             }}
             onBlur={emailBlurHanlder}
             hasError={emailHasError}
-            errorMessage={``}
+            errorMessage={`please enter a valid email`}
           />
 
           <PasswordInput
@@ -63,11 +121,11 @@ const SignIn = ({ onToggleForms, onHandleClose }) => {
             label={`Password`}
             onChange={(e) => {
               passwordChangeHandler(e);
-              // clearErrors();
+              clearErrors();
             }}
             onBlur={passwordBlurHandler}
             hasError={passwordHasError}
-            errorMessage={``}
+            errorMessage={`Password is not valid`}
           />
 
           <button
@@ -78,7 +136,7 @@ const SignIn = ({ onToggleForms, onHandleClose }) => {
           </button>
         </form>
         <div className="mt-6 px-10 flex">
-          <MainButton onClick={handleUserLogin} isSmall={true}>
+          <MainButton isLoading={loading} onClick={submitForm} isSmall={true}>
             SIGN IN
           </MainButton>
         </div>

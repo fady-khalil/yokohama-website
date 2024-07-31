@@ -1,37 +1,35 @@
 import { useState } from "react";
 import BASE_URL from "Utilities/BASE_URL";
 
-const usePostData = () => {
+const usePostToken = () => {
   const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const postData = async (url, data) => {
+  const postData = async (url, token) => {
+    console.log(`${BASE_URL}/${url}`);
     setLoading(true);
-    setError(false);
     try {
-      const formData = new FormData();
-      for (const key in data) {
-        formData.append(key, data[key]);
-      }
-
       const res = await fetch(`${BASE_URL}/${url}`, {
         method: "POST",
-        body: formData,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
 
+      if (!res.ok) throw new Error("Network response was not ok");
       const result = await res.json();
+
       setResponse(result);
-      return result; // Return the response data
+      return result;
     } catch (err) {
       setError(err.message);
-      throw err; // Rethrow the error for handling in submitForm
     } finally {
       setLoading(false);
     }
   };
 
-  return { response, loading, error, postData, setError };
+  return { response, loading, error, postData };
 };
 
-export default usePostData;
+export default usePostToken;

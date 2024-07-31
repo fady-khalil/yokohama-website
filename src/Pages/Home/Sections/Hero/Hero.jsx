@@ -72,8 +72,6 @@ const Hero = () => {
                 // clearErrors();
               }}
               onBlur={emailBlurHanlder}
-              hasError={emailHasError}
-              errorMessage={``}
             />
             <button className="bg-primary px-3 rounded-tr-md rounded-br">
               <CaretDoubleRight size={28} />

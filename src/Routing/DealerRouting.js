@@ -15,7 +15,7 @@ import Cart from "Dealer/Cart/Cart";
 import CartDetailed from "Dealer/Cart/CartDetailed";
 const DealerRouting = () => {
   return (
-    <ContextProvider>
+    <div>
       <DealerSiginModal />
       <ScrollToTop />
       <DealderHeader />
@@ -30,7 +30,7 @@ const DealerRouting = () => {
         <Route path="product-detailed" element={<CartDetailed />} />
       </Routes>
       {/* <Footer /> */}
-    </ContextProvider>
+    </div>
   );
 };
 

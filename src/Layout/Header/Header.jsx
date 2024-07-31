@@ -1,5 +1,4 @@
 import { useContext, useState } from "react";
-import Container from "Components/Container/Container";
 import { useLocation, Link } from "react-router-dom";
 // inner
 import Logo from "./Logo/Logo";
@@ -8,11 +7,11 @@ import CartIcon from "./CartIcon/CartIcon";
 import LoginButton from "./AuthButtons/Login/LoginButton";
 import DealerLoginButton from "./AuthButtons/DealerLogin/DealerLoginButton";
 import DesktopNav from "./Navigation/DesktopNav";
-import { LoginContext } from "context/Auth/LoginContext";
+import { UserLoginContext } from "context/Auth/UserLoginContext";
 import { User, List } from "@phosphor-icons/react";
 import Drawer from "./Drawer/Drawer";
 const Header = () => {
-  const { userIsLoggedIn } = useContext(LoginContext);
+  const { userIsSignIn, userData } = useContext(UserLoginContext);
   const location = useLocation();
   const isHomePage = location.pathname === "/";
 
@@ -35,7 +34,7 @@ const Header = () => {
           <div className="hidden lg:flex items-center">
             <CartIcon isHomePage={isHomePage} />
             <Search isHomePage={isHomePage} />
-            {userIsLoggedIn && (
+            {userIsSignIn && (
               <Link
                 to={"/Account"}
                 className={` flex bg-primary items-center  h-full border-r  border-[#777] px-6 gap-x-2 ${
@@ -47,11 +46,13 @@ const Header = () => {
                   weight="fill"
                   color={isHomePage ? "white" : "white"}
                 />
-                <p className="rb-bold uppercase text-sm">Hello User</p>
+                <p className="rb-medium uppercase texts-sm">
+                  Hello {userData?.username}
+                </p>
               </Link>
             )}
           </div>
-          {!userIsLoggedIn && (
+          {!userIsSignIn && (
             <div className="hidden lg:flex items-center  py-2 gap-x-2 px-6">
               <LoginButton isHomePage={isHomePage} />
               <DealerLoginButton isHomePage={isHomePage} />

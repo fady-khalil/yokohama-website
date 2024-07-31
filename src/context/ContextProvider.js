@@ -1,13 +1,16 @@
-import { LoginProvider } from "./Auth/LoginContext";
+import { ModalProvider } from "./Auth/ModalContext";
 import { DealerLoginProvider } from "./Auth/DealerContext";
 import { DealerCartProvider } from "./DealerCart/DealerCartContext";
+import { UserLoginProvider } from "./Auth/UserLoginContext";
 const ContextProvider = ({ children }) => {
   return (
-    <LoginProvider>
+    <ModalProvider>
       <DealerLoginProvider>
-        <DealerCartProvider>{children}</DealerCartProvider>
+        <UserLoginProvider>
+          <DealerCartProvider>{children}</DealerCartProvider>
+        </UserLoginProvider>
       </DealerLoginProvider>
-    </LoginProvider>
+    </ModalProvider>
   );
 };
 

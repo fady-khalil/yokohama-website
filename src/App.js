@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { DealerLoginContext } from "context/Auth/DealerContext";
 
 //

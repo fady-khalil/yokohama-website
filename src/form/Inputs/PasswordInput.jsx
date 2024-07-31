@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-// import { formStyle } from "../../style";
-// import ShowPasswordIcon from "../../assests/SVG/Navigation/ShowPasswordIcon";
-// import HidePasswordIcon from "../../assests/SVG/Navigation/HidePasswordIcon";
+
+import { Eye, EyeSlash } from "@phosphor-icons/react";
 
 const PasswordInput = (props) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -32,28 +31,26 @@ const PasswordInput = (props) => {
       <label htmlFor={id} className="text-sm  capitalize rb-bold">
         {label}
       </label>
-      <input
-        className="text-black px-2 py-3 rounded-sm bg-gray-200 "
-        id={id}
-        type={`${showPassword ? "text" : "password"}`}
-        name={name}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        onBlur={onBlur}
-        onFocus={onFocus}
-      />
-      {/* <span className="cursor-pointer" onClick={() => handlePassword()}>
-          {!showPassword && (
-            <ShowPasswordIcon width={"1rem"} height={"1rem"} color={"#333"} />
-          )}
-          {showPassword && (
-            <HidePasswordIcon width={"1rem"} height={"1rem"} color={"#333"} />
-          )}
-        </span> */}
-      {/* <p className={`${formStyle.errorText} ${hasError ? "block " : "hidden"}`}>
+      <div className="px-2 py-2 rounded-sm bg-gray-200 flex items-center justify-between gap-x-4">
+        <input
+          className="text-black bg-transparent flex-1  "
+          id={id}
+          type={`${showPassword ? "text" : "password"}`}
+          name={name}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
+          onFocus={onFocus}
+        />
+        <span className="cursor-pointer" onClick={() => handlePassword()}>
+          {!showPassword && <Eye size={22} />}
+          {showPassword && <EyeSlash size={22} />}
+        </span>
+      </div>
+      <p className={`text-xs text-red-500 ${hasError ? "block " : "hidden"}`}>
         {errorMessage}
-      </p> */}
+      </p>
     </div>
   );
 };

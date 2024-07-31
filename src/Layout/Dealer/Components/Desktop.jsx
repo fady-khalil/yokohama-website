@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Dot } from "@phosphor-icons/react";
-const Desktop = ({ onMouseLeft, onclose }) => {
+const Desktop = ({ onclose }) => {
   return (
-    <div onMouseEnter={onMouseLeft} className="hidden lg:flex items-center">
+    <div className="hidden lg:flex items-center">
       <ul className="flex items-center gap-x-6 rb-bold uppercase text-sm">
         <li className="flex items-center">
           <Link onClick={onclose} to={"/shop"}>

@@ -4,22 +4,13 @@ import Logo from "./Components/Logo";
 import Desktop from "./Components/Desktop";
 import CartIcon from "./Components/Cart";
 import DealerDetails from "./Components/DealerDetails/DealerDetails";
-import { List, X, ShoppingCart } from "@phosphor-icons/react";
-import MainButton from "Components/Buttons/MainButton";
+import { List } from "@phosphor-icons/react";
 import { DealerLoginContext } from "context/Auth/DealerContext";
 import Drawer from "./Components/Drawer";
 
 const DealderHeader = () => {
-  const [isVisible, setIsVisible] = useState(false);
   const [drawerIsVisible, setDrawerIsVisible] = useState(false);
-  const { handleDealderLogout } = useContext(DealerLoginContext);
-
-  const onMouseEnter = () => {
-    setIsVisible(true);
-  };
-  const onMouseLeft = () => {
-    setIsVisible(false);
-  };
+  const { dealerData } = useContext(DealerLoginContext);
 
   const OpendrawerMenu = () => {
     setDrawerIsVisible(true);
@@ -27,20 +18,17 @@ const DealderHeader = () => {
   const ClosedrawerMenu = () => {
     setDrawerIsVisible(false);
   };
+
   return (
-    <header onMouseEnter={onMouseLeft} className="bg-dark text-white ">
+    <header className="bg-dark text-white ">
       <Container>
         <div className="flex items-stretch justify-between ">
-          <Logo onMouseLeft={onMouseLeft} />
-          <Desktop onclose={ClosedrawerMenu} onMouseLeft={onMouseLeft} />
+          <Logo />
+          <Desktop onclose={ClosedrawerMenu} />
 
           <div className="flex items-stretch gap-x-4">
-            <CartIcon onMouseLeft={onMouseLeft} />
-            <DealerDetails
-              onMouseEnter={onMouseEnter}
-              onMouseLeft={onMouseLeft}
-              isVisible={isVisible}
-            />
+            <CartIcon />
+            <DealerDetails data={dealerData} />
             <button
               onClick={OpendrawerMenu}
               className="text-3xl bg-dark px-2 text-white"

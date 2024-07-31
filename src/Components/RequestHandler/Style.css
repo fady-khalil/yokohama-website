@@ -14,3 +14,59 @@
     transform: translateX(100%);
   }
 }
+
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -135px 0 0 -135px; /* Adjusted for the new size */
+}
+
+.loading-text {
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translateX(50%);
+  margin: -135px 0 0 -135px;
+}
+
+.circle {
+  position: absolute;
+  border: 3px solid transparent;
+  border-top-color: #dc0c17cb;
+  border-radius: 50%;
+  animation: rotate linear infinite;
+}
+
+.circle.one {
+  height: 75px; /* 1.5 times 50px */
+  width: 75px; /* 1.5 times 50px */
+  left: 75px; /* Adjusted for the new size */
+  top: 75px; /* Adjusted for the new size */
+  animation-duration: 0.85s;
+}
+
+.circle.two {
+  height: 112.5px; /* 1.5 times 75px */
+  width: 112.5px; /* 1.5 times 75px */
+  top: 57px; /* Adjusted for the new size */
+  left: 57px; /* Adjusted for the new size */
+  animation-duration: 0.95s;
+}
+
+.circle.three {
+  height: 150px; /* 1.5 times 100px */
+  width: 150px; /* 1.5 times 100px */
+  top: 37.5px; /* Adjusted for the new size */
+  left: 37.5px; /* Adjusted for the new size */
+  animation-duration: 1.5s;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotateZ(360deg);
+  }
+  to {
+    transform: rotateZ(0deg);
+  }
+}

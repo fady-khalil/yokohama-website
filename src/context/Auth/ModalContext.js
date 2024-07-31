@@ -2,21 +2,21 @@ import React, { createContext, useState, useEffect } from "react";
 // import GetContent from "utility/GetContent";
 // import { useLocation } from "react-router-dom";
 
-export const LoginContext = createContext();
+export const ModalContext = createContext();
 
-export const LoginProvider = ({ children }) => {
+export const ModalProvider = ({ children }) => {
   const [modalIsActive, setModalIsActive] = useState(false);
   const [forgotModalIsActive, setForgotModalIsActvie] = useState(false);
   const [dealderModalIsActive, setDealerModalIsActive] = useState(false);
 
-  const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
-  const handleUserLogin = () => {
-    setUserIsLoggedIn(true);
-  };
+  // const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
+  // const handleUserLogin = () => {
+  //   setUserIsLoggedIn(true);
+  // };
 
-  const handleUserLogout = () => {
-    setUserIsLoggedIn(false);
-  };
+  // const handleUserLogout = () => {
+  //   setUserIsLoggedIn(false);
+  // };
 
   const openModalHandeler = () => {
     setModalIsActive(true);
@@ -38,7 +38,7 @@ export const LoginProvider = ({ children }) => {
   };
 
   return (
-    <LoginContext.Provider
+    <ModalContext.Provider
       value={{
         modalIsActive,
         openModalHandeler,
@@ -51,13 +51,13 @@ export const LoginProvider = ({ children }) => {
         closeDealerModalHandeler,
         dealderModalIsActive,
 
-        // user
-        userIsLoggedIn,
-        handleUserLogin,
-        handleUserLogout,
+        // // user
+        // userIsLoggedIn,
+        // handleUserLogin,
+        // handleUserLogout,
       }}
     >
       {children}
-    </LoginContext.Provider>
+    </ModalContext.Provider>
   );
 };

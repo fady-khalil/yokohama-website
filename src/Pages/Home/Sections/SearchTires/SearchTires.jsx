@@ -41,7 +41,7 @@ const SearchTires = () => {
           <h2 className="text-4xl lg:text-5xl rb-bold">Find your tires</h2>
           <div className="flex items-center justify-center w-3/4 mx-auto gap-x-4 mt-6">
             <span className="flex items-center gap-x-1">
-              <Circle ne />
+              <Circle />
               <p>Vehicle</p>
             </span>
             <span className="flex items-center gap-x-1">

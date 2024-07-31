@@ -9,11 +9,11 @@ import {
   User,
 } from "@phosphor-icons/react";
 import { useContext } from "react";
-import { LoginContext } from "context/Auth/LoginContext";
+import { ModalContext } from "context/Auth/ModalContext";
 
 const Drawer = ({ onHandleClose, isActive }) => {
   const { openModalHandeler, openDealerModalHandeler, userIsLoggedIn } =
-    useContext(LoginContext);
+    useContext(ModalContext);
   return (
     <>
       <div

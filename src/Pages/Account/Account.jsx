@@ -5,7 +5,6 @@ import OrderHistory from "./Sections/OrderHistory/OrderHistory";
 import EditAccounts from "./Sections/EditAccounts/EditAccounts";
 import AddressBook from "./Sections/AddressBook/AddressBook";
 import Wishlist from "./Sections/Wishlist/Wishlist";
-import Logout from "./Sections/Logout/Logout";
 const Account = () => {
   const [selectedTabs, setSelectedTabs] = useState(1);
 
@@ -31,10 +30,6 @@ const Account = () => {
     {
       id: 4,
       component: <Wishlist />,
-    },
-    {
-      id: 5,
-      component: <Logout />,
     },
   ];
 

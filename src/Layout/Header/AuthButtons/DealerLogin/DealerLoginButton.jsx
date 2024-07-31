@@ -1,9 +1,9 @@
 import { useContext } from "react";
-import { LoginContext } from "context/Auth/LoginContext";
+import { ModalContext } from "context/Auth/ModalContext";
 import { Link } from "react-router-dom";
 
 const DealerLoginButton = ({ isHomePage }) => {
-  const { openDealerModalHandeler } = useContext(LoginContext);
+  const { openDealerModalHandeler } = useContext(ModalContext);
   return (
     <Link
       onClick={openDealerModalHandeler}

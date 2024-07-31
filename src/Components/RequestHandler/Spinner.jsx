@@ -1,15 +1,15 @@
 import React from "react";
 
-const Spinner = ({ isWhite }) => {
+const Spinner = ({ isWhite, isSmall }) => {
   return (
     <svg
-      className={`animate-spin h-6 w-6 ${
-        isWhite ? "text-white" : "text-primary"
+      className={`animate-spin ${isSmall ? "h-5 w-5" : "h-6 w-6"}  ${
+        isWhite ? "text-red-500" : "text-primary"
       }`}
       viewBox="0 0 24 24"
     >
       <circle
-        className="fill-lightGreen opacity-50"
+        className="fill-[white] opacity-50"
         cx="12"
         cy="12"
         r="10"
