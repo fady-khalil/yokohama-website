@@ -1,23 +1,54 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import Spinner from "Components/RequestHandler/Spinner";
+import useGetData from "Hooks/Fetching/useGetData";
 
 const DesktopNav = ({ isHomePage }) => {
+  const [data, setData] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const { fetchData, error } = useGetData();
+
+  const getData = async () => {
+    setIsLoading(true);
+    setIsError(false);
+
+    try {
+      const data = await fetchData("yokohama/ctegories/all");
+      setData(data?.data);
+    } catch (error) {
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
   return (
     <ul
       className={`hidden xsl:flex items-center  rb-medium uppercase gap-x-6  ${
         isHomePage ? "text-black" : "text-white"
       }`}
     >
-      <li>
-        <Link to={"/shop"}>Shop Tires</Link>
-      </li>
-      <span className="block bg-primary h-2 w-2 rounded-full"></span>
-      <li>
-        <Link to={"/shop"}>Shop Lubricants</Link>
-      </li>
-      <span className="block bg-primary h-2 w-2 rounded-full"></span>
-      <li>
-        <Link to={"/shop"}>Shop Batteries</Link>
-      </li>
+      {isLoading && <Spinner />}
+      {!isLoading &&
+        data?.map(({ name, id }, index) => (
+          <div
+            className="xsl:flex items-center  rb-medium uppercase gap-x-6"
+            key={index}
+          >
+            <li>
+              <Link to={`/shop/${id}`}>{`Shop ${name}`}</Link>
+            </li>
+            <span
+              className={` bg-primary h-2 w-2 rounded-full ${
+                index === data?.length - 1 ? "hidden" : "block"
+              }`}
+            ></span>
+          </div>
+        ))}
     </ul>
   );
 };
