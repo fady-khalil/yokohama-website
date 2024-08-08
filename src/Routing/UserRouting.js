@@ -39,8 +39,8 @@ const UserRouting = () => {
         <Route path="contact-us" element={<Contact />} />
         <Route path="original-equipment" element={<OriginalEquipment />} />
         <Route path="news-and-event" element={<NewAndEvent />} />
-        <Route path="shop/:ud" element={<Shop />} />
-        <Route path="product-detailed" element={<ProductDetailed />} />
+        <Route path="shop/:id" element={<Shop />} />
+        <Route path="product-detailed/:id" element={<ProductDetailed />} />
         <Route path="my-cart" element={<MyCart />} />
       </Routes>
       <Footer />

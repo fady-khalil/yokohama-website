@@ -1,4 +1,4 @@
-import Container from "components/Container/Container";
+import Container from "Components/Container/Container";
 
 import { ReactComponent as ErrorIcon } from "assests/undraw_fixing_bugs_w7gi.svg";
 
