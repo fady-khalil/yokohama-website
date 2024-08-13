@@ -41,11 +41,7 @@ const Header = () => {
                   isHomePage ? "text-white" : "text-white"
                 }`}
               >
-                <User
-                  isHomePage={isHomePage}
-                  weight="fill"
-                  color={isHomePage ? "white" : "white"}
-                />
+                <User weight="fill" color={isHomePage ? "white" : "white"} />
                 <p className="rb-medium uppercase texts-sm">
                   Hello {userData?.username}
                 </p>

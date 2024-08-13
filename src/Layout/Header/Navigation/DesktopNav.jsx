@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Spinner from "Components/RequestHandler/Spinner";
 import useGetData from "Hooks/Fetching/useGetData";
+import Spinner from "Components/RequestHandler/Spinner";
 
 const DesktopNav = ({ isHomePage }) => {
   const [data, setData] = useState();
@@ -26,6 +26,7 @@ const DesktopNav = ({ isHomePage }) => {
   useEffect(() => {
     getData();
   }, []);
+
   return (
     <ul
       className={`hidden xsl:flex items-center  rb-medium uppercase gap-x-6  ${

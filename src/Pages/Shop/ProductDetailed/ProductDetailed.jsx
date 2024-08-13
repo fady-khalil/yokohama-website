@@ -1,4 +1,6 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useContext } from "react";
+import { UserLoginContext } from "context/Auth/UserLoginContext";
+// components
 import ProductInfo from "./Components/ProductInfo";
 import ProductInfoTabs from "./Components/ProductInfoTabs";
 import ProductDescription from "./Components/ProductDescription";
@@ -6,7 +8,7 @@ import ProductSpecs from "./Components/ProductSpecs";
 import SizeInfo from "./Components/SizeInfo";
 import ProductGallery from "./Components/ProductGallery";
 import ProductWarranty from "./Components/ProductWarranty";
-import ProductReview from "./Components/ProductReview";
+import ProductReview from "./Components/Reviews/ProductReview";
 
 // fetching data
 import { useParams } from "react-router-dom";
@@ -15,6 +17,8 @@ import IsLoading from "Components/RequestHandler/IsLoading";
 import IsError from "Components/RequestHandler/IsError";
 
 const ProductDetailed = () => {
+  const { userIsSignIn } = useContext(UserLoginContext);
+
   const [selectedTabs, setSelectedTabs] = useState(1);
   const descriptionRef = useRef(null);
   const specsRef = useRef(null);
@@ -79,28 +83,47 @@ const ProductDetailed = () => {
   if (data) {
     return (
       <main>
-        <ProductInfo />
+        <ProductInfo
+          feature_ids={data?.feature_ids}
+          currency={data?.currency}
+          price={data?.price}
+          brand={data?.brand}
+          size={data?.size}
+          name={data?.name}
+          category={data?.category}
+          product_image={data?.images}
+          description={data?.description}
+        />
         <ProductInfoTabs
           activeTabs={selectedTabs}
+          data={data}
           onTabClick={scrollToSection}
         />
-        <div ref={descriptionRef}>
-          <ProductDescription />
-        </div>
-        <div ref={specsRef}>
-          <ProductSpecs />
-        </div>
-        <div ref={sizeInfoRef}>
-          <SizeInfo />
-        </div>
+        {data?.description_sale?.title && (
+          <div ref={descriptionRef}>
+            <ProductDescription data={data?.description_sale} />
+          </div>
+        )}
+        {data?.specs?.title && (
+          <div ref={specsRef}>
+            <ProductSpecs data={data?.specs} />
+          </div>
+        )}
+        {data?.size_info?.length > 0 && (
+          <div ref={sizeInfoRef}>
+            <SizeInfo data={data?.size_info} />
+          </div>
+        )}
         <div ref={galleryRef}>
           <ProductGallery />
         </div>
-        <div ref={warrantyRef}>
-          <ProductWarranty />
-        </div>
+        {data?.warranty && (
+          <div ref={warrantyRef}>
+            <ProductWarranty name={data?.name} data={data?.warranty} />
+          </div>
+        )}
         <div ref={reviewsRef}>
-          <ProductReview />
+          <ProductReview product_id={data?.id} isSignIn={userIsSignIn} />
         </div>
       </main>
     );

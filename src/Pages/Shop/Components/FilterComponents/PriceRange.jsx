@@ -13,9 +13,7 @@ const PriceRange = ({ data }) => {
     }
   }, [data]);
 
-  const handleChange = (values) => {
-    setPriceRange(values);
-  };
+  const handleChange = (values) => {};
 
   return (
     <div className="px-6 min-w-[fit-content] py-2 lg:py-0">
@@ -25,8 +23,6 @@ const PriceRange = ({ data }) => {
           className="w-full h-2 bg-gray-300 rounded-md flex items-center"
           thumbClassName="w-4 h-4 bg-red-600 rounded-full"
           trackClassName="bg-gray-500"
-          min={priceRange[0]}
-          max={priceRange[1]}
           step={10}
           value={priceRange}
           onChange={handleChange}

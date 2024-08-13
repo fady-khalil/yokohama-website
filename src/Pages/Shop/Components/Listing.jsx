@@ -6,6 +6,7 @@ import listImage3 from "assests/listing/3.png";
 import { Link } from "react-router-dom";
 
 const Listing = ({ data }) => {
+  console.log(data);
   return (
     <div className="col-span-3 my-secondary relative z-[0]">
       <Container>

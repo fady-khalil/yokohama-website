@@ -1,6 +1,5 @@
 import myCartData from "Constant/DealerCart";
 import Container from "Components/Container/Container";
-import { X } from "@phosphor-icons/react";
 import React, { useState } from "react";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -13,43 +12,59 @@ import "swiper/css/thumbs";
 
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 
-const ProductInfo = () => {
+const ProductInfo = ({
+  description,
+  price,
+  currency,
+  feature_ids,
+  name,
+  size,
+  brand,
+  product_image,
+  category,
+}) => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
   return (
     <Container>
       <div className="flex flex-col flex-col-reverse lg:flex-row items-center gap-y-6 gap-x-32 py-secondary lg:py-primary">
         <div className="flex-1">
-          <div className="flex items-center justify-between border-b pb-4">
-            <img src={myCartData?.catLogo} alt="" />
-            <X />
+          <div className="flex items-center gap-x-16 border-b pb-4">
+            <img className="w-32" src={category?.[0]?.image} alt="" />
+            <p className="text-2xl capitalize">{category?.[0]?.name}</p>
           </div>
-          <div>
-            <img src={myCartData?.brandLogo} alt="" />
-            <p className="my-3 text-sm rb-medium">{myCartData?.description}</p>
+          <div className="flex items-center justify-between my-4">
+            <p className="text-2xl">{name}</p>
+            <p
+              className="my-3 text-sm rb-medium"
+              dangerouslySetInnerHTML={{ __html: description }}
+            />
           </div>
 
           <div className="flex items-center mb-3 gap-x-2">
-            <p className="text-3xl rb-light">{myCartData?.price[0]}</p>
+            <p className="text-2xl rb-light">
+              {price} {currency}
+            </p>
           </div>
 
           <div className="flex items-center justify-between py-3 border-t border-b">
-            {myCartData.feature.map(({ image, text }, index) => (
-              <div className="flex flex-col" key={index}>
-                <img
-                  className="w-6 h-6 lg:w-10 lg:h-10 mb-2"
-                  src={image}
-                  alt=""
-                />
-                <p className="rb-bold text-sm sm:text-base">{text}</p>
-              </div>
-            ))}
+            {feature_ids &&
+              feature_ids.map(({ icon, text }, index) => (
+                <div className="flex flex-col" key={index}>
+                  <img
+                    className="w-6 h-6 lg:w-10 lg:h-10 mb-2"
+                    src={icon}
+                    alt=""
+                  />
+                  <p className="rb-bold text-sm sm:text-base">{text}</p>
+                </div>
+              ))}
           </div>
 
           <div className="flex my-6 gap-x-3 rb-medium">
             <div className="flex-1 flex items-center gap-x-2 border">
               <p className="border-r px-4 py-3">Size</p>
-              <p className="px-2">{myCartData.size}</p>
+              <p className="px-2">{size}</p>
             </div>
           </div>
 
@@ -73,8 +88,8 @@ const ProductInfo = () => {
             Ask an expert
           </button>
         </div>
-        <div className="flex-1 flex flex-col items-center justify-center">
-          <img className="w-full" src={myCartData.images[0]} alt="" />
+        <div className="flex-1 flex flex-col items-center justify-center p-12">
+          <img className="w-full" src={product_image} alt="" />
         </div>
       </div>
     </Container>

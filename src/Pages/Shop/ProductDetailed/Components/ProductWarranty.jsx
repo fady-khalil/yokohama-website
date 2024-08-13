@@ -1,17 +1,19 @@
 import Container from "Components/Container/Container";
 import React from "react";
 
-const ProductWarranty = () => {
+const ProductWarranty = ({ data, name }) => {
   return (
     <div className="pt-secondary lg:pt-primary bg-[#efefef]">
       <Container>
         <div className="border-b border-[#777] pb-4">
-          <h4 className="rb-bold text-center text-3xl ">
-            Geolander x-at® warranty
-          </h4>
+          <h4 className="rb-bold text-center text-3xl ">{name}® warranty</h4>
         </div>
 
-        <div className="py-secondary lg:w-[60%] mx-auto">
+        <p
+          className="py-secondary lg:w-[60%] mx-auto font-medium text-[#555] text-center"
+          dangerouslySetInnerHTML={{ __html: data }}
+        />
+        {/* <div className="py-secondary lg:w-[60%] mx-auto">
           <div className="text-center ">
             <h6 className="rb-bold text-lg uppercase">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima,
@@ -53,7 +55,7 @@ const ProductWarranty = () => {
           <button className="text-primary rb-bold text-center underline uppercase py-secondary mx-auto w-max flex items-center justify-content">
             Read more
           </button>
-        </div>
+        </div> */}
       </Container>
     </div>
   );

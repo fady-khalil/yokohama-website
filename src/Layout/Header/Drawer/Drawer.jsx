@@ -1,7 +1,8 @@
 import { X } from "@phosphor-icons/react";
 import logo from "assests/logo.png";
 import { Link } from "react-router-dom";
-import footerLinks from "Constant/Footer";
+import FooterLinks from "Constant/Footer";
+
 import {
   FacebookLogo,
   InstagramLogo,
@@ -14,6 +15,9 @@ import { ModalContext } from "context/Auth/ModalContext";
 const Drawer = ({ onHandleClose, isActive }) => {
   const { openModalHandeler, openDealerModalHandeler, userIsLoggedIn } =
     useContext(ModalContext);
+
+  const footerLinks = FooterLinks();
+
   return (
     <>
       <div
@@ -33,7 +37,7 @@ const Drawer = ({ onHandleClose, isActive }) => {
       >
         {/* header */}
         <div className="bg-white flex items-center justify-between py-2 px-4 h-[6vh]">
-          <Link to={"/"}>
+          <Link onClick={onHandleClose} to={"/"}>
             <img className="w-36" src={logo} alt="" />
           </Link>
           <button onClick={onHandleClose}>
@@ -44,13 +48,29 @@ const Drawer = ({ onHandleClose, isActive }) => {
         {/* drawer */}
         <div className=" flex flex-col  justify-between mb-10 h-[94vh]">
           <ul className="px-4 mt-secondary flex flex-col gap-y-4">
-            {footerLinks.map(({ name, path }, index) => (
-              <li key={index} className="text-white border-b border-white pb-2">
-                <Link onClick={onHandleClose} to={path}>
-                  {name}
-                </Link>
-              </li>
-            ))}
+            {footerLinks.map(({ name, path, list, mega }, index) =>
+              mega && list ? (
+                list.map(({ name, id }, index) => (
+                  <li
+                    key={index}
+                    className="text-white border-b border-white pb-2 capitalize"
+                  >
+                    <Link onClick={onHandleClose} to={`/shop/${id}`}>
+                      {name}
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <li
+                  key={index}
+                  className="text-white border-b border-white pb-2 capitalize"
+                >
+                  <Link onClick={onHandleClose} to={path}>
+                    {name}
+                  </Link>
+                </li>
+              )
+            )}
 
             <li className="text-white border-b border-white pb-2">
               <Link onClick={onHandleClose} to={"my-cart"}>

@@ -16,6 +16,7 @@ const Shop = () => {
   const [classifications, setClassifications] = useState([]);
   const [filterType, setFilterType] = useState("");
   const [sortOrder, setSortOrder] = useState("");
+  const [priceRangeData, setPriceRangeData] = useState([]);
 
   // fetching data
   const { id } = useParams();
@@ -58,7 +59,7 @@ const Shop = () => {
       setCategories(uniqueCategories);
 
       const allClassifications = data.flatMap((item) =>
-        item?.products.flatMap((product) => product.classification || [])
+        item?.products.flatMap((product) => product.classification)
       );
 
       const uniqueClassifications = Array.from(
@@ -104,20 +105,21 @@ const Shop = () => {
         }))
         .filter((item) => item.products.length > 0);
     }
-
     if (sortOrder) {
-      filtered = filtered.map((item) => ({
-        ...item,
-        products: item.products.sort((a, b) => {
-          if (sortOrder === "high-to-low") {
-            return b.price - a.price;
-          } else if (sortOrder === "low-to-high") {
-            return a.price - b.price;
-          }
-          return 0;
-        }),
-      }));
+      filtered = filtered?.flatMap((item) => item.products);
+
+      const data = filtered.sort((a, b) => {
+        if (sortOrder === "high-to-low") {
+          return b.price - a.price; // Highest to lowest
+        } else if (sortOrder === "low-to-high") {
+          return a.price - b.price; // Lowest to highest
+        }
+        return 0; // No sorting if sortOrder is neither
+      });
+      filtered = [{ products: data }];
     }
+
+    // console.log(filteredData);
 
     setFilteredData(filtered);
   }, [
@@ -189,6 +191,7 @@ const Shop = () => {
           selectedClassification={selectedClassification}
           categories={categories}
           filterType={filterType}
+          classifications={classifications}
         />
         <Listing data={filteredData} />
       </div>

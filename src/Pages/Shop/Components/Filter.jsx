@@ -22,6 +22,7 @@ const Filter = ({
   categories,
   classifications,
   filterType,
+  onHandlePriceRange,
 }) => {
   const [filterIsVisible, setFilterIsVisible] = useState(false);
   const openFilterHandler = () => {
@@ -135,7 +136,7 @@ const Filter = ({
           classifications={classifications}
           selectedClassification={selectedClassification}
         />
-        <MainButton onClick={closeFilterHandler}>Apply</MainButton>
+        {/* <MainButton onClick={closeFilterHandler}>Apply</MainButton> */}
       </div>
     </>
   );

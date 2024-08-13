@@ -1,4 +1,6 @@
 import { Routes, Route } from "react-router-dom";
+import PrivateRoute from "Helpers/PrivateRoute";
+
 // layout
 import Header from "Layout/Header/Header";
 import Footer from "Layout/Footer/Footer";
@@ -11,16 +13,19 @@ import OriginalEquipment from "Pages/OriginalEquipment/OriginalEquipment";
 import Safety from "Pages/Safety/Safety";
 import Contact from "Pages/Contact/Contact";
 import NewAndEvent from "Pages/NewAndEvent/NewAndEvent";
-import ContextProvider from "context/ContextProvider";
 import ScrollToTop from "Hooks/ScrollToTop";
 import MyCart from "Pages/MyCart/MyCart";
 import Shop from "Pages/Shop/Shop";
 import ProductDetailed from "Pages/Shop/ProductDetailed/ProductDetailed";
-
+import NewsDetailed from "Pages/NewAndEvent/NewsDetailed";
 // modals
 import AuthModal from "Pages/Auth/AuthModal";
 import ForgetPasswordModal from "Pages/Auth/ForgetPassword/ForgetPasswordModal";
 import DealerSiginModal from "Pages/Auth/DealerSigin/DealerSiginModal";
+
+// routing page
+import AccessDeniedPage from "Pages/AccessDenied/AccessDeniedPage";
+import NotFound from "Pages/NotFound/NotFound.jsx";
 
 const UserRouting = () => {
   return (
@@ -34,14 +39,22 @@ const UserRouting = () => {
         <Route index element={<Home />} />
         <Route path="about-us" element={<About />} />
         <Route path="dealers" element={<Dealers />} />
-        <Route path="Account" element={<Account />} />
         <Route path="safety" element={<Safety />} />
         <Route path="contact-us" element={<Contact />} />
         <Route path="original-equipment" element={<OriginalEquipment />} />
         <Route path="news-and-event" element={<NewAndEvent />} />
+        <Route path="news-and-event/:slug" element={<NewsDetailed />} />
+        <Route path="access-denied" element={<AccessDeniedPage />} />
+        <Route path="*" element={<NotFound />} />
         <Route path="shop/:id" element={<Shop />} />
         <Route path="product-detailed/:id" element={<ProductDetailed />} />
-        <Route path="my-cart" element={<MyCart />} />
+
+        {/* private route */}
+        <Route
+          path="Account"
+          element={<PrivateRoute element={<Account />} />}
+        />
+        <Route path="my-cart" element={<PrivateRoute element={<MyCart />} />} />
       </Routes>
       <Footer />
     </div>

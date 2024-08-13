@@ -34,16 +34,15 @@ export const UserLoginProvider = ({ children }) => {
     setuserToken(data?.token);
     localStorage.setItem("userIsSignIn", JSON.stringify(true));
     localStorage.setItem("userToken", data?.token);
-    localStorage.setItem("userData", data?.user);
+    localStorage.setItem("userData", JSON.stringify(data?.user));
   };
-
-  // console.log(localStorage.getItem("userData"));
 
   useEffect(() => {
     if (localStorage.getItem("userIsSignIn")) {
       setUserIsSignIn(true);
       setuserToken(localStorage.getItem("userToken"));
       const storedUserData = localStorage.getItem("userData");
+      setuserData(JSON.parse(storedUserData));
     }
   }, []);
 

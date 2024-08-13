@@ -1,16 +1,16 @@
 import { useState } from "react";
 import BASE_URL from "Utilities/BASE_URL";
 
-const usePostToken = () => {
+const useDeleteDataToken = () => {
   const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const postData = async (url, token) => {
+  const deleteData = async (url, token) => {
     setLoading(true);
     try {
       const res = await fetch(`${BASE_URL}/${url}`, {
-        method: "POST",
+        method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -18,7 +18,6 @@ const usePostToken = () => {
 
       if (!res.ok) throw new Error("Network response was not ok");
       const result = await res.json();
-
       setResponse(result);
       return result;
     } catch (err) {
@@ -28,7 +27,7 @@ const usePostToken = () => {
     }
   };
 
-  return { response, loading, error, postData };
+  return { response, loading, error, deleteData };
 };
 
-export default usePostToken;
+export default useDeleteDataToken;

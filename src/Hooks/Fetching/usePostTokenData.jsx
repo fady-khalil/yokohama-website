@@ -9,22 +9,18 @@ const usePostDataToken = () => {
   const postData = async (url, data, token) => {
     setLoading(true);
     try {
-      const formData = new FormData();
-      for (const key in data) {
-        formData.append(key, data[key]);
-      }
-
       const res = await fetch(`${BASE_URL}/${url}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        body: formData,
+        body: JSON.stringify(data),
       });
 
       if (!res.ok) throw new Error("Network response was not ok");
       const result = await res.json();
       setResponse(result);
+      return result;
     } catch (err) {
       setError(err.message);
     } finally {
