@@ -1,11 +1,15 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import MainButton from "Components/Buttons/MainButton";
 import Input from "form/Inputs/Input";
-import PasswordInput from "form/Inputs/PasswordInput";
 import useInput from "form/Hooks/user-input";
 import PhoneInput from "react-phone-input-2";
 import Select from "react-select";
 import { getNames } from "country-list";
+
+// fetching data and context
+import { UserLoginContext } from "context/Auth/UserLoginContext";
+import useGetDataToken from "Hooks/Fetching/useGetDataToken";
+import usePostTokenData from "Hooks/Fetching/usePostTokenData";
 
 const EditProfileForm = () => {
   const [phone, setPhone] = useState("");
@@ -45,6 +49,26 @@ const EditProfileForm = () => {
     setSelectedCountry(selectedOption);
   };
 
+  // handling edit profile
+  const { userToken } = useContext(UserLoginContext);
+  const { fetchData } = useGetDataToken();
+  const { postData } = usePostTokenData();
+
+  const [profileData, setprofileData] = useState("");
+
+  const getUserProfileDataHandler = async () => {
+    try {
+      const data = await fetchData("yokohama/profile", userToken);
+      setprofileData(data?.data);
+    } catch (error) {
+    } finally {
+    }
+  };
+
+  useEffect(() => {
+    getUserProfileDataHandler();
+  }, []);
+
   return (
     <div className="flex-1 border-b pb-12 lg:pb-0 lg:border-b-0  lg:border-r lg:pr-8">
       <div className="mb-6">
@@ -57,6 +81,7 @@ const EditProfileForm = () => {
           label="Full Name"
           id="register-full-name"
           value={fullNameInput}
+          placeholder={profileData?.name}
           onChange={(e) => {
             fullNameChangeHandler(e);
             // clearErrors();
@@ -68,7 +93,9 @@ const EditProfileForm = () => {
         <Input
           type="email"
           label="Email"
+          disabled
           id="register-email"
+          placeholder={profileData?.email}
           value={emailInput}
           onChange={(e) => {
             emailChangeHandler(e);
@@ -83,6 +110,7 @@ const EditProfileForm = () => {
         <div className="flex-1 lg:items-center gap-x-4 ">
           <Input
             type="date"
+            placeholder={profileData?.date}
             label="Date of Birth"
             id="register-dob"
             value={dateOfBirth}

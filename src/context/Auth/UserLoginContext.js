@@ -36,7 +36,6 @@ export const UserLoginProvider = ({ children }) => {
     localStorage.setItem("userToken", data?.token);
     localStorage.setItem("userData", JSON.stringify(data?.user));
   };
-
   useEffect(() => {
     if (localStorage.getItem("userIsSignIn")) {
       setUserIsSignIn(true);

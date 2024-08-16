@@ -1,6 +1,5 @@
-import myCartData from "Constant/DealerCart";
 import Container from "Components/Container/Container";
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -12,44 +11,86 @@ import "swiper/css/thumbs";
 
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 
-const ProductInfo = ({
-  description,
-  price,
-  currency,
-  feature_ids,
-  name,
-  size,
-  brand,
-  product_image,
-  category,
-}) => {
-  const [thumbsSwiper, setThumbsSwiper] = useState(null);
+// context
+import { UserLoginContext } from "context/Auth/UserLoginContext";
+import { GuestCartContext } from "context/Guest/GuestCartContext";
+import { UserCartContext } from "context/User/CartContext";
+import Spinner from "Components/RequestHandler/Spinner";
 
+const ProductInfo = ({ product }) => {
+  const { addToCart } = useContext(GuestCartContext);
+  const { userIsSignIn, userToken } = useContext(UserLoginContext);
+  const {
+    userAddToCart,
+    addToCartLoading,
+    displayProductHandler,
+    cart,
+    updateCart,
+    removeFromCart,
+  } = useContext(UserCartContext);
+
+  const addToCartHandler = (product) => {
+    displayProductHandler(product);
+    if (userIsSignIn) {
+      userAddToCart(product?.id);
+    } else {
+      addToCart(product);
+    }
+  };
+
+  const [isInCart, setIsInCart] = useState(false);
+  const [quantity, setQuantity] = useState(0);
+
+  useEffect(() => {
+    if (cart?.cart_items) {
+      const foundItem = cart.cart_items.find(
+        (item) => item.product_id === product.id
+      );
+
+      if (foundItem) {
+        setIsInCart(true);
+        setQuantity(foundItem.quantity);
+      } else {
+        setIsInCart(false);
+        setQuantity(0);
+      }
+    }
+  }, [cart, product.id]);
+
+  const handleQuantityChange = (productId, quantity) => {
+    if (quantity < 1) {
+      removeFromCart(productId);
+    } else {
+      updateCart(productId, quantity);
+    }
+  };
   return (
     <Container>
       <div className="flex flex-col flex-col-reverse lg:flex-row items-center gap-y-6 gap-x-32 py-secondary lg:py-primary">
         <div className="flex-1">
           <div className="flex items-center gap-x-16 border-b pb-4">
-            <img className="w-32" src={category?.[0]?.image} alt="" />
-            <p className="text-2xl capitalize">{category?.[0]?.name}</p>
+            <img className="w-32" src={product?.category?.[0]?.image} alt="" />
+            <p className="text-2xl capitalize">
+              {product?.category?.[0]?.name}
+            </p>
           </div>
           <div className="flex items-center justify-between my-4">
-            <p className="text-2xl">{name}</p>
+            <p className="text-2xl">{product?.name}</p>
             <p
               className="my-3 text-sm rb-medium"
-              dangerouslySetInnerHTML={{ __html: description }}
+              dangerouslySetInnerHTML={{ __html: product?.description }}
             />
           </div>
 
           <div className="flex items-center mb-3 gap-x-2">
             <p className="text-2xl rb-light">
-              {price} {currency}
+              {product?.price} {product?.currency}
             </p>
           </div>
 
           <div className="flex items-center justify-between py-3 border-t border-b">
-            {feature_ids &&
-              feature_ids.map(({ icon, text }, index) => (
+            {product?.feature_ids &&
+              product?.feature_ids.map(({ icon, text }, index) => (
                 <div className="flex flex-col" key={index}>
                   <img
                     className="w-6 h-6 lg:w-10 lg:h-10 mb-2"
@@ -64,24 +105,44 @@ const ProductInfo = ({
           <div className="flex my-6 gap-x-3 rb-medium">
             <div className="flex-1 flex items-center gap-x-2 border">
               <p className="border-r px-4 py-3">Size</p>
-              <p className="px-2">{size}</p>
+              <p className="px-2">{product?.size}</p>
             </div>
           </div>
 
           <div className="flex gap-x-3">
             <div className="flex-1 rb-bold text-white flex items-center bg-dark">
               <p className="border-r px-6 py-3">Qty</p>
-              <button className="flex items-center justify-between flex-1 px-10 gap-x-2">
-                <p>+</p>
-                <p>0</p>
-                <p>-</p>
+              <button
+                disabled={!isInCart}
+                className="flex items-center justify-between flex-1 px-10 gap-x-2"
+              >
+                <p
+                  onClick={() =>
+                    handleQuantityChange(product?.id, quantity + 1)
+                  }
+                >
+                  +
+                </p>
+                <p>{quantity}</p>
+                <p
+                  onClick={() =>
+                    handleQuantityChange(product?.id, quantity - 1)
+                  }
+                >
+                  -
+                </p>
               </button>
             </div>
-            <div className="flex-1">
-              <button className="bg-primary text-white rb-bold w-full text-center py-3">
-                Add To Cart
-              </button>
-            </div>
+            {!isInCart && (
+              <div className="flex-1">
+                <button
+                  onClick={() => addToCartHandler(product)}
+                  className="bg-primary text-white rb-bold w-full text-center py-3 flex items-center justify-center gap-x-2"
+                >
+                  {addToCartLoading ? <Spinner /> : " Add To Cart"}
+                </button>
+              </div>
+            )}
           </div>
 
           <button className="mt-6 uppercase underline rb-bold">
@@ -89,7 +150,7 @@ const ProductInfo = ({
           </button>
         </div>
         <div className="flex-1 flex flex-col items-center justify-center p-12">
-          <img className="w-full" src={product_image} alt="" />
+          <img className="w-full" src={product?.product_image} alt="" />
         </div>
       </div>
     </Container>

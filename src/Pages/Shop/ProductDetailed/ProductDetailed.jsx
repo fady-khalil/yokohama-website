@@ -83,17 +83,7 @@ const ProductDetailed = () => {
   if (data) {
     return (
       <main>
-        <ProductInfo
-          feature_ids={data?.feature_ids}
-          currency={data?.currency}
-          price={data?.price}
-          brand={data?.brand}
-          size={data?.size}
-          name={data?.name}
-          category={data?.category}
-          product_image={data?.images}
-          description={data?.description}
-        />
+        <ProductInfo product={data} />
         <ProductInfoTabs
           activeTabs={selectedTabs}
           data={data}

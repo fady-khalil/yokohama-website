@@ -14,6 +14,7 @@ const Input = (props) => {
     onBlur = () => {},
     hasError = false,
     errorMessage = "error",
+    disabled,
   } = props;
 
   return (
@@ -22,6 +23,7 @@ const Input = (props) => {
         {label}
       </label>
       <input
+        disabled={disabled}
         className={"px-2 py-2 rounded-sm bg-gray-200 placeholder:text-sm "}
         id={id}
         type={type}

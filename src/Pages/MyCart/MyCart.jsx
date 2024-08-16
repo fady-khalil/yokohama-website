@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import Container from "Components/Container/Container";
-
 import CartTabs from "./Components/CartTabs";
 import CartReview from "./Components/CartReview";
 import ShippingAndPayment from "./Components/ShippingAndPayment";
 import Reciept from "./Components/Reciept";
+
 const MyCart = ({ onSelectingTabs, activeTabs }) => {
   const [selectedTabs, setSelectedTabs] = useState(1);
 
