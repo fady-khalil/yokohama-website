@@ -17,6 +17,7 @@ const useGetData = () => {
       return result;
     } catch (error) {
       setError(error);
+      console.log(error);
     } finally {
       setLoading(false);
     }

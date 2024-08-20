@@ -4,21 +4,22 @@ import Input from "form/Inputs/Input";
 import useInput from "form/Hooks/user-input";
 import PhoneInput from "react-phone-input-2";
 import Select from "react-select";
-import { getNames } from "country-list";
+import UseCountries from "Components/RequestHandler/GetCountries";
 
 // fetching data and context
 import { UserLoginContext } from "context/Auth/UserLoginContext";
 import useGetDataToken from "Hooks/Fetching/useGetDataToken";
-import usePostTokenData from "Hooks/Fetching/usePostTokenData";
+import usePostDataTokenJson from "Hooks/Fetching/usePostDataTokenJson";
 
 const EditProfileForm = () => {
   const [phone, setPhone] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
-  const [selectedCountry, setSelectedCountry] = useState(null);
   const [emailMarketing, setEmailMarketing] = useState(false);
-  const countries = getNames().map((country) => ({
-    label: country,
-    value: country,
+
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const countries = UseCountries()?.map((country) => ({
+    value: country?.id,
+    label: country?.country_name,
   }));
 
   const {
@@ -52,7 +53,7 @@ const EditProfileForm = () => {
   // handling edit profile
   const { userToken } = useContext(UserLoginContext);
   const { fetchData } = useGetDataToken();
-  const { postData } = usePostTokenData();
+  const { postData } = usePostDataTokenJson();
 
   const [profileData, setprofileData] = useState("");
 
@@ -69,6 +70,31 @@ const EditProfileForm = () => {
     getUserProfileDataHandler();
   }, []);
 
+  const userCountry = countries?.find(
+    (country) => country.value === profileData.country_id
+  );
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const editProfileHandler = async () => {
+    const FormdDta = {
+      name: fullNameInput,
+      phone: phone,
+      birth_day: setDateOfBirth,
+      country_id: selectedCountry?.value,
+    };
+
+    try {
+      setIsLoading(true);
+      const data = await postData("yokohama/edit_profile", FormdDta, userToken);
+      if (data?.is_success) {
+        getUserProfileDataHandler();
+      }
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div className="flex-1 border-b pb-12 lg:pb-0 lg:border-b-0  lg:border-r lg:pr-8">
       <div className="mb-6">
@@ -143,7 +169,9 @@ const EditProfileForm = () => {
           options={countries}
           value={selectedCountry}
           onChange={countryChangeHandler}
-          placeholder="Select a country"
+          placeholder={`${
+            userCountry ? userCountry.label : "Select a country"
+          }`}
         />
       </div>
 
@@ -160,8 +188,14 @@ const EditProfileForm = () => {
           from HMG.
         </label>
       </span>
-      <div className="mt-16">
-        <MainButton isSmall={true}>Save Change</MainButton>
+      <div className="mt-16 w-max ml-auto">
+        <MainButton
+          isLoading={isLoading}
+          onClick={editProfileHandler}
+          isSmall={true}
+        >
+          Save Change
+        </MainButton>
       </div>
     </div>
   );

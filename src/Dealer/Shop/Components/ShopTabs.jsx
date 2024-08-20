@@ -1,20 +1,6 @@
 import React from "react";
 import Container from "Components/Container/Container";
-const ShopTabs = ({ activeTabs, onSelectingTabs }) => {
-  const aboutTabs = [
-    {
-      id: 1,
-      name: "tires",
-    },
-    {
-      id: 2,
-      name: "Libricants",
-    },
-    {
-      id: 3,
-      name: "Batteries",
-    },
-  ];
+const ShopTabs = ({ activeTabs, onSelectingTabs, tabs }) => {
   return (
     <section className="pt-primary">
       <Container>
@@ -23,7 +9,7 @@ const ShopTabs = ({ activeTabs, onSelectingTabs }) => {
         </div>
 
         <div className="bg-dark text-white flex items-center justify-center gap-x-16 mt-14">
-          {aboutTabs.map(({ id, name }, index) => (
+          {tabs?.map(({ id, name }, index) => (
             <button
               onClick={() => onSelectingTabs(id)}
               className={`rb-bold uppercase text-sm  py-4 px-8 transition ease-in duration ${

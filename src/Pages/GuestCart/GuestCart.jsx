@@ -4,6 +4,7 @@ import Container from "Components/Container/Container";
 import { Trash } from "@phosphor-icons/react";
 import MainButton from "Components/Buttons/MainButton";
 import EmptyCart from "Components/Screens/EmptyCart";
+
 const GuestCart = () => {
   const { cart, removeFromCart, updateCart } = useContext(GuestCartContext);
 
@@ -17,6 +18,14 @@ const GuestCart = () => {
 
   const subtotal = useMemo(() => {
     return cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  }, [cart]);
+
+  const totalVAT = useMemo(() => {
+    return cart.reduce((acc, item) => {
+      const vatPercentage = parseFloat(item.VAT) / 100;
+      const vatAmount = item.price * item.quantity * vatPercentage;
+      return acc + vatAmount;
+    }, 0);
   }, [cart]);
 
   return (
@@ -34,10 +43,10 @@ const GuestCart = () => {
                     className="flex flex-wrap gap-6 items-center justify-between w-full border-b pb-3"
                     key={index}
                   >
-                    <img className="w-32 mr-12" src={item.images} alt="" />
+                    <img className="w-20 mr-12" src={item.images} alt="" />
                     <div className="flex-1">
                       <img
-                        className="w-16 object-contain"
+                        className="w-10 object-contain"
                         src={item.category?.[0]?.image}
                         alt=""
                       />
@@ -94,8 +103,8 @@ const GuestCart = () => {
                     <p>{subtotal.toFixed(2)}$</p>
                   </span>
                   <span className="flex items-center justify-between text-[#ddd]">
-                    <p>Tax Vat</p>
-                    <p>200$</p>
+                    <p>Tax VAT</p>
+                    <p>{totalVAT.toFixed(2)}$</p>
                   </span>
                   <span className="flex items-center justify-between text-[#ddd]">
                     <p>Shipping Charge</p>
@@ -110,16 +119,18 @@ const GuestCart = () => {
                     Total
                   </p>
                   <p className="text-white text-xl rb-bold mt-4 mb-2">
-                    {subtotal.toFixed(2)}$
+                    {(subtotal + totalVAT).toFixed(2)}$
                   </p>
                 </span>
 
                 <div className="mt-6 w-full flex-1 flex">
-                  <MainButton isSmall={true}>Continue to checkout</MainButton>
+                  <MainButton to={"/guest-checkout"} isSmall={true}>
+                    Continue to checkout
+                  </MainButton>
                 </div>
-                <button className="text-white rb-bold text-center underline mt-3 mx-auto flex items-center justify-center">
+                {/* <button className="text-white rb-bold text-center underline mt-3 mx-auto flex items-center justify-center">
                   Continue Shopping
-                </button>
+                </button> */}
               </div>
             </div>
           )}

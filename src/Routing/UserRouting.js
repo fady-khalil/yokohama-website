@@ -22,10 +22,13 @@ import ProductDetailed from "Pages/Shop/ProductDetailed/ProductDetailed";
 import Account from "Pages/Account/Account";
 import MyCart from "Pages/MyCart/MyCart";
 import GuestCart from "Pages/GuestCart/GuestCart";
+import GuestCheckout from "Pages/GuestCart/GuestCheckout.jsx";
+import SuccessPage from "Pages/SuccessPage/SuccessPage";
 // modals
 import AuthModal from "Pages/Auth/AuthModal";
 import ForgetPasswordModal from "Pages/Auth/ForgetPassword/ForgetPasswordModal";
 import DealerSiginModal from "Pages/Auth/DealerSigin/DealerSiginModal";
+import AddNewAddress from "Pages/MyCart/ShippingAndBilling/Components/AddNewAddress";
 
 // routing page
 import AccessDeniedPage from "Pages/AccessDenied/AccessDeniedPage";
@@ -38,6 +41,7 @@ const UserRouting = () => {
       <AuthModal />
       <ForgetPasswordModal />
       <DealerSiginModal />
+      <AddNewAddress />
       <ScrollToTop />
       <Header />
       <Routes>
@@ -46,6 +50,7 @@ const UserRouting = () => {
         <Route path="dealers" element={<Dealers />} />
         <Route path="safety" element={<Safety />} />
         <Route path="contact-us" element={<Contact />} />
+        <Route path="guest-checkout" element={<GuestCheckout />} />
         <Route path="original-equipment" element={<OriginalEquipment />} />
         <Route path="news-and-event" element={<NewAndEvent />} />
         <Route path="news-and-event/:slug" element={<NewsDetailed />} />
@@ -53,6 +58,7 @@ const UserRouting = () => {
         <Route path="*" element={<NotFound />} />
         <Route path="shop/:id" element={<Shop />} />
         <Route path="product-detailed/:id" element={<ProductDetailed />} />
+        <Route path="Success-Page" element={<SuccessPage />} />
 
         {/* condition rendering */}
         <Route

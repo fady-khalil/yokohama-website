@@ -8,7 +8,7 @@ const ProductSpecs = ({ data }) => {
   return (
     <div className="border-t pt-secondary">
       <Container>
-        <h2 className="text-center rb-bold text-3xl pt-14 mb-6">
+        <h2 className="text-center rb-bold text-2xl pt-14 mb-6 w-3/4 mx-auto">
           {data?.title}
         </h2>
 

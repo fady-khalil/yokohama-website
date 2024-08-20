@@ -2,8 +2,6 @@ import React from "react";
 
 const Input = (props) => {
   const {
-    boxStyle,
-    inputStyle,
     type,
     name,
     id,
@@ -18,13 +16,15 @@ const Input = (props) => {
   } = props;
 
   return (
-    <span className={"flex-1 flex gap-y-1 flex-col  w-full"}>
+    <span className={`flex-1 flex gap-y-1 flex-col  w-full`}>
       <label htmlFor={id} className="text-sm rb-bold capitalize">
         {label}
       </label>
       <input
         disabled={disabled}
-        className={"px-2 py-2 rounded-sm bg-gray-200 placeholder:text-sm "}
+        className={`px-2 py-3 rounded-sm bg-gray-200 placeholder:text-sm  ${
+          hasError ? "border border-primary" : ""
+        }`}
         id={id}
         type={type}
         name={name}
@@ -35,8 +35,8 @@ const Input = (props) => {
       />
 
       <p
-        className={`text-xs text-red-500  ${
-          hasError ? "opacity-1 mb-3 " : "opacity-0"
+        className={`text-xs text-red-600   ${
+          hasError ? "opacity-1 " : "opacity-0"
         }`}
       >
         {errorMessage}

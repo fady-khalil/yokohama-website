@@ -18,7 +18,12 @@ import { UserCartContext } from "context/User/CartContext";
 import Spinner from "Components/RequestHandler/Spinner";
 
 const ProductInfo = ({ product }) => {
-  const { addToCart } = useContext(GuestCartContext);
+  const {
+    addToCart,
+    cart: guestCart,
+    updateCart: guestUpdateCart,
+    removeFromCart: guestRemoveFromCart,
+  } = useContext(GuestCartContext);
   const { userIsSignIn, userToken } = useContext(UserLoginContext);
   const {
     userAddToCart,
@@ -42,7 +47,7 @@ const ProductInfo = ({ product }) => {
   const [quantity, setQuantity] = useState(0);
 
   useEffect(() => {
-    if (cart?.cart_items) {
+    if (userIsSignIn && cart?.cart_items) {
       const foundItem = cart.cart_items.find(
         (item) => item.product_id === product.id
       );
@@ -54,16 +59,34 @@ const ProductInfo = ({ product }) => {
         setIsInCart(false);
         setQuantity(0);
       }
+    } else if (!userIsSignIn && guestCart) {
+      const foundItem = guestCart.find((item) => item.id === product.id);
+      if (foundItem) {
+        setIsInCart(true);
+        setQuantity(foundItem.quantity);
+      } else {
+        setIsInCart(false);
+        setQuantity(0);
+      }
     }
-  }, [cart, product.id]);
+  }, [cart, product.id, guestCart, userIsSignIn]);
 
   const handleQuantityChange = (productId, quantity) => {
-    if (quantity < 1) {
-      removeFromCart(productId);
-    } else {
-      updateCart(productId, quantity);
+    if (userIsSignIn) {
+      if (quantity < 1) {
+        removeFromCart(productId);
+      } else {
+        updateCart(productId, quantity);
+      }
+    } else if (!userIsSignIn) {
+      if (quantity < 1) {
+        guestRemoveFromCart(productId);
+      } else {
+        guestUpdateCart(productId, quantity);
+      }
     }
   };
+
   return (
     <Container>
       <div className="flex flex-col flex-col-reverse lg:flex-row items-center gap-y-6 gap-x-32 py-secondary lg:py-primary">
@@ -150,7 +173,7 @@ const ProductInfo = ({ product }) => {
           </button>
         </div>
         <div className="flex-1 flex flex-col items-center justify-center p-12">
-          <img className="w-full" src={product?.product_image} alt="" />
+          <img className="w-3/4 h-3/4 mx-auto" src={product?.images} alt="" />
         </div>
       </div>
     </Container>

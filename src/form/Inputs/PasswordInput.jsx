@@ -48,7 +48,11 @@ const PasswordInput = (props) => {
           {showPassword && <EyeSlash size={22} />}
         </span>
       </div>
-      <p className={`text-xs text-red-500 ${hasError ? "block " : "hidden"}`}>
+      <p
+        className={`text-xs text-red-500 ${
+          hasError ? "opacity-100 " : "opacity-0"
+        }`}
+      >
         {errorMessage}
       </p>
     </div>

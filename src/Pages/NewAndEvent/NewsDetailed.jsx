@@ -7,7 +7,7 @@ import IsError from "Components/RequestHandler/IsError";
 import Container from "Components/Container/Container";
 const NewsDetailed = () => {
   const { slug } = useParams();
-  const { fetchData } = useGetData();
+  const { fetchData, error } = useGetData();
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -30,7 +30,7 @@ const NewsDetailed = () => {
     getData();
   }, []);
   if (isLoading) return <IsLoading />;
-  if (isError) return <IsError />;
+  if (isError || error) return <IsError />;
   if (data) {
     return (
       <section className="my-primary">

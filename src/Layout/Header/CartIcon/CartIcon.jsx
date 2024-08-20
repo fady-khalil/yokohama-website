@@ -11,17 +11,17 @@ import image from "assests/product-1-cropped-removebg-preview.png";
 const CartIcon = ({ isHomePage }) => {
   const { userIsSignIn } = useContext(UserLoginContext);
   const { cart } = useContext(GuestCartContext);
+  // const displayProduct = true;
   const {
     cart: userCart,
     displayProduct,
     displayProductHandler,
   } = useContext(UserCartContext);
-
   useEffect(() => {
     if (displayProduct) {
       const timer = setTimeout(() => {
         displayProductHandler("");
-      }, 1000);
+      }, 2000);
 
       return () => clearTimeout(timer); // Clean up the timer if the component unmounts or displayProduct changes
     }
@@ -35,32 +35,45 @@ const CartIcon = ({ isHomePage }) => {
       <div className="relative ">
         <ShoppingCart weight="fill" color={isHomePage ? "black" : "white"} />
         <span className="absolute  -top-3 -right-3 text-white text-xs bg-primary flex items-center justify-center p-1 rounded-full w-4 h-4">
-          {userIsSignIn ? userCart?.cart_items?.length : cart?.length}
+          {userIsSignIn
+            ? userCart?.cart_items?.length || cart.length
+            : cart?.length}
         </span>
       </div>
 
       <div
-        className={`absolute -translate-x-1/2 left-1/2 transition ease-in duration-300  top-[100%] ${
+        className={`absolute -translate-x-1/2 left-1/2 transition ease-in duration-300 min-w-[max-content] top-[100%] py-2 px-2 ${
           displayProduct
             ? " translate-y-[0] opacity-100 "
             : "translate-y-[-50%]  opacity-[0]"
         } z-[100] bg-white drop-shadow-2xl `}
       >
-        <div className="flex items-center gap-x-3  p-3 min-w-[max-content]">
+        <p className="text-sm text-center py-2 border-b border-[#ccc] twhite ">
+          Item(s) added to your cart
+        </p>
+        <div className="flex items-center gap-x-10 min-w-[max-content] my-4">
           <img
-            className="w-8  object-contain"
+            className="w-10  object-contain"
             src={image}
             // src={displayProduct.images}
             alt=""
           />
           <div className="">
-            <p className="min-w-[max-content] text-xs">{displayProduct.name}</p>
+            <p className="min-w-[max-content] text-sm">
+              Lorem ipsum dolor sit.
+            </p>
+            {/* <p className="min-w-[max-content] text-xs">{displayProduct.name}</p> */}
           </div>
         </div>
 
-        <p className="text-xs text-center bg-primary text-white p-3">
-          Item added to your cart
-        </p>
+        <div className="flex items-center justify-center my-1">
+          <Link
+            to={"/my-cart"}
+            className="bg-primary text-white w-full  text-center py-2 text-sm"
+          >
+            View Cart
+          </Link>
+        </div>
       </div>
     </Link>
   );

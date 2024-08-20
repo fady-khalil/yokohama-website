@@ -5,7 +5,7 @@ import useGetData from "Hooks/Fetching/useGetData";
 import IsError from "Components/RequestHandler/IsError";
 import IsLoading from "Components/RequestHandler/IsLoading";
 const NewAndEvent = () => {
-  const { fetchData } = useGetData();
+  const { fetchData, error } = useGetData();
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -29,7 +29,7 @@ const NewAndEvent = () => {
   }, []);
 
   if (isLoading) return <IsLoading />;
-  if (isError) return <IsError />;
+  if (isError || error) return <IsError />;
   if (data) {
     return (
       <main className="my-secondary lg:my-primary">

@@ -5,7 +5,7 @@ import useGetData from "Hooks/Fetching/useGetData";
 import IsError from "Components/RequestHandler/IsError";
 import IsLoading from "Components/RequestHandler/IsLoading";
 const Safety = () => {
-  const { fetchData } = useGetData();
+  const { fetchData, error } = useGetData();
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -28,7 +28,7 @@ const Safety = () => {
     getData();
   }, []);
   if (isLoading) return <IsLoading />;
-  if (isError) return <IsError />;
+  if (isError || error) return <IsError />;
   if (data) {
     return (
       <section className="mb-primary">

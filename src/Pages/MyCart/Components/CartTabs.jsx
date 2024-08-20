@@ -9,7 +9,7 @@ const CartTabs = ({ onSelectingTabs, activeTabs }) => {
     },
     {
       id: 2,
-      name: "Shipping & Payment",
+      name: "Shipping & Billing",
     },
     {
       id: 3,

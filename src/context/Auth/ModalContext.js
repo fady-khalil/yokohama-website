@@ -8,15 +8,7 @@ export const ModalProvider = ({ children }) => {
   const [modalIsActive, setModalIsActive] = useState(false);
   const [forgotModalIsActive, setForgotModalIsActvie] = useState(false);
   const [dealderModalIsActive, setDealerModalIsActive] = useState(false);
-
-  // const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
-  // const handleUserLogin = () => {
-  //   setUserIsLoggedIn(true);
-  // };
-
-  // const handleUserLogout = () => {
-  //   setUserIsLoggedIn(false);
-  // };
+  const [newAddressModalIsActive, setNewAddressModalIsActive] = useState(false);
 
   const openModalHandeler = () => {
     setModalIsActive(true);
@@ -35,6 +27,12 @@ export const ModalProvider = ({ children }) => {
   };
   const closeDealerModalHandeler = () => {
     setDealerModalIsActive(false);
+  };
+  const openNewAddressModalHandeler = () => {
+    setNewAddressModalIsActive(true);
+  };
+  const closeNewAddressModalHandeler = () => {
+    setNewAddressModalIsActive(false);
   };
 
   return (
@@ -55,6 +53,10 @@ export const ModalProvider = ({ children }) => {
         // userIsLoggedIn,
         // handleUserLogin,
         // handleUserLogout,
+
+        openNewAddressModalHandeler,
+        closeNewAddressModalHandeler,
+        newAddressModalIsActive,
       }}
     >
       {children}

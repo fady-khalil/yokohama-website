@@ -42,6 +42,7 @@ body {
   height: auto !important;
   padding-left: 64px !important;
   flex: 1;
+  min-width: 100%;
 }
 .test-2 {
   padding-inline: 0.4rem !important;

@@ -3,7 +3,6 @@ import { UserLoginContext } from "context/Auth/UserLoginContext";
 // fetching data
 import useGetDataToken from "Hooks/Fetching/useGetDataToken";
 import usePostToken from "Hooks/Fetching/usePostToken";
-import useUpdateQunatity from "Hooks/Fetching/useUpdateQunatity";
 
 export const UserCartContext = createContext();
 
@@ -95,6 +94,9 @@ export const UserCartProvider = ({ children }) => {
     }
   };
 
+  const clearCart = () => {
+    setCart([]);
+  };
   return (
     <UserCartContext.Provider
       value={{
@@ -113,6 +115,8 @@ export const UserCartProvider = ({ children }) => {
 
         // update products
         updateCart,
+        clearCart,
+        // billing
       }}
     >
       {children}

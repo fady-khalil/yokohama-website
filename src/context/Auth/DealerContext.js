@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import usePostToken from "Hooks/Fetching/usePostToken";
 import { useNavigate } from "react-router-dom";
 
@@ -22,6 +22,9 @@ export const DealerLoginProvider = ({ children }) => {
       const result = await postData("yokohama/auth/logout", dealerToken);
       setDealerIsSignIn(false);
       navigate("/");
+      localStorage.removeItem("dealerIsSignIn");
+      localStorage.removeItem("dealerToken");
+      localStorage.removeItem("dealerData");
     } catch (err) {
       console.error("Error:", err);
     }
@@ -31,7 +34,20 @@ export const DealerLoginProvider = ({ children }) => {
   const handleUerData = (data) => {
     setDealerData(data?.user);
     setDealerToken(data?.token);
+
+    localStorage.setItem("dealerIsSignIn", JSON.stringify(true));
+    localStorage.setItem("dealerToken", data?.token);
+    localStorage.setItem("dealerData", JSON.stringify(data?.user));
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("dealerIsSignIn")) {
+      setDealerIsSignIn(true);
+      setDealerToken(localStorage.getItem("dealerToken"));
+      const storedUserData = localStorage.getItem("dealerData");
+      setDealerData(JSON.parse(storedUserData));
+    }
+  }, []);
 
   return (
     <DealerLoginContext.Provider
