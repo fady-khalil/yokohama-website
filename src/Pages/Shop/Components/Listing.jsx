@@ -4,7 +4,6 @@ import listImage1 from "assests/listing/1.png";
 import listImage2 from "assests/listing/2.png";
 import listImage3 from "assests/listing/3.png";
 import { Link } from "react-router-dom";
-
 const Listing = ({ data }) => {
   return (
     <div className="col-span-3 my-secondary relative z-[0]">
@@ -37,7 +36,7 @@ const Listing = ({ data }) => {
                     <div className="flex items-center gap-x-2 my-3 font-medium">
                       <p>{price}</p>
                       <p>{currency}</p>
-                    </div>
+                    </div>{" "}
                     <div className="flex mb-2">
                       {[1, 2, 3, 4, 5].map((star) => {
                         const starClass =

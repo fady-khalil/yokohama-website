@@ -48,6 +48,14 @@ const ShopLanding = ({ selectedId }) => {
     }
   };
 
+  const handleQuantityChange = (productId, quantity) => {
+    if (quantity < 1) {
+      removeFromCart(productId);
+    } else {
+      updateCart(productId, quantity);
+    }
+  };
+
   useEffect(() => {
     getData();
   }, [selectedId]);
@@ -58,12 +66,14 @@ const ShopLanding = ({ selectedId }) => {
     if (cart?.cart_items) {
       const foundItems = data?.data?.flatMap((item) =>
         item.products?.filter((product) =>
-          cart.cart_items.some((cartItem) => cartItem.product_id === product.id)
+          cart?.cart_items?.some(
+            (cartItem) => cartItem.product_id === product.id
+          )
         )
       );
 
       // Do something with the foundItems, such as setting state
-      if (foundItems.length > 0) {
+      if (foundItems?.length > 0) {
         setIsInCart(true);
         setFoundProducts(foundItems); // Store the found products
       } else {
@@ -73,9 +83,12 @@ const ShopLanding = ({ selectedId }) => {
     }
   }, [cart, data]);
 
-  console.log(cart);
-  console.log(foundProducts);
-
+  const getCartItemQuantity = (productId) => {
+    const cartItem = cart?.cart_items?.find(
+      (item) => item.product_id === productId
+    );
+    return cartItem ? cartItem.quantity : 0;
+  };
   return (
     <div className="mb-primary">
       <Container>
@@ -157,10 +170,7 @@ const ShopLanding = ({ selectedId }) => {
                       {
                         id,
                         name,
-                        avg_review,
                         price,
-                        classification,
-                        currency,
                         images,
                         brand,
                         pattern,
@@ -168,68 +178,96 @@ const ShopLanding = ({ selectedId }) => {
                         qty_available,
                       },
                       index
-                    ) => (
-                      <tr key={index}>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm">
-                          <Link to={"/product-detailed"}>{name}</Link>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm">
-                          <Link to={"/product-detailed"}>{brand}</Link>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm">
-                          <Link to={"/product-detailed"}>{pattern}</Link>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm">
-                          <Link to={"/product-detailed"}>
-                            {price} {}
-                          </Link>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm">
-                          <p>{discount}</p>
-                          {/* <p className="text-primary italic text-sm font-light">
+                    ) => {
+                      const isProductInCart = foundProducts?.some(
+                        (product) => product.id === id
+                      );
+                      const cartQuantity = getCartItemQuantity(id);
+
+                      return (
+                        <tr key={index}>
+                          <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm">
+                            <Link to={"/product-detailed"}>{name}</Link>
+                          </td>
+                          <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm">
+                            <Link to={"/product-detailed"}>{brand}</Link>
+                          </td>
+                          <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm">
+                            <Link to={"/product-detailed"}>{pattern}</Link>
+                          </td>
+                          <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm">
+                            <Link to={"/product-detailed"}>{price} USD</Link>
+                          </td>
+                          <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm">
+                            <p>{discount}</p>
+                            {/* <p className="text-primary italic text-sm font-light">
                           {order.discount[1]}
                         </p> */}
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm">
-                          <div className="flex items-center gap-x-2 justify-center">
-                            <span
-                              className={`w-3 h-3 ${
-                                index % 2 === 0 ? "bg-primary" : "bg-green-500"
-                              } rounded-full block`}
-                            ></span>
+                          </td>
+                          <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm">
+                            <div className="flex items-center gap-x-2 justify-center">
+                              <span
+                                className={`w-3 h-3 ${
+                                  qty_available > 0
+                                    ? "bg-green-500"
+                                    : "bg-primary"
+                                } rounded-full block`}
+                              ></span>
 
-                            {qty_available}
-                          </div>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm ">
-                          <span className="w-[80%] mx-auto flex items-center gap-x-4 justify-between  px-2 py-1 border">
-                            <button>+</button>
-                            <p>0</p>
-                            <button>-</button>
-                          </span>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm">
-                          <p>Sub Total</p>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm">
-                          <button
-                            onClick={() => AddToCart(id)}
-                            className="bg-dark text-sm  px-4 py-1 rb-bold text-sm text-white uppercase"
+                              {qty_available}
+                            </div>
+                          </td>
+                          <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm ">
+                            <span className="w-[80%] mx-auto flex items-center gap-x-4 justify-between  px-2 py-1 border">
+                              <button
+                                disabled={!isProductInCart}
+                                onClick={() =>
+                                  handleQuantityChange(id, cartQuantity + 1)
+                                }
+                              >
+                                +
+                              </button>
+                              <p>{cartQuantity}</p>
+                              <button
+                                disabled={!isProductInCart}
+                                onClick={() =>
+                                  handleQuantityChange(id, cartQuantity - 1)
+                                }
+                              >
+                                -
+                              </button>
+                            </span>
+                          </td>
+                          <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm">
+                            <p>Sub Total</p>
+                          </td>
+                          <td
+                            className={`min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm`}
                           >
-                            {addToCartLoading ? (
-                              <Spinner isSmall={true} />
-                            ) : (
-                              "Add to cart"
-                            )}
-                          </button>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm">
-                          <button className="text-white bg-primary p-1 rounded-full">
-                            <Info weight="fill" />
-                          </button>
-                        </td>
-                      </tr>
-                    )
+                            <button
+                              onClick={() => AddToCart(id)}
+                              className={`px-4 py-1.5 rb-bold   text-sm text-white uppercase ${
+                                isProductInCart ? "bg-primary" : "bg-black"
+                              } `}
+                              // disabled={addToCartLoading} // Disable the button while loading
+                            >
+                              {addToCartLoading[id] ? (
+                                <Spinner isSmall={true} />
+                              ) : isProductInCart ? (
+                                "In your cart"
+                              ) : (
+                                "Add to cart"
+                              )}
+                            </button>
+                          </td>
+                          <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b  rb-bold text-sm">
+                            <button className="text-white bg-primary p-1 rounded-full">
+                              <Info weight="fill" />
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    }
                   )
                 )}
               </tbody>

@@ -6,7 +6,7 @@ import Spinner from "Components/RequestHandler/Spinner";
 const DealerDetails = ({ data }) => {
   const { handleDealderLogout, dealerLoading } = useContext(DealerLoginContext);
   return (
-    <div className="relative  px-6 text-white bg-primary hidden lg:flex items-center py-4 group  items-center justify-center min-w-[10rem] max-w-[fit-content]">
+    <div className="relative  px-6 text-white bg-primary hidden lg:flex items-center py-6 group  items-center justify-center min-w-[10rem] max-w-[fit-content]">
       <button className="flex items-center gap-x-3  items-center">
         <User size={20} weight="fill" />
         <p>{data?.username}</p>
@@ -20,9 +20,9 @@ const DealerDetails = ({ data }) => {
             My Orders
           </Link>
         </li>
-        <li>
+        {/* <li>
           <Link className="hover:underline ">Edit Account</Link>
-        </li>
+        </li> */}
         <li>
           <button
             onClick={() => handleDealderLogout()}

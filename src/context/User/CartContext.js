@@ -70,7 +70,6 @@ export const UserCartProvider = ({ children }) => {
         `/yokohama/cart/update/${productId}?quantity=${quantity}`,
         userToken
       );
-      console.log(dataUpdatedData);
       setCart(dataUpdatedData?.data);
     } catch (error) {
       console.error("Error updating cart:", error);

@@ -1,5 +1,7 @@
 import Container from "Components/Container/Container";
 import React, { useState, useContext, useEffect } from "react";
+import Spinner from "Components/RequestHandler/Spinner";
+import { Heart } from "@phosphor-icons/react";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -15,8 +17,7 @@ import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import { UserLoginContext } from "context/Auth/UserLoginContext";
 import { GuestCartContext } from "context/Guest/GuestCartContext";
 import { UserCartContext } from "context/User/CartContext";
-import Spinner from "Components/RequestHandler/Spinner";
-
+import { UserWishlistContext } from "context/User/WishlistContext";
 const ProductInfo = ({ product }) => {
   const {
     addToCart,
@@ -34,6 +35,9 @@ const ProductInfo = ({ product }) => {
     removeFromCart,
   } = useContext(UserCartContext);
 
+  const { getWishlistData, userAddToWihlist, addTowishlistLoading, wishlist } =
+    useContext(UserWishlistContext);
+
   const addToCartHandler = (product) => {
     displayProductHandler(product);
     if (userIsSignIn) {
@@ -42,9 +46,17 @@ const ProductInfo = ({ product }) => {
       addToCart(product);
     }
   };
+  const addToWishlitandler = (product) => {
+    if (userIsSignIn) {
+      userAddToWihlist(product?.id);
+    } else {
+      userAddToWihlist(product);
+    }
+  };
 
   const [isInCart, setIsInCart] = useState(false);
   const [quantity, setQuantity] = useState(0);
+  const [isInWishlist, setIsInWishlist] = useState(false);
 
   useEffect(() => {
     if (userIsSignIn && cart?.cart_items) {
@@ -69,7 +81,16 @@ const ProductInfo = ({ product }) => {
         setQuantity(0);
       }
     }
-  }, [cart, product.id, guestCart, userIsSignIn]);
+
+    if (wishlist) {
+      const foundWishlistItem = wishlist?.wishlist?.find(
+        (item) => item.id === product.id
+      );
+      console.log(foundWishlistItem);
+
+      setIsInWishlist(!!foundWishlistItem);
+    }
+  }, [cart, product.id, guestCart, userIsSignIn, wishlist]);
 
   const handleQuantityChange = (productId, quantity) => {
     if (userIsSignIn) {
@@ -132,7 +153,7 @@ const ProductInfo = ({ product }) => {
             </div>
           </div>
 
-          <div className="flex gap-x-3">
+          <div className="flex items-center gap-x-3">
             <div className="flex-1 rb-bold text-white flex items-center bg-dark">
               <p className="border-r px-6 py-3">Qty</p>
               <button
@@ -165,6 +186,21 @@ const ProductInfo = ({ product }) => {
                   {addToCartLoading ? <Spinner /> : " Add To Cart"}
                 </button>
               </div>
+            )}
+
+            {!isInCart && (
+              <button
+                onClick={() => addToWishlitandler(product)}
+                className={`min-w-[75px] flex items-center justify-center py-2 w-max  ${
+                  isInWishlist ? "text-primary" : ""
+                }`}
+              >
+                {addTowishlistLoading ? (
+                  <Spinner />
+                ) : (
+                  <Heart weight={isInWishlist ? "fill" : "regular"} size={24} />
+                )}
+              </button>
             )}
           </div>
 

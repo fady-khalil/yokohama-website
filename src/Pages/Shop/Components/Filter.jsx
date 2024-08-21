@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { MagnifyingGlass, Faders } from "@phosphor-icons/react";
+import { MagnifyingGlass, Faders, X } from "@phosphor-icons/react";
 import useInput from "form/Hooks/user-input";
-import MainButton from "Components/Buttons/MainButton";
 
 // filter
 import SortBy from "./FilterComponents/SortBy";
@@ -77,27 +76,10 @@ const Filter = ({
 
   return (
     <>
-      <div className="flex lg:hidden items-center justify-between  bg-primary  gap-x-6  border-b px-3 ss:px-6 sm:px-8 sticky top-0 py-3 sm:py-6 z-[10]">
-        <div className="flex items-center justify-center flex-1  text-white">
-          <input
-            className={
-              " text-white px-2 py-3 rounded-sm bg-white placeholder:text-sm flex-1"
-            }
-            id={"shop-search"}
-            type={"search"}
-            name={"shop-search"}
-            placeholder={"Search"}
-            value={searchInput}
-            onChange={searchChangeHandler}
-            onBlur={searchBlurHanlder}
-          />
-        </div>
-
-        <div>
-          <button onClick={openFilterHandler}>
-            <Faders color="white" size={32} />
-          </button>
-        </div>
+      <div className="flex lg:hidden items-center justify-end  bg-primary  gap-x-6  border-b px-3 ss:px-6 sm:px-8 sticky top-0 py-3 sm:py-6 z-[10]">
+        <button onClick={openFilterHandler}>
+          <Faders color="white" size={32} />
+        </button>
       </div>
       {filterIsVisible && (
         <div className="fixed top-0 left-0 bg-[#000000a3] w-[100vw] h-[100vh] z-[10]"></div>
@@ -107,10 +89,12 @@ const Filter = ({
           filterIsVisible ? "flex" : "hidden lg:flex"
         }`}
       >
-        <div className="flex items-center justify-between bg-primary p-6 text-white">
-          <p className="rb-medium text-lg hidden">Search</p>
-          <MagnifyingGlass />
-        </div>
+        <button
+          onClick={closeFilterHandler}
+          className="flex items-center justify-end bg-primary p-6 text-white"
+        >
+          <X size={32} />
+        </button>
         <SortBy onPriceHighToLow={onPriceHighToLow} />
         <PriceRange data={priceRange} />
 
@@ -122,11 +106,13 @@ const Filter = ({
           </label>
         </div>
         <ByBrand
+          onCloseFiler={closeFilterHandler}
           selectedBrand={selectedBrand}
           onBrandFilter={onBrandFilter}
           data={brands}
         />
         <ByCategory
+          onCloseFiler={closeFilterHandler}
           selectedCategory={selectedCategory}
           onCategoryFilter={onCategoryFilter}
           data={category}

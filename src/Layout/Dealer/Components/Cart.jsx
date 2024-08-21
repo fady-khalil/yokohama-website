@@ -1,27 +1,22 @@
-import React from "react";
+import { useContext, useEffect } from "react";
 import { ShoppingCart } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
 import { DealerCartContext } from "context/DealerCart/DealerCartContext";
 
 const CartIcon = () => {
-  const { handleCartModalVisible } = useContext(DealerCartContext);
-
+  const { cart } = useContext(DealerCartContext);
   return (
     <Link
       to={"/my-cart"}
-      onClick={handleCartModalVisible}
-      className="text-white text-lg   items-center hidden lg:flex"
+      className="text-white text-lg  px-6 border-l border-white items-center justify-center hidden lg:flex"
     >
-      <ShoppingCart weight="fill" />
+      <div className="relative ">
+        <ShoppingCart weight="fill" />
+        <span className="absolute  -top-3 -right-3 text-white text-xs bg-primary flex items-center justify-center p-1 rounded-full w-4 h-4">
+          {cart?.cart_items?.length}
+        </span>
+      </div>
     </Link>
-    // <button
-    //   onClick={handleCartModalVisible}
-    //   onMouseEnter={onMouseLeft}
-    //   className="text-white text-lg  flex items-center"
-    // >
-    //   <ShoppingCart weight="fill" />
-    // </button>
   );
 };
 

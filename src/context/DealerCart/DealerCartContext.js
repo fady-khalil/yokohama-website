@@ -19,7 +19,7 @@ export const DealerCartProvider = ({ children }) => {
   const [isError, setIsError] = useState(false);
 
   // add to cart
-  const [addToCartLoading, setAddToCartLoading] = useState(false);
+  const [addToCartLoading, setAddToCartLoading] = useState({});
 
   // detel item from car
   const [loadingItems, setLoadingItems] = useState({});
@@ -48,7 +48,7 @@ export const DealerCartProvider = ({ children }) => {
 
   const AddToCart = async (productId) => {
     try {
-      setAddToCartLoading(true);
+      setAddToCartLoading((prev) => ({ ...prev, [productId]: true }));
       const addToCartData = await postData(
         `yokohama/cart/${productId}`,
         dealerToken
@@ -60,7 +60,7 @@ export const DealerCartProvider = ({ children }) => {
     } catch (error) {
       console.error("Error adding to cart:", error);
     } finally {
-      setAddToCartLoading(false);
+      setAddToCartLoading((prev) => ({ ...prev, [productId]: false }));
     }
   };
 
@@ -70,7 +70,6 @@ export const DealerCartProvider = ({ children }) => {
         `/yokohama/cart/update/${productId}?quantity=${quantity}`,
         dealerToken
       );
-      console.log(dataUpdatedData);
       setCart(dataUpdatedData?.data);
     } catch (error) {
       console.error("Error updating cart:", error);

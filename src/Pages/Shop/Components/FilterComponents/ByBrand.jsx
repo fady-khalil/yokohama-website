@@ -1,6 +1,6 @@
 import React from "react";
 
-const ByBrand = ({ data, onBrandFilter, selectedBrand }) => {
+const ByBrand = ({ data, onBrandFilter, selectedBrand, onCloseFiler }) => {
   const titleHeader = "rb-bold text-lg uppercase ";
   const checkBox = "text-gray-500 rb-medium";
 
@@ -14,7 +14,10 @@ const ByBrand = ({ data, onBrandFilter, selectedBrand }) => {
           <div key={index}>
             <label className="flex items-center space-x-2">
               <input
-                onChange={() => onBrandFilter(brand)}
+                onChange={() => {
+                  onCloseFiler();
+                  onBrandFilter(brand);
+                }}
                 type="checkbox"
                 className="form-checkbox h-4 w-4"
                 checked={selectedBrand === brand}

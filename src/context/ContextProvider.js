@@ -4,6 +4,7 @@ import { DealerCartProvider } from "./DealerCart/DealerCartContext";
 import { UserLoginProvider } from "./Auth/UserLoginContext";
 import { GuestCartProvider } from "./Guest/GuestCartContext";
 import { UserCartProvider } from "./User/CartContext";
+import { UserWishlistProvider } from "./User/WishlistContext";
 const ContextProvider = ({ children }) => {
   return (
     <ModalProvider>
@@ -11,7 +12,9 @@ const ContextProvider = ({ children }) => {
         <UserLoginProvider>
           <DealerCartProvider>
             <GuestCartProvider>
-              <UserCartProvider>{children}</UserCartProvider>
+              <UserCartProvider>
+                <UserWishlistProvider>{children}</UserWishlistProvider>
+              </UserCartProvider>
             </GuestCartProvider>
           </DealerCartProvider>
         </UserLoginProvider>

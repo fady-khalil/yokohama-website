@@ -26,12 +26,12 @@ const DealderHeader = () => {
           <Logo />
           <Desktop onclose={ClosedrawerMenu} />
 
-          <div className="flex items-stretch gap-x-4">
+          <div className="flex items-stretch ">
             <CartIcon />
             <DealerDetails data={dealerData} />
             <button
               onClick={OpendrawerMenu}
-              className="text-3xl bg-dark px-2 text-white"
+              className="text-3xl bg-dark px-2 text-white ml-6"
             >
               <List />
             </button>

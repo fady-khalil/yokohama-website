@@ -13,6 +13,7 @@ import MyOrders from "Dealer/MyOrder/MyOrders";
 import Shop from "Dealer/Shop/Shop";
 import Cart from "Dealer/Cart/Cart";
 import CartDetailed from "Dealer/Cart/CartDetailed";
+import SuccessPage from "Pages/SuccessPage/SuccessPage";
 const DealerRouting = () => {
   return (
     <div>
@@ -27,6 +28,7 @@ const DealerRouting = () => {
         <Route path="my-orders" element={<MyOrders />} />
         <Route path="shop" element={<Shop />} />
         <Route path="my-cart" element={<Cart />} />
+        <Route path="Success-Page" element={<SuccessPage />} />
         <Route path="product-detailed" element={<CartDetailed />} />
       </Routes>
       {/* <Footer /> */}

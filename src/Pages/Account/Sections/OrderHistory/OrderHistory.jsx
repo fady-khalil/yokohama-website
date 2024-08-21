@@ -31,8 +31,6 @@ const OrderHistory = () => {
     getData();
   }, []);
 
-  console.log(data);
-
   return (
     <div className="py-secondary min-h-[30vh]">
       <Container>

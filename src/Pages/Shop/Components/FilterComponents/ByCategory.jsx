@@ -1,6 +1,11 @@
 import React from "react";
 
-const ByCategory = ({ data, selectedCategory, onCategoryFilter }) => {
+const ByCategory = ({
+  data,
+  selectedCategory,
+  onCategoryFilter,
+  onCloseFiler,
+}) => {
   const titleHeader = "rb-bold text-lg uppercase ";
   const checkBox = "text-gray-500 rb-medium";
   return (
@@ -13,7 +18,10 @@ const ByCategory = ({ data, selectedCategory, onCategoryFilter }) => {
           <div key={index}>
             <label className="flex items-center space-x-2 ">
               <input
-                onChange={() => onCategoryFilter(cat.name)}
+                onChange={() => {
+                  onCloseFiler();
+                  onCategoryFilter(cat.name);
+                }}
                 type="checkbox"
                 className="form-checkbox h-4 w-4 "
                 checked={selectedCategory === cat.name}

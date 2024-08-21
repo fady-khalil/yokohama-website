@@ -105,6 +105,7 @@ const Shop = () => {
         }))
         .filter((item) => item.products.length > 0);
     }
+
     if (sortOrder) {
       filtered = filtered?.flatMap((item) => item.products);
 
@@ -118,8 +119,6 @@ const Shop = () => {
       });
       filtered = [{ products: data }];
     }
-
-    // console.log(filteredData);
 
     setFilteredData(filtered);
   }, [
