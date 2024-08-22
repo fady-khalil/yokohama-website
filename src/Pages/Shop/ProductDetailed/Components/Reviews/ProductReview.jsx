@@ -7,7 +7,7 @@ import ReviewDisplay from "./Components/ReviewDisplay";
 import { UserLoginContext } from "context/Auth/UserLoginContext";
 
 // Fetching data
-import usePostDataToken from "Hooks/Fetching/usePostTokenData";
+import usePostDataTokenJson from "Hooks/Fetching/usePostDataTokenJson";
 import useGetDataToken from "Hooks/Fetching/useGetDataToken";
 import useGetData from "Hooks/Fetching/useGetData";
 import Spinner from "Components/RequestHandler/Spinner";
@@ -31,7 +31,7 @@ const ProductReview = ({ isSignIn, product_id }) => {
   const { error, fetchData } = useGetDataToken();
 
   // post data
-  const { postData, loading: submitDataLoading } = usePostDataToken();
+  const { postData, loading: submitDataLoading } = usePostDataTokenJson();
 
   const submitNewReviewHandler = async () => {
     setFormIsNotValid(false);

@@ -2,8 +2,8 @@ import Container from "Components/Container/Container";
 import React, { useState, useContext, useEffect } from "react";
 import Spinner from "Components/RequestHandler/Spinner";
 import { UserWishlistContext } from "context/User/WishlistContext";
-import { UserLoginContext } from "context/Auth/UserLoginContext";
 import { UserCartContext } from "context/User/CartContext";
+import { Link } from "react-router-dom";
 
 import EmptyCart from "Components/Screens/EmptyCart";
 import { Trash } from "@phosphor-icons/react";
@@ -54,13 +54,13 @@ const Wishlist = () => {
                     key={index}
                   >
                     <img className="w-28" src={image} alt="" />
-                    <div>
+                    <Link to={`/product-detailed/${id}`}>
                       <p className="min-w-[fit-content] font-medium">{name}</p>
                       <span className="mt-2 flex items-center gap-x-2">
                         <p>{price}</p>
                         <p>{currency}</p>
                       </span>
-                    </div>
+                    </Link>
 
                     <button
                       onClick={() => removeFromWishlist(id)}

@@ -4,7 +4,7 @@ import { Trash } from "@phosphor-icons/react";
 import Spinner from "Components/RequestHandler/Spinner";
 import MainButton from "Components/Buttons/MainButton";
 import EmptyCart from "Components/Screens/EmptyCart";
-
+import { Link } from "react-router-dom";
 // context
 import { UserCartContext } from "context/User/CartContext";
 
@@ -42,7 +42,8 @@ const CartReview = ({ onSelectingTabs }) => {
                     { name, image, price, currency, quantity, product_id },
                     index
                   ) => (
-                    <div
+                    <Link
+                      to={`/product-detailed/${product_id}`}
                       className="flex flex-wrap gap-6 items-center justify-between w-full border-b pb-3"
                       key={index}
                     >
@@ -83,7 +84,7 @@ const CartReview = ({ onSelectingTabs }) => {
                           <Trash weight="fill" size={26} />
                         )}
                       </button>
-                    </div>
+                    </Link>
                   )
                 )}
               </div>
