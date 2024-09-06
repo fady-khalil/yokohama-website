@@ -17,7 +17,9 @@ const Shop = () => {
   const [filterType, setFilterType] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [priceRangeData, setPriceRangeData] = useState([]);
-
+  const onPriceRangeChange = (range) => {
+    setPriceRangeData(range);
+  };
   // fetching data
   const { id } = useParams();
   const { fetchData, error } = useGetData();
@@ -25,14 +27,24 @@ const Shop = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState();
+
+  const handlePageChange = (newPage) => {
+    if (newPage !== page) {
+      setPage(newPage);
+    }
+  };
+
   const getData = async () => {
     setIsLoading(true);
     setIsError(false);
 
     try {
       const result = await fetchData(
-        `yokohama/ctegories/all/sub_categories?id=${id}`
+        `yokohama/ctegories/all/sub_categories?id=${id}&page=${page}`
       );
+      setTotalPages(result?.totalpages);
       setData(result?.data || []);
       setFilteredData(result?.data || []);
     } catch (error) {
@@ -44,7 +56,7 @@ const Shop = () => {
 
   useEffect(() => {
     getData();
-  }, [id]);
+  }, [id, page]);
 
   useEffect(() => {
     if (data) {
@@ -180,6 +192,7 @@ const Shop = () => {
       <Header header={"Shop"} />
       <div className="grid grid-cols-1 lg:grid-cols-4 ">
         <Filter
+          onPriceRangeChange={onPriceRangeChange}
           onPriceHighToLow={onPriceHighToLowHandler}
           onBrandFilter={onBrandFilter}
           onCategoryFilter={onCategoryFilter}
@@ -192,7 +205,12 @@ const Shop = () => {
           filterType={filterType}
           classifications={classifications}
         />
-        <Listing data={filteredData} />
+        <Listing
+          totalPages={totalPages}
+          currentPage={page}
+          onPageChange={handlePageChange}
+          data={filteredData}
+        />
       </div>
     </main>
   );

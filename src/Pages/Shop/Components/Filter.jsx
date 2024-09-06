@@ -21,7 +21,7 @@ const Filter = ({
   categories,
   classifications,
   filterType,
-  onHandlePriceRange,
+  onPriceRangeChange,
 }) => {
   const [filterIsVisible, setFilterIsVisible] = useState(false);
   const openFilterHandler = () => {
@@ -31,16 +31,6 @@ const Filter = ({
     setFilterIsVisible(false);
   };
 
-  const {
-    value: searchInput,
-    isValid: searchIsValid,
-    isTouched: searchIsTouched,
-    HasError: searchHasError,
-    inputChangeHandler: searchChangeHandler,
-    inputBlurHandler: searchBlurHanlder,
-    reset: searchReset,
-  } = useInput((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value));
-
   const [priceRange, setPriceRange] = useState();
   const [brands, setBrands] = useState();
   const [category, setCategory] = useState();
@@ -48,7 +38,7 @@ const Filter = ({
   useEffect(() => {
     if (data) {
       // price range
-      const prices = data.flatMap((item) =>
+      const prices = data?.flatMap((item) =>
         item?.products?.map((product) => product.price)
       );
       setPriceRange(prices);
@@ -93,10 +83,12 @@ const Filter = ({
           onClick={closeFilterHandler}
           className="flex items-center justify-end bg-primary p-6 text-white"
         >
-          <X size={32} />
+          <span className="lg:hidden">
+            <X size={32} />
+          </span>
         </button>
         <SortBy onPriceHighToLow={onPriceHighToLow} />
-        <PriceRange data={priceRange} />
+        {/* <PriceRange onPriceRangeChange={onPriceRangeChange} data={priceRange} /> */}
 
         {/* offers */}
         <div className="px-6  min-w-[fit-content] py-2 lg:py-0 ">

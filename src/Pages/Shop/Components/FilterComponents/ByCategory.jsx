@@ -9,7 +9,7 @@ const ByCategory = ({
   const titleHeader = "rb-bold text-lg uppercase ";
   const checkBox = "text-gray-500 rb-medium";
   return (
-    <div className="px-6  min-w-[fit-content] py-2 lg:py-0">
+    <div className="px-6  min-w-[fit-content] pt-2 pb-4  border-b-2 border-black">
       <div className="flex items-center justify-between mb-4">
         <p className={titleHeader}>Category</p>
       </div>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const SortBy = ({ onPriceHighToLow }) => {
-  const titleHeader = "rb-bold text-lg uppercase ";
+  const titleHeader = "rb-bold text-lg uppercase mb-4";
   const checkBox = "text-gray-500 rb-medium";
   const [selectedSortOrder, setSelectedSortOrder] = useState("");
 
@@ -11,10 +11,10 @@ const SortBy = ({ onPriceHighToLow }) => {
   };
 
   return (
-    <div className="px-6 min-w-[fit-content] py-2 lg:py-0">
+    <div className="px-6 min-w-[fit-content] pt-2 pb-4  border-b-2 border-black">
       <p className={titleHeader}>Sort By </p>
 
-      <div className="lg:p-4 flex flex-col gap-y-3 ">
+      <div className=" flex flex-col gap-y-2 ">
         <div className="mb-2">
           <label className="flex items-center space-x-2 ">
             <input
