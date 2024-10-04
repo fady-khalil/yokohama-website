@@ -1,23 +1,18 @@
 import React from "react";
 import Container from "Components/Container/Container";
-import aboutData from "Constant/About";
 
-const WhyUs = () => {
+const WhyUs = ({ data }) => {
   return (
     <section className="my-secondary">
       <Container>
-        {aboutData?.vision.map(({ image, title, list }, index) => (
+        {data?.map(({ image, title, text }, index) => (
           <div className="flex flex-col gap-y-8 lg:flex-row gap-x-16 items-center lg:even:flex-row-reverse mb-14">
             <div className="flex-1">
               <img className="w-full" src={image} alt="" />
             </div>
             <div className="flex-1">
               <p className="rb-bold text-3xl lg:text-4xl">{title}</p>
-              <ul className="mt-6 list-disc list-inside flex flex-col gap-y-2">
-                {list.map((li, index) => (
-                  <li key={index}>{li}</li>
-                ))}
-              </ul>
+              <p className="" dangerouslySetInnerHTML={{ __html: text }} />
             </div>
           </div>
         ))}

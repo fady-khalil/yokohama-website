@@ -8,20 +8,20 @@ import Celebrating from "./Sections/Celebrating";
 import Brands from "Pages/Home/Sections/Brands/Brands";
 import OurClients from "./Sections/OurClients";
 import Content from "./Sections/Content";
-const Brand = () => {
+const Brand = ({ hero, statics, story, content }) => {
   return (
     <section>
-      <Hero data={aboutData.brand.hero} />
-      <Feature data={aboutData.brand.feature} />
+      <Hero data={hero} />
+      <Feature data={statics} />
       <div
         className="brand-bg py-mega "
         style={{ backgroundImage: `url(${bg})` }}
       >
-        <Celebrating data={aboutData.brand.Celebrating} />
+        <Celebrating data={story} />
         <Brands noSpace={true} />
       </div>
       <OurClients data={aboutData.brand.ourClients} />
-      <Content data={aboutData.brand.content} />
+      <Content data={content} />
     </section>
   );
 };

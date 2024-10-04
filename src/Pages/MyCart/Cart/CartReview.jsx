@@ -42,16 +42,20 @@ const CartReview = ({ onSelectingTabs }) => {
                     { name, image, price, currency, quantity, product_id },
                     index
                   ) => (
-                    <Link
-                      to={`/product-detailed/${product_id}`}
+                    <div
                       className="flex flex-wrap gap-6 items-center justify-between w-full border-b pb-3"
                       key={index}
                     >
-                      <img className="w-28" src={image} alt="" />
+                      <Link to={`/product-detailed/${product_id}`}>
+                        <img className="w-28" src={image} alt="" />
+                      </Link>
                       <div>
-                        <p className="f min-w-[fit-content] font-medium">
+                        <Link
+                          to={`/product-detailed/${product_id}`}
+                          className="f min-w-[fit-content] font-medium"
+                        >
                           {name}
-                        </p>
+                        </Link>
                         <span className="mt-2 flex items-center gap-x-2">
                           <p>{price}</p>
                           <p>{currency}</p>
@@ -84,7 +88,7 @@ const CartReview = ({ onSelectingTabs }) => {
                           <Trash weight="fill" size={26} />
                         )}
                       </button>
-                    </Link>
+                    </div>
                   )
                 )}
               </div>

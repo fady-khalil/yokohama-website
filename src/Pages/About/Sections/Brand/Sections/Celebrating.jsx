@@ -23,7 +23,7 @@ const Celebrating = ({ data }) => {
           modules={[Navigation]}
           onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
         >
-          {data?.map(({ title, num, text }, index) => (
+          {data?.map(({ title, year, text }, index) => (
             <SwiperSlide key={index}>
               <div
                 className={`lg:w-1/2 mx-auto bg-white p-10 lg:px-16 lg:py-32 text-center ${
@@ -36,7 +36,7 @@ const Celebrating = ({ data }) => {
                   {title}
                 </p>
                 <p className="rb-bold text-4xl lg:text-5xl text-font my-4">
-                  {num}
+                  {year}
                 </p>
                 <p className="rb-light lg:w-1/2 mx-auto">{text}</p>
               </div>
@@ -45,14 +45,14 @@ const Celebrating = ({ data }) => {
         </Swiper>
 
         <div className="flex items-center mt-secondary text-white justify-center">
-          {data.map(({ num }, index) => (
+          {data?.map(({ year }, index) => (
             <div
               className={`flex-1 flex items-center justify-center ${
                 index === activeIndex ? "text-primary" : ""
               }`}
               key={index}
             >
-              {num}
+              {year}
             </div>
           ))}
         </div>

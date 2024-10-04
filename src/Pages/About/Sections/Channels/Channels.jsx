@@ -1,7 +1,8 @@
 import React from "react";
 import Container from "Components/Container/Container";
-import aboutData from "Constant/About";
-const Channels = () => {
+import channelBg from "assests/about/channels/bg.jpg";
+
+const Channels = ({ data }) => {
   return (
     <section className="my-secondary">
       <Container>
@@ -12,16 +13,20 @@ const Channels = () => {
         </div>
 
         <div
-          className="py-24 mt-12  gap-y-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-between"
-          style={{ backgroundImage: `url(${aboutData?.channels.background})` }}
+          className="py-24 mt-12  gap-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-between"
+          style={{ backgroundImage: `url(${channelBg})` }}
         >
-          {aboutData?.channels?.list?.map(({ icon, name }, index) => (
+          {data?.map(({ logo, title }, index) => (
             <div
               className="flex flex-col gap-y-2 items-center text-white"
               key={index}
             >
-              <img src={icon} alt="" />
-              <p className="rb-medium ">{name}</p>
+              <img
+                className="w-32 h-32 mx-auto object-contain"
+                src={logo}
+                alt=""
+              />
+              <p className="rb-medium ">{title}</p>
             </div>
           ))}
         </div>
