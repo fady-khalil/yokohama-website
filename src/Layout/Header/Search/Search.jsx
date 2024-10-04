@@ -1,12 +1,15 @@
 import React from "react";
 
-import SearchIcon from "./Components/SearchIcon";
-import SearchInput from "./Components/SearchInput";
+import { Link } from "react-router-dom";
+import { MagnifyingGlass } from "@phosphor-icons/react";
 const Search = ({ isHomePage }) => {
   return (
-    <div className="h-full flex items-center justify-center">
-      <SearchIcon isHomePage={isHomePage} />
-    </div>
+    <Link
+      to={"/search"}
+      className="text-lg  border-r border-[#777] flex items-center justify-center h-full px-6 py-6 "
+    >
+      <MagnifyingGlass weight="bold" color={isHomePage ? "black" : "white"} />
+    </Link>
   );
 };
 

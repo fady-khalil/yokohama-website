@@ -24,6 +24,7 @@ import MyCart from "Pages/MyCart/MyCart";
 import GuestCart from "Pages/GuestCart/GuestCart";
 import GuestCheckout from "Pages/GuestCart/GuestCheckout.jsx";
 import SuccessPage from "Pages/SuccessPage/SuccessPage";
+import Search from "Pages/Search/Search";
 // modals
 import AuthModal from "Pages/Auth/AuthModal";
 import ForgetPasswordModal from "Pages/Auth/ForgetPassword/ForgetPasswordModal";
@@ -59,6 +60,7 @@ const UserRouting = () => {
         <Route path="shop/:id" element={<Shop />} />
         <Route path="product-detailed/:id" element={<ProductDetailed />} />
         <Route path="Success-Page" element={<SuccessPage />} />
+        <Route path="search" element={<Search />} />
 
         {/* condition rendering */}
         <Route

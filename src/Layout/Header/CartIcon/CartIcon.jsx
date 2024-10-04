@@ -44,8 +44,8 @@ const CartIcon = ({ isHomePage }) => {
       <div
         className={`absolute -translate-x-1/2 left-1/2 transition ease-in duration-300 min-w-[max-content] top-[100%] py-2 px-2 ${
           displayProduct
-            ? " translate-y-[0] opacity-100 "
-            : "translate-y-[-50%]  opacity-[0]"
+            ? " translate-y-[0] opacity-100 visible select-auto"
+            : "translate-y-[-50%]  opacity-[0] select-none invisible"
         } z-[100] bg-white drop-shadow-2xl `}
       >
         <p className="text-sm text-center py-2 border-b border-[#ccc] twhite ">
