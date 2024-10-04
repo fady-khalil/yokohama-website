@@ -110,6 +110,7 @@ const Filter = ({
           data={category}
         />
         <ByClassification
+          onCloseFiler={closeFilterHandler}
           onClassificationFilter={onClassificationFilter}
           classifications={classifications}
           selectedClassification={selectedClassification}

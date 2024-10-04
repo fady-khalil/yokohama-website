@@ -2,6 +2,7 @@ const ByClassification = ({
   classifications,
   selectedClassification,
   onClassificationFilter,
+  onCloseFiler,
 }) => {
   const titleHeader = "rb-bold text-lg uppercase ";
   const checkBox = "text-gray-500 rb-medium";
@@ -16,7 +17,10 @@ const ByClassification = ({
           <div key={index}>
             <label className="flex items-center space-x-2">
               <input
-                onChange={() => onClassificationFilter(classification)}
+                onChange={() => {
+                  onClassificationFilter(classification);
+                  onCloseFiler();
+                }}
                 type="checkbox"
                 className="form-checkbox h-4 w-4"
                 checked={selectedClassification === classification}
