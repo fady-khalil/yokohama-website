@@ -9,44 +9,56 @@ import IsError from "Components/RequestHandler/IsError";
 
 const Shop = () => {
   const [filteredData, setFilteredData] = useState([]);
-  const [selectedBrand, setSelectedBrand] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedClassification, setSelectedClassification] = useState("");
-  const [categories, setCategories] = useState([]);
-  const [classifications, setClassifications] = useState([]);
-  const [filterType, setFilterType] = useState("");
   const [sortOrder, setSortOrder] = useState("");
-  const [priceRangeData, setPriceRangeData] = useState([]);
-  const onPriceRangeChange = (range) => {
-    setPriceRangeData(range);
-  };
 
-  // fetching data
-  const { id } = useParams();
-  const { fetchData, error } = useGetData();
-  const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
+  // pagination
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState();
-
   const handlePageChange = (newPage) => {
     if (newPage !== page) {
       setPage(newPage);
     }
   };
 
-  const getData = async () => {
+  // fetching data
+  const { id } = useParams();
+  const { fetchData, error } = useGetData();
+  const [data, setData] = useState([]);
+  const [allData, setAllData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  // filter
+  const [selectedBrandID, setSelectedBrandID] = useState();
+  const [selectClassificationID, setSelectClassificationID] = useState();
+  const [selectCategoryId, setSelectCategoryId] = useState();
+
+  const handleBrandId = (id) => {
+    setSelectedBrandID(id);
+  };
+  const handleClassificationID = (id) => {
+    setSelectClassificationID(id);
+  };
+  const handleCategoryIdID = (id) => {
+    setSelectCategoryId(id);
+  };
+
+  const getData = async (classificationID, brandId, categoryId) => {
     setIsLoading(true);
     setIsError(false);
 
     try {
       const result = await fetchData(
-        `yokohama/ctegories/all/sub_categories?id=${id}&page=${page}`
+        `yokohama/ctegories/all/sub_categories?id=${id}${
+          classificationID ? `&class_ids=[${classificationID}]` : ""
+        }${brandId ? `&brand_ids=[${brandId}]` : ""}${
+          categoryId ? `&categ_ids=[${categoryId}]` : ""
+        }&page=${page}`
       );
       setTotalPages(result?.totalpages);
-      setData(result?.data || []);
-      setFilteredData(result?.data || []);
+      setData(result?.data);
+      setAllData(result);
+      setFilteredData(result?.data);
     } catch (error) {
       setIsError(true);
     } finally {
@@ -55,131 +67,39 @@ const Shop = () => {
   };
 
   useEffect(() => {
-    getData();
-  }, [id, page]);
+    if (selectClassificationID && selectedBrandID && selectCategoryId) {
+      // Call with both classificationID and brandID
+      getData(selectClassificationID, selectedBrandID, selectCategoryId);
+    } else if (selectClassificationID) {
+      // Call with only classificationID
+      getData(selectClassificationID, null, null);
+    } else if (selectedBrandID) {
+      // Call with only brandID
+      getData(null, selectedBrandID, null);
+    } else if (selectCategoryId) {
+      getData(null, null, selectCategoryId);
+    } else {
+      getData();
+    }
+  }, [id, page, selectClassificationID, selectedBrandID, selectCategoryId]);
 
+  // price high to low
   useEffect(() => {
-    if (data) {
-      const allCategories = data.flatMap((item) =>
-        item?.products.flatMap((product) => product.category)
-      );
-
-      const uniqueCategories = Array.from(
-        new Set(allCategories.map((cat) => JSON.stringify(cat)))
-      ).map((cat) => JSON.parse(cat));
-
-      setCategories(uniqueCategories);
-
-      const allClassifications = data.flatMap((item) =>
-        item?.products.flatMap((product) => product.classification)
-      );
-
-      const uniqueClassifications = Array.from(
-        new Set(allClassifications.map((classif) => JSON.stringify(classif)))
-      ).map((classif) => JSON.parse(classif));
-
-      setClassifications(uniqueClassifications);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    let filtered = data;
-
-    if (filterType === "brand" && selectedBrand) {
-      filtered = filtered
-        .map((item) => ({
-          ...item,
-          products: item.products.filter(
-            (product) => product.brand === selectedBrand
-          ),
-        }))
-        .filter((item) => item.products.length > 0);
-    }
-
-    if (filterType === "category" && selectedCategory) {
-      filtered = filtered
-        .map((item) => ({
-          ...item,
-          products: item.products.filter((product) =>
-            product.category.some((cat) => cat.name === selectedCategory)
-          ),
-        }))
-        .filter((item) => item.products.length > 0);
-    }
-
-    if (filterType === "classification" && selectedClassification) {
-      filtered = filtered
-        .map((item) => ({
-          ...item,
-          products: item.products.filter(
-            (product) => product.classification === selectedClassification
-          ),
-        }))
-        .filter((item) => item.products.length > 0);
-    }
+    let filtered = [...data];
 
     if (sortOrder) {
-      filtered = filtered?.flatMap((item) => item.products);
-
-      const data = filtered.sort((a, b) => {
+      filtered = filtered.sort((a, b) => {
         if (sortOrder === "high-to-low") {
-          return b.price - a.price; // Highest to lowest
+          return b.price - a.price;
         } else if (sortOrder === "low-to-high") {
-          return a.price - b.price; // Lowest to highest
+          return a.price - b.price;
         }
-        return 0; // No sorting if sortOrder is neither
+        return 0;
       });
-      filtered = [{ products: data }];
     }
 
     setFilteredData(filtered);
-  }, [
-    selectedBrand,
-    selectedCategory,
-    selectedClassification,
-    filterType,
-    sortOrder,
-    data,
-  ]);
-
-  const onBrandFilter = (brand) => {
-    if (filterType === "brand" && selectedBrand === brand) {
-      setSelectedBrand("");
-      setFilterType(""); // Reset filterType when brand is cleared
-    } else {
-      setSelectedBrand(brand);
-      setSelectedCategory(""); // Clear category and classification selection
-      setSelectedClassification("");
-      setFilterType("brand");
-    }
-  };
-
-  const onCategoryFilter = (category) => {
-    if (filterType === "category" && selectedCategory === category) {
-      setSelectedCategory("");
-      setFilterType(""); // Reset filterType when category is cleared
-    } else {
-      setSelectedCategory(category);
-      setSelectedBrand(""); // Clear brand and classification selection
-      setSelectedClassification("");
-      setFilterType("category");
-    }
-  };
-
-  const onClassificationFilter = (classification) => {
-    if (
-      filterType === "classification" &&
-      selectedClassification === classification
-    ) {
-      setSelectedClassification("");
-      setFilterType(""); // Reset filterType when classification is cleared
-    } else {
-      setSelectedClassification(classification);
-      setSelectedBrand(""); // Clear brand and category selection
-      setSelectedCategory("");
-      setFilterType("classification");
-    }
-  };
+  }, [sortOrder, data]);
 
   const onPriceHighToLowHandler = (order) => {
     setSortOrder(order);
@@ -188,64 +108,31 @@ const Shop = () => {
   // if (isLoading) return <IsLoading />;
   if (isError || error) return <IsError />;
 
-  // Display message when no products match the filter
-  const noProductsMessage = filteredData.every(
-    (item) => item.products.length === 0
-  )
-    ? "No results found for this page with the current filters."
-    : null;
-
-  const clearFilters = () => {
-    setSelectedBrand("");
-    setSelectedCategory("");
-    setSelectedClassification("");
-    setFilterType("");
-    setSortOrder("");
-    // Optionally, you might want to reset price range if applicable
-    setPriceRangeData([]);
-  };
-
   return (
     <main className="relative">
       <Header header={"Shop"} />
       <div className="grid grid-cols-1 lg:grid-cols-4 ">
         <Filter
-          onPriceRangeChange={onPriceRangeChange}
-          onPriceHighToLow={onPriceHighToLowHandler}
-          onBrandFilter={onBrandFilter}
-          onCategoryFilter={onCategoryFilter}
-          onClassificationFilter={onClassificationFilter}
+          allData={allData}
           data={data}
-          selectedBrand={selectedBrand}
-          selectedCategory={selectedCategory}
-          selectedClassification={selectedClassification}
-          categories={categories}
-          filterType={filterType}
-          classifications={classifications}
+          onPriceHighToLow={onPriceHighToLowHandler}
+          onHandleBrandId={handleBrandId}
+          onHandleClassificationID={handleClassificationID}
+          onHanldeCategoryId={handleCategoryIdID}
         />
 
         {isLoading ? (
-          <IsLoading />
+          <div className=" col-span-3">
+            <IsLoading />
+          </div>
         ) : (
           <div className="col-span-3">
-            {noProductsMessage ? (
-              <div className="text-center py-10">
-                <p>{noProductsMessage}</p>
-                <button
-                  onClick={clearFilters}
-                  className="mt-4 px-4 py-2 bg-primary text-white rounded "
-                >
-                  Clear Filters
-                </button>
-              </div>
-            ) : (
-              <Listing
-                totalPages={totalPages}
-                currentPage={page}
-                onPageChange={handlePageChange}
-                data={filteredData}
-              />
-            )}
+            <Listing
+              totalPages={totalPages}
+              currentPage={page}
+              onPageChange={handlePageChange}
+              data={filteredData}
+            />
           </div>
         )}
       </div>

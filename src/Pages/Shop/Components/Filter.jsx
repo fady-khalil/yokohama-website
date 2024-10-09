@@ -1,27 +1,18 @@
-import { useEffect, useState } from "react";
-import { MagnifyingGlass, Faders, X } from "@phosphor-icons/react";
-import useInput from "form/Hooks/user-input";
+import { useState } from "react";
+import { Faders, X } from "@phosphor-icons/react";
 
 // filter
 import SortBy from "./FilterComponents/SortBy";
-import PriceRange from "./FilterComponents/PriceRange";
 import ByBrand from "./FilterComponents/ByBrand";
 import ByCategory from "./FilterComponents/ByCategory";
 import ByClassification from "./FilterComponents/ByClassification";
 
 const Filter = ({
   onPriceHighToLow,
-  onBrandFilter,
-  onCategoryFilter,
-  onClassificationFilter,
-  data,
-  selectedBrand,
-  selectedCategory,
-  selectedClassification,
-  categories,
-  classifications,
-  filterType,
-  onPriceRangeChange,
+  allData,
+  onHandleBrandId,
+  onHandleClassificationID,
+  onHanldeCategoryId,
 }) => {
   const [filterIsVisible, setFilterIsVisible] = useState(false);
   const openFilterHandler = () => {
@@ -30,39 +21,6 @@ const Filter = ({
   const closeFilterHandler = () => {
     setFilterIsVisible(false);
   };
-
-  const [priceRange, setPriceRange] = useState();
-  const [brands, setBrands] = useState();
-  const [category, setCategory] = useState();
-
-  useEffect(() => {
-    if (data) {
-      // price range
-      const prices = data?.flatMap((item) =>
-        item?.products?.map((product) => product.price)
-      );
-      setPriceRange(prices);
-
-      // brand
-      const brands = data?.flatMap((item) =>
-        item?.products?.map((product) => product.brand)
-      );
-      const uniqueBrands = Array.from(new Set(brands));
-      setBrands(uniqueBrands);
-    }
-
-    // cat
-    const categories = data?.flatMap((item) =>
-      item?.products?.flatMap((product) => product.category)
-    );
-
-    // Flatten and remove duplicates
-    const uniqueCategories = Array.from(
-      new Set(categories?.map((category) => JSON.stringify(category)))
-    ).map((category) => JSON.parse(category));
-
-    setCategory(uniqueCategories);
-  }, [data]);
 
   return (
     <>
@@ -75,7 +33,7 @@ const Filter = ({
         <div className="fixed top-0 left-0 bg-[#000000a3] w-[100vw] h-[100vh] z-[10]"></div>
       )}
       <div
-        className={`fixed  top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-[95vw] h-[90vh] md:w-[60vw]  overflow-scroll  z-[10] lg:sticky lg:top-2 lg:mt-[-120px] lg:h-[max-content] lg:top-0 lg:translate-y-0 lg:left-0 lg:translate-x-0 lg:w-auto lg:overflow-auto  flex-col gap-8 border-r bg-white  ${
+        className={`filter-scrollbar fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-[95vw] max-h-[100vh] md:w-[60vw]  overflow-y-scroll  z-[10] lg:sticky lg:top-2 lg:mt-[-120px] lg:h-[max-content] lg:top-0 lg:translate-y-0 lg:left-0 lg:translate-x-0 lg:w-auto  flex-col gap-8 border-r bg-white  ${
           filterIsVisible ? "flex" : "hidden lg:flex"
         }`}
       >
@@ -98,22 +56,19 @@ const Filter = ({
           </label>
         </div>
         <ByBrand
+          onHandleBrandId={onHandleBrandId}
+          data={allData?.brands}
           onCloseFiler={closeFilterHandler}
-          selectedBrand={selectedBrand}
-          onBrandFilter={onBrandFilter}
-          data={brands}
         />
         <ByCategory
+          onHanldeCategoryId={onHanldeCategoryId}
+          data={allData?.ctegories}
           onCloseFiler={closeFilterHandler}
-          selectedCategory={selectedCategory}
-          onCategoryFilter={onCategoryFilter}
-          data={category}
         />
         <ByClassification
+          onHandleClassificationID={onHandleClassificationID}
+          data={allData?.classification}
           onCloseFiler={closeFilterHandler}
-          onClassificationFilter={onClassificationFilter}
-          classifications={classifications}
-          selectedClassification={selectedClassification}
         />
         {/* <MainButton onClick={closeFilterHandler}>Apply</MainButton> */}
       </div>

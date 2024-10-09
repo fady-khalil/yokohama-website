@@ -20,13 +20,13 @@ const Shop = () => {
   const onPriceRangeChange = (range) => {
     setPriceRangeData(range);
   };
+
   // fetching data
   const { id } = useParams();
   const { fetchData, error } = useGetData();
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState();
 
@@ -185,8 +185,26 @@ const Shop = () => {
     setSortOrder(order);
   };
 
-  if (isLoading) return <IsLoading />;
+  // if (isLoading) return <IsLoading />;
   if (isError || error) return <IsError />;
+
+  // Display message when no products match the filter
+  const noProductsMessage = filteredData.every(
+    (item) => item.products.length === 0
+  )
+    ? "No results found for this page with the current filters."
+    : null;
+
+  const clearFilters = () => {
+    setSelectedBrand("");
+    setSelectedCategory("");
+    setSelectedClassification("");
+    setFilterType("");
+    setSortOrder("");
+    // Optionally, you might want to reset price range if applicable
+    setPriceRangeData([]);
+  };
+
   return (
     <main className="relative">
       <Header header={"Shop"} />
@@ -205,12 +223,31 @@ const Shop = () => {
           filterType={filterType}
           classifications={classifications}
         />
-        <Listing
-          totalPages={totalPages}
-          currentPage={page}
-          onPageChange={handlePageChange}
-          data={filteredData}
-        />
+
+        {isLoading ? (
+          <IsLoading />
+        ) : (
+          <div className="col-span-3">
+            {noProductsMessage ? (
+              <div className="text-center py-10">
+                <p>{noProductsMessage}</p>
+                <button
+                  onClick={clearFilters}
+                  className="mt-4 px-4 py-2 bg-primary text-white rounded "
+                >
+                  Clear Filters
+                </button>
+              </div>
+            ) : (
+              <Listing
+                totalPages={totalPages}
+                currentPage={page}
+                onPageChange={handlePageChange}
+                data={filteredData}
+              />
+            )}
+          </div>
+        )}
       </div>
     </main>
   );

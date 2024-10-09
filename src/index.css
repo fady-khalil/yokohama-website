@@ -32,9 +32,7 @@ body {
   font-weight: 900;
   font-style: normal;
 }
-.css-13cymwt-control {
-  /* background: rgb(229 231 235) !important; */
-}
+
 .test {
   background: rgb(229 231 235) !important;
   padding-block: 0.7rem !important;
@@ -96,4 +94,27 @@ body {
   top: 0px;
   z-index: 1000; /* Adjust as needed to ensure it stays above other elements */
   background-color: #efefef; /* Same background color as the tabs */
+}
+
+/* filter scroll bar */
+.filter-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.filter-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #dc0c15; /* Customize the color */
+  border-radius: 10px; /* Make it rounded */
+}
+
+.filter-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Color when hovered */
+}
+
+.filter-scrollbar::-webkit-scrollbar-track {
+  background-color: #f1f1f1; /* Track background */
+}
+
+.filter-scrollbar {
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #b8b8b8 #f1f1f1; /* For Firefox */
 }

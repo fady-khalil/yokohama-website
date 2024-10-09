@@ -3,7 +3,7 @@ import React from "react";
 const Spinner = ({ isWhite, isSmall }) => {
   return (
     <svg
-      className={`animate-spin ${isSmall ? "h-5 w-5" : "h-6 w-6"}  ${
+      className={`animate-spin ${isSmall ? "h-5 w-5" : "h-8 w-8"}  ${
         isWhite ? "text-red-500" : "text-primary"
       }`}
       viewBox="0 0 24 24"
