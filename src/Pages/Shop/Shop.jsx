@@ -50,11 +50,20 @@ const Shop = () => {
     try {
       const result = await fetchData(
         `yokohama/ctegories/all/sub_categories?id=${id}${
-          classificationID ? `&class_ids=[${classificationID}]` : ""
-        }${brandId ? `&brand_ids=[${brandId}]` : ""}${
-          categoryId ? `&categ_ids=[${categoryId}]` : ""
+          classificationID ? `&class_ids=${classificationID}` : ""
+        }${brandId ? `&brand_ids=${brandId}` : ""}${
+          categoryId ? `&categ_ids=${categoryId}` : ""
         }&page=${page}`
       );
+
+      console.log(
+        `yokohama/ctegories/all/sub_categories?id=${id}${
+          classificationID ? `&class_ids=${classificationID}` : ""
+        }${brandId ? `&brand_ids=${brandId}` : ""}${
+          categoryId ? `&categ_ids=${categoryId}` : ""
+        }&page=${page}`
+      );
+
       setTotalPages(result?.totalpages);
       setData(result?.data);
       setAllData(result);
@@ -68,8 +77,17 @@ const Shop = () => {
 
   useEffect(() => {
     if (selectClassificationID && selectedBrandID && selectCategoryId) {
-      // Call with both classificationID and brandID
+      // Call with all three: classificationID, brandID, and categoryID
       getData(selectClassificationID, selectedBrandID, selectCategoryId);
+    } else if (selectClassificationID && selectedBrandID) {
+      // Call with classificationID and brandID
+      getData(selectClassificationID, selectedBrandID, null);
+    } else if (selectClassificationID && selectCategoryId) {
+      // Call with classificationID and categoryID
+      getData(selectClassificationID, null, selectCategoryId);
+    } else if (selectedBrandID && selectCategoryId) {
+      // Call with brandID and categoryID
+      getData(null, selectedBrandID, selectCategoryId);
     } else if (selectClassificationID) {
       // Call with only classificationID
       getData(selectClassificationID, null, null);
@@ -77,8 +95,10 @@ const Shop = () => {
       // Call with only brandID
       getData(null, selectedBrandID, null);
     } else if (selectCategoryId) {
+      // Call with only categoryID
       getData(null, null, selectCategoryId);
     } else {
+      // Call without any parameters
       getData();
     }
   }, [id, page, selectClassificationID, selectedBrandID, selectCategoryId]);

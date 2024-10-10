@@ -2,16 +2,15 @@ import React, { useState } from "react";
 
 const ByClassification = ({ data, onCloseFiler, onHandleClassificationID }) => {
   const [selectedClassificationID, setSelectedClassificationID] =
-    useState(null); // Manage the selected classification ID
+    useState(null);
   const titleHeader = "rb-bold text-lg uppercase";
   const checkBox = "text-gray-500 rb-medium";
 
   const handleChange = (id) => {
-    // Toggle selection: If the same ID is clicked again, unselect it
     const newSelectedID = selectedClassificationID === id ? null : id;
-    setSelectedClassificationID(newSelectedID); // Update the selected ID
+    setSelectedClassificationID(newSelectedID);
     onCloseFiler();
-    onHandleClassificationID(newSelectedID); // Pass the updated ID to parent
+    onHandleClassificationID(newSelectedID);
   };
 
   return (
