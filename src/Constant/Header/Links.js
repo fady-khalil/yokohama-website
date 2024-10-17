@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import useGetData from "Hooks/Fetching/useGetData";
+import bannerImage from "assests/tires-shop.jpg";
 
-const FooterLinks = () => {
+const GetLinks = () => {
   const [data, setData] = useState();
   const [aboutData, setAboutData] = useState([]);
   const [dataContent, setDataContent] = useState();
@@ -57,13 +58,16 @@ const FooterLinks = () => {
     getAboutData();
   }, []);
 
-  return [
+  const updatedNavLinks = [
     {
+      banner: bannerImage,
+      text: "Shop",
       mega: true,
-      list: data,
+      pages: data,
     },
     {
-      name: "About",
+      banner: bannerImage,
+      text: "About",
       mega: true,
       about: true,
       pages: [
@@ -86,37 +90,32 @@ const FooterLinks = () => {
       ],
     },
     // Dynamic rendering of dataContent
-    // ...(dataContent?.map((content) => ({
-    //   dynamic: true,
-    //   text: content.name, // Use the name of each content as text
-    //   mega: true,
-    //   pages: content.sub_cat_child || [], // Use sub_cat_child as pages
-    // })) || []),
+    ...(dataContent?.map((content) => ({
+      banner: bannerImage,
+      dynamic: true,
+      text: content.name, // Use the name of each content as text
+      mega: true,
+      pages: content.sub_cat_child || [], // Use sub_cat_child as pages
+    })) || []),
     {
-      name: "Dealers",
-      path: "/dealers",
+      text: "Promotion",
+      url: "/",
     },
     {
-      name: "Safety",
-      path: "safety",
-    },
-    {
-      name: "Contact",
-      path: "contact-us",
-    },
-    {
-      name: "Videos",
-      path: "",
-    },
-    {
-      name: "Original Equipment",
-      path: "original-equipment",
-    },
-    {
-      name: "News and news",
-      path: "news-and-event",
+      text: "Tire Finder",
+      url: "/",
     },
   ];
+
+  return updatedNavLinks;
 };
 
-export default FooterLinks;
+export default GetLinks;
+
+// MDE
+// EUROPE
+// AMERCA
+// market maker => data for tiers
+// 1010 tires
+// sizemytire
+// equivilants tires size also to but teh data

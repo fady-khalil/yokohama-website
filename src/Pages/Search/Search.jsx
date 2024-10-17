@@ -89,13 +89,11 @@ const Search = () => {
     }
   };
 
-  console.log(data);
-
   return (
     <main>
-      <section className="">
+      <section className="min-h-[100vh]">
         <Container>
-          <div className="border border-black rounded-lg flex items-stretch gap-x-2 mt-16 lg:mt-32 lg:w-1/2 mx-auto">
+          <div className="border border-black rounded-lg flex items-stretch gap-x-2 mt-16 lg:mt-32 lg:w-1/2 mx-auto ">
             <input
               placeholder="Search..."
               className="flex-1 outline-0 px-2 rounded-lg"

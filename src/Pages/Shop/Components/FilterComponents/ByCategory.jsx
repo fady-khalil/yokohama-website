@@ -1,38 +1,35 @@
 import React, { useState } from "react";
 
-const ByCategory = ({ data, onCloseFiler, onHanldeCategoryId }) => {
-  const titleHeader = "rb-bold text-lg uppercase ";
-  const checkBox = "text-gray-500 rb-medium";
-  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
-
-  const handleChange = (id) => {
-    const newSelectedBrandId = selectedCategoryId === id ? null : id;
-    setSelectedCategoryId(newSelectedBrandId);
+const ByCategory = ({
+  data,
+  onCloseFiler,
+  onHanldeCategoryId,
+  selectedCategoryId,
+  setSelectedCategoryId,
+}) => {
+  const handleChange = (e) => {
+    const newSelectedCategoryId = e.target.value
+      ? parseInt(e.target.value)
+      : null;
+    setSelectedCategoryId(newSelectedCategoryId);
     onCloseFiler();
-    onHanldeCategoryId(newSelectedBrandId);
+    onHanldeCategoryId(newSelectedCategoryId);
   };
+
   return (
-    <div className="px-6  min-w-[fit-content] pt-2 pb-4  border-b-2 border-black">
-      <div className="flex items-center justify-between mb-4">
-        <p className={titleHeader}>Category</p>
-      </div>
-      <div className="flex flex-col gap-y-3">
+    <div className="flex flex-col gap-y-3 border-b-[1.5px] border-black pb-2">
+      <select
+        onChange={handleChange}
+        value={selectedCategoryId || ""}
+        className="outline-0"
+      >
+        <option value="">By category</option>
         {data?.map(({ name, id }, index) => (
-          <div key={index}>
-            <label className="flex items-center space-x-2 ">
-              <input
-                onChange={() => {
-                  handleChange(id);
-                }}
-                type="checkbox"
-                className="form-checkbox h-4 w-4 "
-                checked={selectedCategoryId === id}
-              />
-              <span className={checkBox}>{name}</span>
-            </label>
-          </div>
+          <option key={index} value={id}>
+            {name}
+          </option>
         ))}
-      </div>
+      </select>
     </div>
   );
 };

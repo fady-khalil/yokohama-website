@@ -13,66 +13,88 @@ const Filter = ({
   onHandleBrandId,
   onHandleClassificationID,
   onHanldeCategoryId,
+  isVisible,
+  onClearFilter,
+  onHandleFilterVisible,
 }) => {
-  const [filterIsVisible, setFilterIsVisible] = useState(false);
-  const openFilterHandler = () => {
-    setFilterIsVisible(true);
-  };
-  const closeFilterHandler = () => {
-    setFilterIsVisible(false);
+  // State for filter sub-components
+  const [selectedBrandId, setSelectedBrandId] = useState(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [selectedClassificationId, setSelectedClassificationId] =
+    useState(null);
+
+  // Clear filter handler
+  const clearFiltersHandler = () => {
+    setSelectedBrandId(null);
+    setSelectedCategoryId(null);
+    setSelectedClassificationId(null);
+
+    // Also trigger the parent clear filter function to reset the data
+    onClearFilter();
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // This will create a smooth scrolling effect
+    });
   };
 
   return (
-    <>
-      <div className="flex lg:hidden items-center justify-end  bg-primary  gap-x-6  border-b px-3 ss:px-6 sm:px-8 sticky top-0 py-3 sm:py-6 z-[10]">
-        <button onClick={openFilterHandler}>
-          <Faders color="white" size={32} />
-        </button>
-      </div>
-      {filterIsVisible && (
-        <div className="fixed top-0 left-0 bg-[#000000a3] w-[100vw] h-[100vh] z-[10]"></div>
-      )}
-      <div
-        className={`filter-scrollbar fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-[95vw] max-h-[100vh] md:w-[60vw]  overflow-y-scroll  z-[10] lg:sticky lg:top-2 lg:mt-[-120px] lg:h-[max-content] lg:top-0 lg:translate-y-0 lg:left-0 lg:translate-x-0 lg:w-auto  flex-col gap-8 border-r bg-white  ${
-          filterIsVisible ? "flex" : "hidden lg:flex"
-        }`}
+    <div
+      className={`transition ease-in duration-300 ${
+        isVisible
+          ? "fixed shadow-2xl shadow-black rounded-xl	  lg:sticky lg:top-44 w-[90vw] lg:w-auto  left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 h-auto px-3 py-6 lg:px-0 lg:py-0 lg:left-0 lg:translate-x-0 lg:translate-y-0 lg:h-[100vh] z-[100] lg:z-[0] lg:top-44 lg:visible lg:shadow-none"
+          : "fixed lg:sticky  invisible translate-x-[-100%] top-1/2 -translate-y-1/2 lg:w-auto lg:left-0 lg:translate-x-0 lg:translate-y-0 lg:h-[100vh] lg:top-44 lg:visible z-[100] lg:z-[0] lg:shadow-none"
+      }  h-[100vh] flex flex-col gap-y-10 bg-white  `}
+    >
+      <button
+        onClick={onHandleFilterVisible}
+        className="w-max ml-auto flex items-center justify-end absolute right-4 top-4 lg:hidden"
       >
-        <button
-          onClick={closeFilterHandler}
-          className="flex items-center justify-end bg-primary p-6 text-white"
-        >
-          <span className="lg:hidden">
-            <X size={32} />
-          </span>
-        </button>
-        <SortBy onPriceHighToLow={onPriceHighToLow} />
-        {/* <PriceRange onPriceRangeChange={onPriceRangeChange} data={priceRange} /> */}
-
-        {/* offers */}
-        <div className="px-6  min-w-[fit-content] py-2 lg:py-0 ">
-          <label className="flex items-center space-x-2">
-            <input type="checkbox" className="form-checkbox h-4 w-4 " />
-            <span className="rb-bold">Special Offers</span>
-          </label>
-        </div>
-        <ByBrand
-          onHandleBrandId={onHandleBrandId}
-          data={allData?.brands}
-          onCloseFiler={closeFilterHandler}
-        />
-        <ByCategory
-          onHanldeCategoryId={onHanldeCategoryId}
-          data={allData?.ctegories}
-          onCloseFiler={closeFilterHandler}
-        />
-        <ByClassification
-          onHandleClassificationID={onHandleClassificationID}
-          data={allData?.classification}
-          onCloseFiler={closeFilterHandler}
-        />
-        {/* <MainButton onClick={closeFilterHandler}>Apply</MainButton> */}
+        <X size={24} />
+      </button>
+      <SortBy onPriceHighToLow={onPriceHighToLow} />
+      {/* offers */}
+      <div className="min-w-[fit-content] py-2 lg:py-0 ">
+        <label className="flex items-center space-x-2">
+          <input type="checkbox" className="form-checkbox h-4 w-4 " />
+          <span className="rb-bold">Special Offers</span>
+        </label>
       </div>
-    </>
+
+      <div>
+        <h2 className="font-bold uppercase text-lg mb-4">Filter By</h2>
+        <span className="flex flex-col gap-y-6">
+          <ByBrand
+            selectedBrandId={selectedBrandId}
+            setSelectedBrandId={setSelectedBrandId}
+            onHandleBrandId={onHandleBrandId}
+            data={allData?.brands}
+            onCloseFiler={onHandleFilterVisible}
+          />
+          <ByCategory
+            selectedCategoryId={selectedCategoryId}
+            setSelectedCategoryId={setSelectedCategoryId}
+            onHanldeCategoryId={onHanldeCategoryId}
+            data={allData?.ctegories}
+            onCloseFiler={onHandleFilterVisible}
+          />
+          <ByClassification
+            selectedClassificationId={selectedClassificationId}
+            setSelectedClassificationId={setSelectedClassificationId}
+            onHandleClassificationID={onHandleClassificationID}
+            data={allData?.classification}
+            onCloseFiler={onHandleFilterVisible}
+          />
+        </span>
+      </div>
+
+      <button
+        onClick={clearFiltersHandler}
+        className="w-3/4 border border-black py-2"
+      >
+        Clear Filter
+      </button>
+    </div>
   );
 };
 

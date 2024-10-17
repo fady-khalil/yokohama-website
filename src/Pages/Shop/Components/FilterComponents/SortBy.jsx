@@ -1,45 +1,27 @@
 import React, { useState } from "react";
 
 const SortBy = ({ onPriceHighToLow }) => {
-  const titleHeader = "rb-bold text-lg uppercase mb-4";
-  const checkBox = "text-gray-500 rb-medium";
+  const titleHeader = "font-bold uppercase text-lg mb-4";
   const [selectedSortOrder, setSelectedSortOrder] = useState("");
 
-  const handleSortChange = (order) => {
+  const handleSortChange = (e) => {
+    const order = e.target.value;
     setSelectedSortOrder(order);
     onPriceHighToLow(order);
   };
 
   return (
-    <div className="px-6 min-w-[fit-content] pt-2 pb-4  border-b-2 border-black">
-      <p className={titleHeader}>Sort By </p>
-
-      <div className=" flex flex-col gap-y-2 ">
-        <div className="mb-2">
-          <label className="flex items-center space-x-2 ">
-            <input
-              type="checkbox"
-              name="sortOrder"
-              checked={selectedSortOrder === "high-to-low"}
-              onChange={() => handleSortChange("high-to-low")}
-              className=" h-4 w-4"
-            />
-            <span className={checkBox}>Price (high to low)</span>
-          </label>
-        </div>
-        <div className="">
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              name="sortOrder"
-              checked={selectedSortOrder === "low-to-high"}
-              onChange={() => handleSortChange("low-to-high")}
-              className=" h-4 w-4"
-            />
-            <span className={checkBox}>Price (low to high)</span>
-          </label>
-        </div>
-      </div>
+    <div className="mt-8 lg:mt-0">
+      <p className={titleHeader}>Sort By</p>
+      <select
+        value={selectedSortOrder}
+        onChange={handleSortChange}
+        className="flex flex-col gap-y-3 border-b-[1.5px] border-black pb-2 outline-0 w-full"
+      >
+        <option value="">Price</option>
+        <option value="high-to-low">Price (high to low)</option>
+        <option value="low-to-high">Price (low to high)</option>
+      </select>
     </div>
   );
 };

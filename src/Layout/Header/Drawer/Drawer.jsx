@@ -8,14 +8,20 @@ import {
   InstagramLogo,
   YoutubeLogo,
   User,
+  CaretDown,
+  CaretUp,
 } from "@phosphor-icons/react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ModalContext } from "context/Auth/ModalContext";
 
 const Drawer = ({ onHandleClose, isActive }) => {
   const { openModalHandeler, openDealerModalHandeler, userIsLoggedIn } =
     useContext(ModalContext);
+  const [openIndex, setOpenIndex] = useState(null); // Track which dropdown is open
 
+  const toggleDropdown = (index) => {
+    setOpenIndex(openIndex === index ? null : index); // Toggle open/close
+  };
   const footerLinks = FooterLinks();
 
   return (
@@ -48,28 +54,52 @@ const Drawer = ({ onHandleClose, isActive }) => {
         {/* drawer */}
         <div className=" flex flex-col  justify-between mb-10 h-[94vh]">
           <ul className="px-4 mt-secondary flex flex-col gap-y-4">
-            {footerLinks.map(({ name, path, list, mega }, index) =>
-              mega && list ? (
-                list.map(({ name, id }, index) => (
+            {footerLinks.map(
+              ({ name, path, list, mega, pages, dynamic }, parentIndex) =>
+                mega && pages ? (
                   <li
-                    key={index}
+                    key={parentIndex}
                     className="text-white border-b border-white pb-2 capitalize"
                   >
-                    <Link onClick={onHandleClose} to={`/shop/${id}`}>
+                    {/* Parent clickable title */}
+                    <span
+                      onClick={() => toggleDropdown(parentIndex)}
+                      className="cursor-pointer flex items-center gap-x-2"
+                    >
+                      {name}
+                      {openIndex === parentIndex ? (
+                        <CaretUp size={24} />
+                      ) : (
+                        <CaretDown size={24} />
+                      )}
+                    </span>
+
+                    {/* Conditionally render the dropdown in normal flow */}
+                    {openIndex === parentIndex && (
+                      <ul className="mt-2 space-y-1  list-inside list-disc">
+                        {pages.map(({ name, slug }, childIndex) => (
+                          <li
+                            key={childIndex}
+                            className="text-white  pb-2 capitalize"
+                          >
+                            <Link onClick={onHandleClose} to={slug}>
+                              {name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                ) : (
+                  <li
+                    key={parentIndex}
+                    className="text-white border-b border-white pb-2 capitalize"
+                  >
+                    <Link onClick={onHandleClose} to={path}>
                       {name}
                     </Link>
                   </li>
-                ))
-              ) : (
-                <li
-                  key={index}
-                  className="text-white border-b border-white pb-2 capitalize"
-                >
-                  <Link onClick={onHandleClose} to={path}>
-                    {name}
-                  </Link>
-                </li>
-              )
+                )
             )}
 
             <li className="text-white border-b border-white pb-2">

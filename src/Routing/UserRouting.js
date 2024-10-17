@@ -25,11 +25,18 @@ import GuestCart from "Pages/GuestCart/GuestCart";
 import GuestCheckout from "Pages/GuestCart/GuestCheckout.jsx";
 import SuccessPage from "Pages/SuccessPage/SuccessPage";
 import Search from "Pages/Search/Search";
+import Content from "Pages/Content/Content";
+
+// about
+import Brand from "Pages/About/Sections/Brand/Brand";
+import MissionAndVission from "Pages/About/Sections/Mission/MissionAndVission";
+import WhyUs from "Pages/About/Sections/WhyUs/WhyUs";
 // modals
 import AuthModal from "Pages/Auth/AuthModal";
 import ForgetPasswordModal from "Pages/Auth/ForgetPassword/ForgetPasswordModal";
 import DealerSiginModal from "Pages/Auth/DealerSigin/DealerSiginModal";
 import AddNewAddress from "Pages/MyCart/ShippingAndBilling/Components/AddNewAddress";
+import Channels from "Pages/About/Sections/Channels/Channels";
 
 // routing page
 import AccessDeniedPage from "Pages/AccessDenied/AccessDeniedPage";
@@ -58,9 +65,14 @@ const UserRouting = () => {
         <Route path="access-denied" element={<AccessDeniedPage />} />
         <Route path="*" element={<NotFound />} />
         <Route path="shop/:id" element={<Shop />} />
+        <Route path="content/:slug" element={<Content />} />
         <Route path="product-detailed/:id" element={<ProductDetailed />} />
         <Route path="Success-Page" element={<SuccessPage />} />
         <Route path="search" element={<Search />} />
+        <Route path="brand_overview" element={<Brand />} />
+        <Route path="mission_and_values" element={<MissionAndVission />} />
+        <Route path="why-us" element={<WhyUs />} />
+        <Route path="distribution_channels" element={<Channels />} />
 
         {/* condition rendering */}
         <Route

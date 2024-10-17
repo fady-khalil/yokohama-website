@@ -8,3 +8,14 @@
     width: min(100% - 6rem, 120rem);
   }
 }
+@media (min-width: 1200px) {
+  .Container {
+    width: min(100% - 10rem, 120rem);
+  }
+}
+
+@media (min-width: 1400px) {
+  .Container {
+    width: min(100% - 14rem, 120rem);
+  }
+}

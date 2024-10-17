@@ -6,6 +6,8 @@ import { useParams } from "react-router-dom";
 import useGetData from "Hooks/Fetching/useGetData";
 import IsLoading from "Components/RequestHandler/IsLoading";
 import IsError from "Components/RequestHandler/IsError";
+import Container from "Components/Container/Container";
+import { Faders } from "@phosphor-icons/react";
 
 const Shop = () => {
   const [filteredData, setFilteredData] = useState([]);
@@ -53,17 +55,8 @@ const Shop = () => {
           classificationID ? `&class_ids=${classificationID}` : ""
         }${brandId ? `&brand_ids=${brandId}` : ""}${
           categoryId ? `&categ_ids=${categoryId}` : ""
-        }&page=${page}`
+        }&limit=16&page=${page}`
       );
-
-      console.log(
-        `yokohama/ctegories/all/sub_categories?id=${id}${
-          classificationID ? `&class_ids=${classificationID}` : ""
-        }${brandId ? `&brand_ids=${brandId}` : ""}${
-          categoryId ? `&categ_ids=${categoryId}` : ""
-        }&page=${page}`
-      );
-
       setTotalPages(result?.totalpages);
       setData(result?.data);
       setAllData(result);
@@ -125,37 +118,59 @@ const Shop = () => {
     setSortOrder(order);
   };
 
+  const clearFilters = () => {
+    setSelectedBrandID(null);
+    setSelectClassificationID(null);
+    setSelectCategoryId(null);
+    setSortOrder("");
+  };
+
+  const [filterIsVisible, setFilterIsVisible] = useState(false);
+  const onHandleFilterVisible = () => {
+    setFilterIsVisible((cur) => !cur);
+  };
+
   // if (isLoading) return <IsLoading />;
   if (isError || error) return <IsError />;
 
   return (
     <main className="relative">
       <Header header={"Shop"} />
-      <div className="grid grid-cols-1 lg:grid-cols-4 ">
-        <Filter
-          allData={allData}
-          data={data}
-          onPriceHighToLow={onPriceHighToLowHandler}
-          onHandleBrandId={handleBrandId}
-          onHandleClassificationID={handleClassificationID}
-          onHanldeCategoryId={handleCategoryIdID}
-        />
+      <Container>
+        <button
+          onClick={onHandleFilterVisible}
+          className="my-6 lg:hidden flex items-center justify-end w-max ml-auto"
+        >
+          <Faders size={32} />
+        </button>
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-28 mb-secondary lg:my-secondary">
+          <Filter
+            isVisible={filterIsVisible}
+            onHandleFilterVisible={onHandleFilterVisible}
+            allData={allData}
+            onClearFilter={clearFilters}
+            onPriceHighToLow={onPriceHighToLowHandler}
+            onHandleBrandId={handleBrandId}
+            onHandleClassificationID={handleClassificationID}
+            onHanldeCategoryId={handleCategoryIdID}
+          />
 
-        {isLoading ? (
-          <div className=" col-span-3">
-            <IsLoading />
-          </div>
-        ) : (
-          <div className="col-span-3">
-            <Listing
-              totalPages={totalPages}
-              currentPage={page}
-              onPageChange={handlePageChange}
-              data={filteredData}
-            />
-          </div>
-        )}
-      </div>
+          {isLoading ? (
+            <div className="">
+              <IsLoading />
+            </div>
+          ) : (
+            <div className="col-span-3">
+              <Listing
+                totalPages={totalPages}
+                currentPage={page}
+                onPageChange={handlePageChange}
+                data={filteredData}
+              />
+            </div>
+          )}
+        </div>
+      </Container>
     </main>
   );
 };
