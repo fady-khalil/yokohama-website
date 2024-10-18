@@ -57,6 +57,8 @@ const FooterLinks = () => {
     getAboutData();
   }, []);
 
+  console.log(data);
+
   return [
     {
       mega: true,

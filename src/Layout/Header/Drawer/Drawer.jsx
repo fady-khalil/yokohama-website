@@ -52,11 +52,23 @@ const Drawer = ({ onHandleClose, isActive }) => {
         </div>
 
         {/* drawer */}
-        <div className=" flex flex-col  justify-between mb-10 h-[94vh]">
-          <ul className="px-4 mt-secondary flex flex-col gap-y-4">
+        <div className=" flex flex-col  justify-between  h-[94vh] overflow-scroll">
+          <ul className="px-4 mt-secondary flex flex-col gap-y-4  mb-6">
             {footerLinks.map(
               ({ name, path, list, mega, pages, dynamic }, parentIndex) =>
-                mega && pages ? (
+                mega && list ? (
+                  // Render the child of the list inside Link
+                  list.map(({ id, name }, index) => (
+                    <li
+                      key={index}
+                      className="text-white border-b border-white pb-2 capitalize"
+                    >
+                      <Link to={`/shop/${id}`} onClick={onHandleClose}>
+                        {name}
+                      </Link>
+                    </li>
+                  ))
+                ) : mega && pages ? (
                   <li
                     key={parentIndex}
                     className="text-white border-b border-white pb-2 capitalize"
@@ -76,11 +88,11 @@ const Drawer = ({ onHandleClose, isActive }) => {
 
                     {/* Conditionally render the dropdown in normal flow */}
                     {openIndex === parentIndex && (
-                      <ul className="mt-2 space-y-1  list-inside list-disc">
+                      <ul className="mt-2 space-y-1 list-inside list-disc">
                         {pages.map(({ name, slug }, childIndex) => (
                           <li
                             key={childIndex}
-                            className="text-white  pb-2 capitalize"
+                            className="text-white pb-2 capitalize"
                           >
                             <Link onClick={onHandleClose} to={slug}>
                               {name}
