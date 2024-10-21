@@ -36,11 +36,9 @@ const Channels = () => {
     return (
       <section className="my-secondary">
         <Container>
-          <div className="">
-            <h5 className="text-3xl text-primary rb-bold text-center">
-              Distribution channels
-            </h5>
-          </div>
+          <h5 className="text-5xl my-20 text-primary rb-bold text-center">
+            Distribution channels
+          </h5>
 
           <div
             className="py-24 mt-12  gap-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-between"

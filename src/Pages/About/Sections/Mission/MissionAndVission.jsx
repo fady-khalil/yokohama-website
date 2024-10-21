@@ -35,6 +35,9 @@ const MissionAndVission = () => {
   if (data) {
     return (
       <section className="my-secondary">
+        <h5 className="text-5xl my-20 text-primary rb-bold text-center">
+          Mission and Vision
+        </h5>
         <Container>
           {data?.map(({ image, title, text }, index) => (
             <div
@@ -45,8 +48,14 @@ const MissionAndVission = () => {
                 <img className="w-full" src={image} alt="" />
               </div>
               <div className="flex-1">
-                <p className="rb-bold text-4xl">{title}</p>
-                <p className="mt-4">{text}</p>
+                <div
+                  className="rb-bold text-4xl"
+                  dangerouslySetInnerHTML={{ __html: title }}
+                />
+                <div
+                  className="mt-4"
+                  dangerouslySetInnerHTML={{ __html: text }}
+                />
               </div>
             </div>
           ))}

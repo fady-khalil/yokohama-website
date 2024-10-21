@@ -34,6 +34,9 @@ const WhyUs = () => {
   if (data) {
     return (
       <section className="my-secondary">
+        <h5 className="text-5xl my-20 text-primary rb-bold text-center">
+          Why us
+        </h5>
         <Container>
           {data?.map(({ image, title, text }, index) => (
             <div

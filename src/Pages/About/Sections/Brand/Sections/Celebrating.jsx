@@ -32,13 +32,18 @@ const Celebrating = ({ data }) => {
                     : ""
                 }`}
               >
-                <p className="rb-bold text-4xl lg:text-5xl text-primary">
-                  {title}
-                </p>
+                <div
+                  className="rb-bold text-4xl lg:text-5xl text-primary"
+                  dangerouslySetInnerHTML={{ __html: title }}
+                />
                 <p className="rb-bold text-4xl lg:text-5xl text-font my-4">
                   {year}
                 </p>
-                <p className="rb-light lg:w-1/2 mx-auto">{text}</p>
+
+                <div
+                  className="rb-light lg:w-1/2 mx-auto"
+                  dangerouslySetInnerHTML={{ __html: text }}
+                />
               </div>
             </SwiperSlide>
           ))}

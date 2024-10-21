@@ -15,7 +15,10 @@ const Content = ({ data }) => {
               </div>
               <div className="flex-1">
                 <p className="rb-bold text-4xl mt-2">{content_title}</p>
-                <p className="mt-4">{content_Text}</p>
+                <div
+                  className="mt-4"
+                  dangerouslySetInnerHTML={{ __html: content_Text }}
+                />
               </div>
             </div>
           )
