@@ -50,11 +50,15 @@ const Channels = () => {
                 key={index}
               >
                 <img
-                  className="w-32 h-32 mx-auto object-contain"
+                  className="w-20 h-20 mx-auto object-contain"
                   src={logo}
                   alt=""
                 />
-                <p className="rb-medium ">{title}</p>
+
+                <div
+                  className="rb-medium"
+                  dangerouslySetInnerHTML={{ __html: title }}
+                />
               </div>
             ))}
           </div>
