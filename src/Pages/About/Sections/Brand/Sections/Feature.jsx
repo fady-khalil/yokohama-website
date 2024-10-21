@@ -9,14 +9,16 @@ const Feature = ({ data }) => {
     >
       <Container>
         <div className="flex flex-col lg:flex-row gap-y-10 items-center justify-between">
-          {data?.map(({ text, logo, num }, index) => (
+          {data?.map(({ title, logo, num }, index) => (
             <div
               className="flex-1 lg:even:mt-32 flex flex-col items-center justify-center"
               key={index}
             >
-              <img className="flex-1" src={logo} alt="" />
-              <p className="text-4xl lg:text-5xl rb-bold text-primary">{num}</p>
-              <p className="text-white">{text}</p>
+              <div className="flex-1 mb-3">
+                <img className="w-[50%] mx-auto" src={logo} alt="" />
+              </div>
+              <p className="text-3xl lg:text-5xl rb-bold text-primary">{num}</p>
+              <p className="text-white">{title}</p>
             </div>
           ))}
         </div>
