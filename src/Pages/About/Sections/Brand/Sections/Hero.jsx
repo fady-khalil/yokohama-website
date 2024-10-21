@@ -6,7 +6,7 @@ const Hero = ({ data }) => {
   return (
     <section
       className="h-[75vh] brand-bg relative z-[]"
-      style={{ backgroundImage: `url(${heroBrand})` }}
+      style={{ backgroundImage: `url(${data?.image})` }}
     >
       <Container className={"h-full"}>
         <div className="py-secondary h-full flex flex-col items-csenter justify-center lg:w-1/2 mx-auto">
