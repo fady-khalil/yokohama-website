@@ -10,7 +10,7 @@ const DesktopNav = () => {
     <ul
       className={`hidden xl:flex items-center flex-1 justify-between px-10 xxl:px-32 rb-mediums uppercase `}
     >
-      {links.map(({ text, mega, pages, banner, url, dynamic, about }, index) =>
+      {links?.map(({ text, mega, pages, banner, url, dynamic, about }, index) =>
         mega ? (
           <li
             className="group py-4 cursor-pointer   flex-1 text-center px-6 "
@@ -20,6 +20,7 @@ const DesktopNav = () => {
           >
             {text}
             <div
+              key={index}
               className={`absolute left-0 right-0 min-h-[100px] h-auto z-[10000000] top-[100%] bg-[#000] text-white opacity-0 translate-y-[10%] select-none invisible group-hover:translate-y-[0%] group-hover:opacity-100 group-hover:select-auto group-hover:visible transition ease-in duration-300 flex items-centesr gap-x-16`}
             >
               <div className="h-auto flex-1">
@@ -35,6 +36,7 @@ const DesktopNav = () => {
                 {pages?.map(({ name, id, slug }, pageIndex) =>
                   dynamic ? (
                     <button
+                      key={pageIndex}
                       onMouseEnter={() => setHoveredIndex(pageIndex)}
                       className="block mb-2 font-bold text-lg flex items-center gap-x-8 menu-link-group hover:underline"
                     >

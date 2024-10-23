@@ -34,6 +34,12 @@ const Shop = () => {
   const [selectedBrandID, setSelectedBrandID] = useState();
   const [selectClassificationID, setSelectClassificationID] = useState();
   const [selectCategoryId, setSelectCategoryId] = useState();
+  // tire size
+  const [selectedWidth, setSelectedWidth] = useState();
+  const [selectedAspectRatio, setSelectedAspectRatio] = useState();
+  const [selectedDiameter, setSelectedDiameter] = useState();
+  // size
+  const [selectedSizeName, setSelectedSizeName] = useState();
 
   const handleBrandId = (id) => {
     setSelectedBrandID(id);
@@ -44,19 +50,43 @@ const Shop = () => {
   const handleCategoryIdID = (id) => {
     setSelectCategoryId(id);
   };
+  const handleWidth = (name) => {
+    setSelectedWidth(name);
+  };
+  const handleAspectRatio = (name) => {
+    setSelectedAspectRatio(name);
+  };
+  const handleDiameter = (name) => {
+    setSelectedDiameter(name);
+  };
+  const handleSizeName = (name) => {
+    setSelectedSizeName(name);
+  };
 
-  const getData = async (classificationID, brandId, categoryId) => {
+  const getData = async (
+    classificationID,
+    brandId,
+    categoryId,
+    width,
+    aspectRatio,
+    diameter,
+    sizeName
+  ) => {
     setIsLoading(true);
     setIsError(false);
-
     try {
       const result = await fetchData(
         `yokohama/ctegories/all/sub_categories?id=${id}${
           classificationID ? `&class_ids=${classificationID}` : ""
         }${brandId ? `&brand_ids=${brandId}` : ""}${
           categoryId ? `&categ_ids=${categoryId}` : ""
+        }${width ? `&size_width=${width}` : ""}${
+          aspectRatio ? `&size_aspects=${aspectRatio}` : ""
+        }${diameter ? `&size_inch=${diameter}` : ""}${
+          sizeName ? `&size_name=${sizeName}` : ""
         }&limit=16&page=${page}`
       );
+
       setTotalPages(result?.totalpages);
       setData(result?.data);
       setAllData(result);
@@ -69,32 +99,65 @@ const Shop = () => {
   };
 
   useEffect(() => {
-    if (selectClassificationID && selectedBrandID && selectCategoryId) {
-      // Call with all three: classificationID, brandID, and categoryID
-      getData(selectClassificationID, selectedBrandID, selectCategoryId);
-    } else if (selectClassificationID && selectedBrandID) {
-      // Call with classificationID and brandID
-      getData(selectClassificationID, selectedBrandID, null);
-    } else if (selectClassificationID && selectCategoryId) {
-      // Call with classificationID and categoryID
-      getData(selectClassificationID, null, selectCategoryId);
-    } else if (selectedBrandID && selectCategoryId) {
-      // Call with brandID and categoryID
-      getData(null, selectedBrandID, selectCategoryId);
-    } else if (selectClassificationID) {
-      // Call with only classificationID
-      getData(selectClassificationID, null, null);
-    } else if (selectedBrandID) {
-      // Call with only brandID
-      getData(null, selectedBrandID, null);
-    } else if (selectCategoryId) {
-      // Call with only categoryID
-      getData(null, null, selectCategoryId);
-    } else {
-      // Call without any parameters
-      getData();
-    }
-  }, [id, page, selectClassificationID, selectedBrandID, selectCategoryId]);
+    // Prepare parameters for the getData function
+    const params = [
+      selectClassificationID || null,
+      selectedBrandID || null,
+      selectCategoryId || null,
+      selectedWidth || null,
+      selectedAspectRatio || null,
+      selectedDiameter || null,
+      selectedSizeName || null,
+    ];
+
+    // Call getData with the parameters array
+    getData(...params);
+  }, [
+    id,
+    page,
+    selectClassificationID,
+    selectedBrandID,
+    selectCategoryId,
+    selectedWidth,
+    selectedAspectRatio,
+    selectedDiameter,
+    selectedSizeName,
+  ]);
+
+  // useEffect(() => {
+  //   if (selectClassificationID && selectedBrandID && selectCategoryId) {
+  //     // Call with all three: classificationID, brandID, and categoryID
+  //     getData(selectClassificationID, selectedBrandID, selectCategoryId);
+  //   } else if (selectClassificationID && selectedBrandID) {
+  //     // Call with classificationID and brandID
+  //     getData(selectClassificationID, selectedBrandID, null);
+  //   } else if (selectClassificationID && selectCategoryId) {
+  //     // Call with classificationID and categoryID
+  //     getData(selectClassificationID, null, selectCategoryId);
+  //   } else if (selectedBrandID && selectCategoryId) {
+  //     // Call with brandID and categoryID
+  //     getData(null, selectedBrandID, selectCategoryId);
+  //   } else if (selectClassificationID) {
+  //     // Call with only classificationID
+  //     getData(selectClassificationID, null, null);
+  //   } else if (selectedBrandID) {
+  //     // Call with only brandID
+  //     getData(null, selectedBrandID, null);
+  //   } else if (selectCategoryId) {
+  //     // Call with only categoryID
+  //     getData(null, null, selectCategoryId);
+  //   } else {
+  //     // Call without any parameters
+  //     getData();
+  //   }
+  // }, [
+  //   id,
+  //   page,
+  //   selectClassificationID,
+  //   selectedBrandID,
+  //   selectCategoryId,
+  //   selectedWidth,
+  // ]);
 
   // price high to low
   useEffect(() => {
@@ -123,6 +186,10 @@ const Shop = () => {
     setSelectClassificationID(null);
     setSelectCategoryId(null);
     setSortOrder("");
+    setSelectedWidth(null);
+    setSelectedAspectRatio(null);
+    setSelectedDiameter(null);
+    setSelectedSizeName(null);
   };
 
   const [filterIsVisible, setFilterIsVisible] = useState(false);
@@ -153,6 +220,10 @@ const Shop = () => {
             onHandleBrandId={handleBrandId}
             onHandleClassificationID={handleClassificationID}
             onHanldeCategoryId={handleCategoryIdID}
+            onHandleWidth={handleWidth}
+            onHandleAspectRatio={handleAspectRatio}
+            onHandleDiameter={handleDiameter}
+            onHandleSizeName={handleSizeName}
           />
 
           {isLoading ? (
@@ -161,12 +232,16 @@ const Shop = () => {
             </div>
           ) : (
             <div className="col-span-3">
-              <Listing
-                totalPages={totalPages}
-                currentPage={page}
-                onPageChange={handlePageChange}
-                data={filteredData}
-              />
+              {filteredData.length === 0 ? (
+                <p className="text-lg">Showing 0 Products</p>
+              ) : (
+                <Listing
+                  totalPages={totalPages}
+                  currentPage={page}
+                  onPageChange={handlePageChange}
+                  data={filteredData}
+                />
+              )}
             </div>
           )}
         </div>
