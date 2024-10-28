@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Faders, X } from "@phosphor-icons/react";
 
 // filter

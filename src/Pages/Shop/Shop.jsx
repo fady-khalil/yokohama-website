@@ -197,6 +197,10 @@ const Shop = () => {
     setFilterIsVisible((cur) => !cur);
   };
 
+  useEffect(() => {
+    clearFilters();
+  }, [id]);
+
   // if (isLoading) return <IsLoading />;
   if (isError || error) return <IsError />;
 
