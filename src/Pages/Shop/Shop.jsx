@@ -79,7 +79,7 @@ const Shop = () => {
         `yokohama/ctegories/all/sub_categories?id=${id}${
           classificationID ? `&class_ids=${classificationID}` : ""
         }${brandId ? `&brand_ids=${brandId}` : ""}${
-          categoryId ? `&categ_ids=${categoryId}` : ""
+          categoryId ? `&categ_ids=[${categoryId}]` : ""
         }${width ? `&size_width=${width}` : ""}${
           aspectRatio ? `&size_aspects=${aspectRatio}` : ""
         }${diameter ? `&size_inch=${diameter}` : ""}${

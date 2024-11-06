@@ -146,7 +146,7 @@ const Search = () => {
                         className="border flex items-center p-2 hover:border-primary transition ease-in duration-300 hover:scale-[0.99]"
                       >
                         <div className="flex-1">
-                          <img className="w-full h-full" src={image1} alt="" />
+                          <img className="w-full h-full" src={image} alt="" />
                         </div>
                         <div className="flex-[2] lg:flex-[3]">
                           <p className="text-lg font-bold">{name}</p>
