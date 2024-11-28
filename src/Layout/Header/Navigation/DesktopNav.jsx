@@ -8,12 +8,12 @@ const DesktopNav = () => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   return (
     <ul
-      className={`hidden xl:flex items-center flex-1 justify-between px-10 xxl:px-32 rb-mediums uppercase `}
+      className={`hidden xl:flex items-center flex-[3]  justify-between  rb-mediums uppercase `}
     >
       {links?.map(({ text, mega, pages, banner, url, dynamic, about }, index) =>
         mega ? (
           <li
-            className="group py-4 cursor-pointer   flex-1 text-center px-6 "
+            className="group font-medium   py-8 cursor-pointer  min-w-[max-content] text-center px-6  "
             key={index}
             onMouseEnter={() => setHoveredIndex(index)}
             onMouseLeave={() => setHoveredIndex(null)}
@@ -38,7 +38,7 @@ const DesktopNav = () => {
                     <button
                       key={pageIndex}
                       onMouseEnter={() => setHoveredIndex(pageIndex)}
-                      className="block mb-2 font-bold text-lg flex items-center gap-x-8 menu-link-group hover:underline"
+                      className="block mb-2 font-bold text-lg flex items-center gap-x-8 menu-link-group hover:scale-105 transform transition-transform duration-300"
                     >
                       {name}
                       <span className="">
@@ -49,7 +49,7 @@ const DesktopNav = () => {
                     <Link
                       key={pageIndex}
                       to={`${about ? slug : `/shop/${id}`}`}
-                      className="block mb-2 font-bold text-lg flex items-center gap-x-8 menu-link-group hover:underline"
+                      className="block mb-2 font-bold text-lg flex items-center gap-x-8 menu-link-group hover:scale-105 transform transition-transform duration-300"
                       // Track the hovered page index
                     >
                       {name}
@@ -78,8 +78,8 @@ const DesktopNav = () => {
         ) : (
           <Link
             key={index}
-            href={url}
-            className="block py-4 flex items-center justify-center px-6 flex-1 text-center min-w-[fit-content] "
+            to={url}
+            className="block font-medium min-w-[max-content]   py-4 flex items-center justify-center px-6 flex-1 text-center min-w-[fit-content] "
           >
             {text}
           </Link>
@@ -87,7 +87,7 @@ const DesktopNav = () => {
       )}
       <Link
         to={"/search"}
-        className="flex items-center gap-x-2 px-6 font-bold uppercase flex-1 text-center justify-center "
+        className="flex items-center gap-x-2 px-6 font-bold uppercase text-center justify-center "
       >
         <p className="hidden xxl:block">Search</p>
         <MagnifyingGlass weight="bold" size={18} />

@@ -65,9 +65,10 @@ const GetLinks = () => {
       mega: true,
       pages: data,
     },
+
     {
       banner: bannerImage,
-      text: "About",
+      text: "About us",
       mega: true,
       about: true,
       pages: [
@@ -87,7 +88,15 @@ const GetLinks = () => {
           name: "Distribution Channels",
           slug: "distribution_channels",
         },
+        {
+          name: "Find a delaer",
+          slug: "dealers",
+        },
       ],
+    },
+    {
+      text: "Our Products",
+      url: "/",
     },
     // Dynamic rendering of dataContent
     ...(dataContent?.map((content) => ({
@@ -97,13 +106,13 @@ const GetLinks = () => {
       mega: true,
       pages: content.sub_cat_child || [], // Use sub_cat_child as pages
     })) || []),
+    // {
+    //   text: "Promotion",
+    //   url: "/",
+    // },
     {
-      text: "Promotion",
-      url: "/",
-    },
-    {
-      text: "Tire Finder",
-      url: "/",
+      text: "News & events",
+      url: "/news-and-event",
     },
   ];
 

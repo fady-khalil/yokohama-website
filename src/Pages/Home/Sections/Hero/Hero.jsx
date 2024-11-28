@@ -7,6 +7,7 @@ import { EnvelopeSimple, CaretDoubleRight } from "@phosphor-icons/react";
 
 import useInput from "form/Hooks/user-input";
 import Input from "form/Inputs/Input";
+import Slider from "./Slider";
 const Hero = () => {
   const [activeNewsLetter, setActiveNewsletter] = useState(false);
   const handleNewsLetterView = () => {
@@ -24,11 +25,9 @@ const Hero = () => {
   } = useInput((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value));
 
   return (
-    <section
-      className="bg-cover bg-center h-[90vh] relative z-[10] overflow-hidden"
-      style={{ backgroundImage: `url(${heroImage})` }}
-    >
-      <div
+    <section className="h-[90vh] relative z-[10]">
+      <Slider />
+      {/* <div
         className={`absolute w-full bottom-0 left-0 right-0 flex items-center flex-col justify-center text-white  text-xl ${
           activeNewsLetter ? "bg-transparent" : "bg-primary h-[16px]"
         }`}
@@ -91,7 +90,7 @@ const Hero = () => {
             <WhiteButton to={"/about-us"}>Learn More</WhiteButton>
           </div>
         </div>
-      </Container>
+      </Container> */}
     </section>
   );
 };
