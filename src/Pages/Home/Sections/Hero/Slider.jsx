@@ -15,16 +15,15 @@ import "./style.css";
 // import required modules
 import { Autoplay, Pagination, EffectFade, Navigation } from "swiper/modules";
 
-import image1 from "assests/Hero/1.jpg";
-import image2 from "assests/Hero/2.jpg";
-import image3 from "assests/Hero/3.jpg";
-import image4 from "assests/Hero/4.jpg";
-import image5 from "assests/Hero/5.jpg";
-import image6 from "assests/Hero/6.jpg";
-import image7 from "assests/Hero/7.jpg";
+import image1 from "assests/Hero/1.png";
+import image2 from "assests/Hero/2.png";
+import image3 from "assests/Hero/3.png";
+import image4 from "assests/Hero/4.png";
+import image5 from "assests/Hero/5.png";
+import image6 from "assests/Hero/6.png";
 
 const Slider = () => {
-  const data = [image1, image2, image3, image4, image5, image6, image7];
+  const data = [image1, image2, image3, image4, image5, image6];
   const prevRef = useRef(null);
   const nextRef = useRef(null);
 
