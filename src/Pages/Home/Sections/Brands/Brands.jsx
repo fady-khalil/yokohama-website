@@ -56,8 +56,8 @@ const Brands = ({ noSpace }) => {
         >
           {images?.map((image, index) => (
             <SwiperSlide key={index}>
-              <div className={"border"}>
-                <img className="object-contsain" src={image} alt="" />
+              <div className={"w-3/4"}>
+                <img className="w-full object-contain" src={image} alt="" />
               </div>
             </SwiperSlide>
           ))}
