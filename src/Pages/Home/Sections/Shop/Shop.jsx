@@ -42,7 +42,7 @@ const Shop = () => {
   }, []);
 
   return (
-    <section className="bg-dark pt-x pb-mega">
+    <section className="bg-dark pt-x py-mega">
       <Container>
         <div className="flex flex-col xl:flex-row gap-6">
           {data?.map((item, index) => (

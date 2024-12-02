@@ -141,3 +141,7 @@ body {
 .menu-link-group:hover span {
   opacity: 1;
 }
+
+.img-cut-diagonal {
+  clip-path: polygon(0 0, 100% 0%, 100% 0%, 0 100%);
+}
