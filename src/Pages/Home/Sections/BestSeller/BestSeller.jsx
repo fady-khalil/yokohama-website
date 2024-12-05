@@ -9,6 +9,7 @@ import Container from "Components/Container/Container";
 import bestSellerData from "Constant/bestSellerData";
 import MainButton from "Components/Buttons/MainButton";
 import WhiteButton from "Components/Buttons/WhiteButton";
+import bg from "assests/find-your-tires-bg.jpg";
 
 const BestSeller = () => {
   const [selectedType, setSelectedType] = useState(bestSellerData[0].id);
@@ -21,7 +22,10 @@ const BestSeller = () => {
   const filteredData = bestSellerData.find((data) => data.id === selectedType);
 
   return (
-    <section className="bg-dark py-primary">
+    <section
+      style={{ backgroundImage: `url(${bg})` }}
+      className="bg-dark py-primary"
+    >
       <Container>
         {/* header */}
         <div>

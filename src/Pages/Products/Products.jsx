@@ -39,15 +39,18 @@ const Products = () => {
   if (isError || error) return <IsError />;
   if (isLoading) return <IsLoading />;
   return (
-    <main>
-      <div className="relative" style={{ backgroundImage: `url(${bg})` }}>
-        <div className="absolute w-full h-full top-0 left-0 bg-[#00000033] z-[0]"></div>
-        <Container>
-          <div className="py-primary text-4xl rb-bold text-center text-white relative z-[10]">
+    <main className="bg-dark">
+      <Container className="pt-10">
+        <div
+          className="relative rounded-2xl"
+          style={{ backgroundImage: `url(${bg})` }}
+        >
+          <div className="absolute w-full h-full top-0 left-0 bg-[#00000033] z-[0]"></div>
+          <div className="py-mega text-4xl rb-bold text-center text-white relative z-[10]">
             <h1>Our Products</h1>
           </div>
-        </Container>
-      </div>
+        </div>
+      </Container>
 
       <Container>
         <div className="my-mega flex flex-col gap-y-12">

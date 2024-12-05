@@ -1,6 +1,7 @@
 import Container from "Components/Container/Container";
 import React, { useState } from "react";
-import bg from "assests/listing/bg.jpg";
+import bg from "assests/find-your-tires-bg.jpg";
+
 // import bg from "assests/find-your-tires-bg.jpg";
 import { CaretDoubleRight, Circle } from "@phosphor-icons/react";
 import SelectInput from "form/Inputs/SelectInput";

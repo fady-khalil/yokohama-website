@@ -93,7 +93,7 @@ const GetLinks = () => {
           slug: "brand_overview",
         },
         {
-          name: "ًًWhy us",
+          name: "Why us",
           slug: "why-us",
         },
         {
@@ -105,7 +105,7 @@ const GetLinks = () => {
           slug: "distribution_channels",
         },
         {
-          name: "Find a delaer",
+          name: "Find a dealer",
           slug: "dealers",
         },
       ],

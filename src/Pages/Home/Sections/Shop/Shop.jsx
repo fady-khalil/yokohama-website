@@ -6,6 +6,7 @@ import batteryImage from "assests/battery-shop.jpg";
 import lubriImage from "assests/lubri-shop.jpg";
 import useGetData from "Hooks/Fetching/useGetData";
 import Spinner from "Components/RequestHandler/Spinner";
+import bg from "assests/find-your-tires-bg.jpg";
 
 const Shop = () => {
   const [data, setData] = useState([]);
@@ -42,7 +43,10 @@ const Shop = () => {
   }, []);
 
   return (
-    <section className="bg-dark  py-mega">
+    <section
+      style={{ backgroundImage: `url(${bg})` }}
+      className="bg-dark  py-mega"
+    >
       <Container>
         <div className="flex flex-col xl:flex-row gap-6">
           {data?.map((item, index) => (

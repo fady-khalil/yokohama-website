@@ -1,5 +1,5 @@
 import React from "react";
-import logo1 from "assests/logo/marwan-logo.jpg";
+import logo1 from "assests/logo/HMG-white.png";
 
 const Logo = () => {
   return (

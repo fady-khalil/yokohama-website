@@ -4,6 +4,7 @@ import MainButton from "Components/Buttons/MainButton";
 import WhiteButton from "Components/Buttons/WhiteButton";
 import heroImage from "assests/hero.jpg";
 import { EnvelopeSimple, CaretDoubleRight } from "@phosphor-icons/react";
+import bg from "assests/find-your-tires-bg.jpg";
 
 import useInput from "form/Hooks/user-input";
 import Input from "form/Inputs/Input";
@@ -25,8 +26,13 @@ const Hero = () => {
   } = useInput((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value));
 
   return (
-    <section className="h-[80vh] relative  z-[10]">
-      <Slider />
+    <section
+      style={{ backgroundImage: `url(${bg})` }}
+      className="h-[80vh] relative bg-dark z-[10]"
+    >
+      <Container className="h-full">
+        <Slider />
+      </Container>
       {/* <div
         className={`absolute w-full bottom-0 left-0 right-0 flex items-center flex-col justify-center text-white  text-xl ${
           activeNewsLetter ? "bg-transparent" : "bg-primary h-[16px]"

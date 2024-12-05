@@ -7,13 +7,17 @@ import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Pagination, Navigation } from "swiper/modules";
+import bg from "assests/find-your-tires-bg.jpg";
 import "./style.css";
 const Oil = () => {
   return (
-    <section className="bg-lightBlue py-primary">
+    <section
+      style={{ backgroundImage: `url(${bg})` }}
+      className="bg-lightBlue py-primary"
+    >
       <Container>
         <div>
-          <h4 className="br-bold text-4xl lg:text-5xl text-center mb-10">
+          <h4 className="br-bold text-4xl lg:text-5xl text-white text-center mb-10">
             Essentials for your vehicle
           </h4>
         </div>
@@ -53,14 +57,14 @@ const Oil = () => {
             <SwiperSlide key={index}>
               <div className={"flex flex-col items-center"}>
                 <img className="w-full" src={item.image} alt="" />
-                <p className="text-center rb-bold text-primary text-xl mt-2">
+                <p className="text-center rb-bold text-white text-xl mt-2">
                   {item.name}
                 </p>
-                <p className="text-center my-3 text-2xl rb-bold">
+                <p className="text-center text-white my-3 text-xl rb-bold">
                   {item.description}
                 </p>
 
-                <p className="text-3xl text-primary">{item.price}</p>
+                <p className="text-3xl text-white">{item.price}</p>
               </div>
             </SwiperSlide>
           ))}

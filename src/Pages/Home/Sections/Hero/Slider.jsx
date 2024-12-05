@@ -1,6 +1,6 @@
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
-import { ArrowRight, ArrowLeft } from "@phosphor-icons/react";
+import { CaretRight, CaretLeft } from "@phosphor-icons/react";
 
 // UI
 // Import Swiper styles
@@ -15,7 +15,7 @@ import "./style.css";
 // import required modules
 import { Autoplay, Pagination, EffectFade, Navigation } from "swiper/modules";
 
-import image1 from "assests/Hero/1.webp";
+import image1 from "assests/Hero/1.jpg";
 import image2 from "assests/Hero/2.webp";
 import image3 from "assests/Hero/3.webp";
 import image4 from "assests/Hero/4.webp";
@@ -28,22 +28,23 @@ const Slider = () => {
   const nextRef = useRef(null);
 
   return (
-    <section className="w-full h-full">
+    <section className="w-full h-full pt-10">
       <div className="flex items-center gap-x-1">
         <button
           ref={prevRef}
-          className="absolute top-1/2 left-10 -translate-y-1/2 z-[1000] solution-prev-button flex items-center justify-center bg-black text-3xl text-white p-1"
+          className="absolute top-1/2 left-10 -translate-y-1/2 z-[1000] solution-prev-button flex items-center justify-center bg-[#444] h-[72px] text-2xl text-white p-[1px] rounded-lg"
         >
-          <ArrowLeft />
+          <CaretLeft />
         </button>
         <button
           ref={nextRef}
-          className="absolute top-1/2 right-10 -translate-y-1/2 z-[1000] solution-next-button flex items-center justify-center bg-black text-3xl text-white p-1"
+          className="absolute top-1/2 right-10 -translate-y-1/2 z-[1000] solution-prev-button flex items-center justify-center bg-[#444] h-[72px] text-2xl text-white p-[1px] rounded-lg"
         >
-          <ArrowRight />
+          <CaretRight />
         </button>
       </div>
       <Swiper
+        spaceBetween={30}
         navigation={{
           clickable: true,
           prevEl: prevRef.current,
@@ -60,12 +61,16 @@ const Slider = () => {
           disableOnInteraction: false,
         }}
         modules={[Autoplay, Navigation]}
-        className="heroSlider"
+        className="heroSlider rounded-2xl"
       >
         {data?.map((image, indx) => (
-          <SwiperSlide key={indx} className="h-full">
-            <div className={` h-full w-full`}>
-              <img src={image} className="w-full object-cover h-full" alt="" />
+          <SwiperSlide key={indx} className="h-full  rounded-2xl">
+            <div className={` h-full w-full  rounded-2xl`}>
+              <img
+                src={image}
+                className="w-full object-cover h-full rounded-2xl"
+                alt=""
+              />
             </div>
           </SwiperSlide>
         ))}
