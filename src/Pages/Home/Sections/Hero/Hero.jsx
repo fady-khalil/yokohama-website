@@ -25,7 +25,7 @@ const Hero = () => {
   } = useInput((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value));
 
   return (
-    <section className="h-[90vh] relative z-[10]">
+    <section className="h-[80vh] relative  z-[10]">
       <Slider />
       {/* <div
         className={`absolute w-full bottom-0 left-0 right-0 flex items-center flex-col justify-center text-white  text-xl ${

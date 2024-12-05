@@ -1,6 +1,7 @@
 import Container from "Components/Container/Container";
 import React, { useState } from "react";
-import bg from "assests/find-your-tires-bg.jpg";
+import bg from "assests/listing/bg.jpg";
+// import bg from "assests/find-your-tires-bg.jpg";
 import { CaretDoubleRight, Circle } from "@phosphor-icons/react";
 import SelectInput from "form/Inputs/SelectInput";
 
@@ -35,7 +36,10 @@ const SearchTires = () => {
   const trimOptions = ["Standard", "Luxury", "Performance"]; // Example trims, replace with actual options
 
   return (
-    <section className="py-primary" style={{ backgroundImage: `url(${bg})` }}>
+    <section
+      className="py-primary bg-dark background"
+      style={{ backgroundImage: `url(${bg})` }}
+    >
       <Container>
         <div className=" text-white flex items-center justify-center text-center flex-col">
           <h2 className="text-4xl lg:text-5xl rb-bold">Find your tires</h2>

@@ -143,5 +143,14 @@ body {
 }
 
 .img-cut-diagonal {
-  clip-path: polygon(0 0, 100% 0%, 100% 0%, 0 100%);
+  clip-path: polygon(0 0, 120% 0%, 100% 0%, 0 160%);
+}
+.box-cut-diagonal {
+  clip-path: polygon(20% 20%, 20% 100%, 20% 0%, 20% 0%);
+}
+
+.background {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: right;
 }

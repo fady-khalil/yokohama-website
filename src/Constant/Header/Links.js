@@ -9,6 +9,7 @@ const GetLinks = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const { fetchData, error } = useGetData();
+  const [productsData, setProductsData] = useState();
 
   const getData = async () => {
     setIsLoading(true);
@@ -52,10 +53,25 @@ const GetLinks = () => {
     }
   };
 
+  const getProducts = async () => {
+    setIsLoading(true);
+    setIsError(false);
+
+    try {
+      const data = await fetchData("yokohama/category/brand");
+      setProductsData(data?.data);
+    } catch (error) {
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     getData();
     getContentData();
     getAboutData();
+    getProducts();
   }, []);
 
   const updatedNavLinks = [
@@ -96,7 +112,10 @@ const GetLinks = () => {
     },
     {
       text: "Our Products",
-      url: "/",
+      banner: bannerImage,
+      pages: productsData,
+      mega: true,
+      products: true,
     },
     // Dynamic rendering of dataContent
     ...(dataContent?.map((content) => ({

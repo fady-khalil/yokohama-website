@@ -17,6 +17,7 @@ import Contact from "Pages/Contact/Contact";
 import NewAndEvent from "Pages/NewAndEvent/NewAndEvent";
 import NewsDetailed from "Pages/NewAndEvent/NewsDetailed";
 
+import Products from "Pages/Products/Products";
 import Shop from "Pages/Shop/Shop";
 import ProductDetailed from "Pages/Shop/ProductDetailed/ProductDetailed";
 import Account from "Pages/Account/Account";
@@ -65,6 +66,7 @@ const UserRouting = () => {
         <Route path="access-denied" element={<AccessDeniedPage />} />
         <Route path="*" element={<NotFound />} />
         <Route path="shop/:id" element={<Shop />} />
+        <Route path="products/:id" element={<Products />} />
         <Route path="content/:slug" element={<Content />} />
         <Route path="product-detailed/:id" element={<ProductDetailed />} />
         <Route path="Success-Page" element={<SuccessPage />} />
