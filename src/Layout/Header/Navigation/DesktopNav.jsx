@@ -36,17 +36,21 @@ const DesktopNav = () => {
                   </div>
 
                   {products ? (
-                    <div className="h-auto w-[50%] flex justify-between gap-x-14 py-16 ">
+                    <div className="h-auto w-[50%] flex justify-between gap-x-14 py-16">
                       {pages?.map(({ name, brands }, index) => (
-                        <div className=" " key={index}>
-                          <p className="text-white text-start text-2xl">
-                            {name}
-                          </p>
-                          <div className="grid grid-cols-1 gap-2 text-sm mt-6 text-white">
+                        <div className="w-full max-w-[200px]" key={index}>
+                          {" "}
+                          {/* Add consistent width */}
+                          <div className="bg-primary rounded-2xl px-6 py-1.5 flex items-center justify-center">
+                            <p className="text-white text-center font-[400] text-lg">
+                              {name}
+                            </p>
+                          </div>
+                          <div className="grid grid-cols-1 gap-4 mt-8  text-white">
                             {brands?.map(({ name, id }, index) => (
                               <Link
                                 to={`products/${id}`}
-                                className="block text-start menu-link-group hover:scale-105 transform transition-transform duration-300"
+                                className="block w-max border-b border-transparent hover:border-primary text-start menu-link-group hover:scale-105 transform transition-transform duration-300"
                                 key={index}
                               >
                                 {name}
