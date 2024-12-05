@@ -46,7 +46,7 @@ const Header = () => {
           <DesktopNav />
           {/* logo */}
           <div className="flex-1">
-            <img className="w-3/4 ml-auto" src={logo} alt="" />
+            <img className="w-[90%] ml-auto" src={logo} alt="" />
           </div>
         </div>
       </div>
