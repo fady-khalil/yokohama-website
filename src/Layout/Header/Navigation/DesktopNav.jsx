@@ -50,7 +50,7 @@ const DesktopNav = () => {
                             {brands?.map(({ name, id }, index) => (
                               <Link
                                 to={`products/${id}`}
-                                className="block w-max border-b border-transparent hover:border-primary text-start menu-link-group hover:scale-105 transform transition-transform duration-300"
+                                className="block w-max  text-start menu-link-group hover:scale-105 transform transition-transform duration-300"
                                 key={index}
                               >
                                 {name}
@@ -99,7 +99,7 @@ const DesktopNav = () => {
               <img
                 src={iconMenu}
                 alt="Menu Icon"
-                className="mx-auto w-4 h-6 "
+                className="mx-auto w-8 h-8 "
               />
             )}
           </React.Fragment>
