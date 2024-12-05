@@ -38,50 +38,52 @@ const SearchTires = () => {
 
   return (
     <section
-      className="bg-dark background"
+      className="py-primary background"
       style={{ backgroundImage: `url(${bg})` }}
     >
       <Container>
-        <div className=" text-white flex items-center justify-center text-center flex-col">
-          <h2 className="text-4xl lg:text-5xl rb-bold">Find your tires</h2>
-          <div className="flex items-center justify-center w-3/4 mx-auto gap-x-4 mt-6">
-            <span className="flex items-center gap-x-1">
-              <Circle />
-              <p>Vehicle</p>
-            </span>
-            <span className="flex items-center gap-x-1">
-              <Circle />
-              <p>Size</p>
-            </span>
+        <div>
+          <div className=" text-white flex items-center justify-center text-center flex-col">
+            <h2 className="text-4xl lg:text-5xl rb-bold">Find your tires</h2>
+            <div className="flex items-center justify-center w-3/4 mx-auto gap-x-4 mt-6">
+              <span className="flex items-center gap-x-1">
+                <Circle />
+                <p>Vehicle</p>
+              </span>
+              <span className="flex items-center gap-x-1">
+                <Circle />
+                <p>Size</p>
+              </span>
+            </div>
           </div>
-        </div>
 
-        <div className="mt-10 flex flex-col lg:flex-row lg:items-center lg:justify-center gap-x-1 lg:w-3/4 mx-auto">
-          {/* Select Inputs */}
-          <SelectInput
-            placeholder={"Type"}
-            onChange={typeValueHandle}
-            options={typeValueOption}
-          />
-          <SelectInput
-            placeholder={"Year"}
-            onChange={yearValueHandle}
-            options={yearOptions}
-          />
-          <SelectInput
-            placeholder={"Model"}
-            onChange={modelValueHandle}
-            options={modelOptions}
-          />
-          <SelectInput
-            placeholder={"Trim"}
-            onChange={trimValueHandle}
-            options={trimOptions}
-          />
+          <div className="mt-10 flex flex-col lg:flex-row lg:items-center lg:justify-center gap-x-1 lg:w-3/4 mx-auto">
+            {/* Select Inputs */}
+            <SelectInput
+              placeholder={"Type"}
+              onChange={typeValueHandle}
+              options={typeValueOption}
+            />
+            <SelectInput
+              placeholder={"Year"}
+              onChange={yearValueHandle}
+              options={yearOptions}
+            />
+            <SelectInput
+              placeholder={"Model"}
+              onChange={modelValueHandle}
+              options={modelOptions}
+            />
+            <SelectInput
+              placeholder={"Trim"}
+              onChange={trimValueHandle}
+              options={trimOptions}
+            />
 
-          <button className="bg-primary px-4 py-3 mt-[4px] flex items-center justify-center  text-white ">
-            <CaretDoubleRight size={20} />
-          </button>
+            <button className="bg-primary px-4 py-3 mt-[4px] flex items-center justify-center  text-white ">
+              <CaretDoubleRight size={20} />
+            </button>
+          </div>
         </div>
       </Container>
     </section>

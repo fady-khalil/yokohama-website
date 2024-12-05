@@ -16,7 +16,7 @@ const Brands = () => {
   return (
     <div
       style={{ backgroundImage: `url(${bg})` }}
-      className="slider-container bg-dark "
+      className="slider-container bg-dark pt-mega"
     >
       <Container>
         <div className="slider-track">

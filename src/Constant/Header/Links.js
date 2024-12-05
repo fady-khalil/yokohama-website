@@ -2,6 +2,12 @@ import { useState, useEffect } from "react";
 import useGetData from "Hooks/Fetching/useGetData";
 import bannerImage from "assests/tires-shop.jpg";
 
+import shopImage from "assests/Banner/shop.jpg";
+import saftyImage from "assests/Banner/safty.jpg";
+import productsImage from "assests/Banner/products.jpg";
+import news from "assests/Banner/news.JPG";
+import aboutImage from "assests/Banner/about-us.jpg";
+
 const GetLinks = () => {
   const [data, setData] = useState();
   const [aboutData, setAboutData] = useState([]);
@@ -76,14 +82,14 @@ const GetLinks = () => {
 
   const updatedNavLinks = [
     {
-      banner: bannerImage,
+      banner: shopImage,
       text: "Shop",
       mega: true,
       pages: data,
     },
 
     {
-      banner: bannerImage,
+      banner: aboutImage,
       text: "About us",
       mega: true,
       about: true,
@@ -112,14 +118,14 @@ const GetLinks = () => {
     },
     {
       text: "Our Products",
-      banner: bannerImage,
+      banner: productsImage,
       pages: productsData,
       mega: true,
       products: true,
     },
     // Dynamic rendering of dataContent
     ...(dataContent?.map((content) => ({
-      banner: bannerImage,
+      banner: saftyImage,
       dynamic: true,
       text: content.name, // Use the name of each content as text
       mega: true,
