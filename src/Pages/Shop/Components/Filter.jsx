@@ -59,8 +59,8 @@ const Filter = ({
     <div
       className={`transition ease-in duration-300 ${
         isVisible
-          ? "fixed shadow-2xl shadow-black rounded-xl	  lg:sticky lg:top-44 w-[90vw] lg:w-auto  left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 h-auto px-3 py-6 lg:px-0 lg:py-0 lg:left-0 lg:translate-x-0 lg:translate-y-0 lg:h-[100vh] z-[100] lg:z-[0] lg:top-44 lg:visible lg:shadow-none"
-          : "fixed lg:sticky  invisible translate-x-[-100%]   top-1/2 -translate-y-1/2 lg:w-auto lg:left-0 lg:translate-x-0 lg:translate-y-0 lg:h-[100vh] lg:top-44 lg:visible z-[100] lg:z-[0] lg:shadow-none"
+          ? "fixed shadow-2xl shadow-black rounded-xl	  lg:sticky lg:top-10 w-[90vw] lg:w-auto  left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 h-auto px-3 py-6 lg:px-0 lg:py-0 lg:left-0 lg:translate-x-0 lg:translate-y-0 lg:h-[100vh] z-[100] lg:z-[0] lg:top-10 lg:visible lg:shadow-none"
+          : "fixed lg:sticky  invisible translate-x-[-100%]   top-1/2 -translate-y-1/2 lg:w-auto lg:left-0 lg:translate-x-0 lg:translate-y-0 lg:h-[100vh] lg:top-10 lg:visible z-[100] lg:z-[0] lg:shadow-none"
       }  h-[100vh] flex flex-col gap-y-6 lg:gap-y-10 bg-white  `}
     >
       <button

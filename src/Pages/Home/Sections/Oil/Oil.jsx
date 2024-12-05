@@ -16,8 +16,8 @@ const Oil = () => {
       className="bg-lightBlue py-primary"
     >
       <Container>
-        <div>
-          <h4 className="br-bold text-4xl lg:text-5xl text-white text-center mb-10">
+        <div className="border-b border-white mb-6 pb-6">
+          <h4 className="br-bold text-4xl lg:text-5xl text-white text-center">
             Essentials for your vehicle
           </h4>
         </div>
@@ -56,7 +56,7 @@ const Oil = () => {
           {oilData?.map((item, index) => (
             <SwiperSlide key={index}>
               <div className={"flex flex-col items-center"}>
-                <img className="w-full" src={item.image} alt="" />
+                <img className="w-full rounded-2xl" src={item.image} alt="" />
                 <p className="text-center rb-bold text-white text-xl mt-2">
                   {item.name}
                 </p>

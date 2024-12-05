@@ -58,7 +58,34 @@ const bestSellerData = [
   },
   {
     id: 3,
-    cat: "Hankook",
+    cat: "Aminol",
+    products: [
+      {
+        name: "Ventus V12 evo2",
+        image: product2,
+        type: "SUMMER",
+        price: "95$",
+        carType: "High-performance cars",
+      },
+      {
+        name: "Dynapro AT2",
+        image: product3,
+        type: "ALL-SEASON",
+        price: "100$",
+        carType: "SUV",
+      },
+      {
+        name: "Winter i*cept evo3",
+        image: product1,
+        type: "WINTER",
+        price: "110$",
+        carType: "Passenger cars / minivan",
+      },
+    ],
+  },
+  {
+    id: 4,
+    cat: "DELKOR",
     products: [
       {
         name: "Ventus V12 evo2",

@@ -48,10 +48,15 @@ const Shop = () => {
       className="bg-dark  py-mega"
     >
       <Container>
+        <div className="pb-6 mb-6  border-b border-white">
+          <h1 className="text-center  rb-bold text-white text-5xl">
+            Shop NOW !
+          </h1>
+        </div>
         <div className="flex flex-col xl:flex-row gap-6">
           {data?.map((item, index) => (
             <div
-              className="flex-1 shop-bg py-20 lg:py-40 px-24 flex items-center justify-center"
+              className="flex-1 shop-bg py-20 lg:py-40 px-24 flex items-center justify-center rounded-2xl"
               style={{
                 backgroundImage: `url(${item.image})`,
                 backgroundSize: "cover",

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Container from "Components/Container/Container";
-import bgImage from "assests/about-us.jpg";
+import bgImage from "assests/Hero/about-us.JPG";
 import giftData from "Constant/giftData";
 import MainButton from "Components/Buttons/MainButton";
 import Modal from "Components/Modal/Modal";

@@ -14,7 +14,7 @@ const MainButton = ({
     <Link
       onClick={onClick}
       to={to}
-      className={` border text-center min-w-[fit-content] flex-1 flex items-center justify-center gap-x-2 capitalize ${
+      className={` border rounded-2xl text-center min-w-[fit-content] flex-1 flex items-center justify-center gap-x-2 capitalize ${
         isSmall ? "px-8 py-2.5 font-bold" : "px-10 py-3.5 text-xl font-medium"
       } ${border ? "border-white" : "border-transparent"}  ${
         isWhite ? "bg-white text-black" : "bg-primary text-white"
