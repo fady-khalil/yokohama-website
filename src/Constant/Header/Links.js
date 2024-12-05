@@ -89,7 +89,7 @@ const GetLinks = () => {
       about: true,
       pages: [
         {
-          name: "Brand Overview",
+          name: "Company Overview",
           slug: "brand_overview",
         },
         {
