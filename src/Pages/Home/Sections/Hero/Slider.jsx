@@ -4,7 +4,7 @@ import { CaretRight, CaretLeft } from "@phosphor-icons/react";
 
 // UI
 // Import Swiper styles
-import React, { useLayoutEffect, useRef, useState, useEffect } from "react";
+import React, { useRef } from "react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
@@ -13,9 +13,9 @@ import "swiper/css/effect-fade";
 import "./style.css";
 
 // import required modules
-import { Autoplay, Pagination, EffectFade, Navigation } from "swiper/modules";
+import { Autoplay, Navigation } from "swiper/modules";
 
-import image1 from "assests/Hero/1.jpg";
+import image1 from "assests/Hero/1.webp";
 import image2 from "assests/Hero/2.webp";
 import image3 from "assests/Hero/3.webp";
 import image4 from "assests/Hero/4.webp";
@@ -66,11 +66,7 @@ const Slider = () => {
         {data?.map((image, indx) => (
           <SwiperSlide key={indx} className="h-full  rounded-2xl">
             <div className={` h-full w-full  rounded-2xl`}>
-              <img
-                src={image}
-                className="w-full object-cover h-full rounded-2xl"
-                alt=""
-              />
+              <img src={image} className="w-full  h-full rounded-2xl" alt="" />
             </div>
           </SwiperSlide>
         ))}

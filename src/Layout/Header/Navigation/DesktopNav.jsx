@@ -25,64 +25,64 @@ const DesktopNav = () => {
               >
                 {text}
                 <div
-                  className={`absolute left-0 right-0 min-h-[100px] h-auto z-[10000000] top-[100%] bg-[#000] text-white opacity-0 translate-y-[10%] select-none invisible group-hover:translate-y-[0%] group-hover:opacity-100 group-hover:select-auto border-b-2 shadow-2xl shadow-[#ffffff9f]  group-hover:visible transition ease-in duration-300 flex items-stretch `}
+                  className={`absolute left-0 right-0 z-[10000000] top-[100%] bg-[#000] text-white opacity-0 translate-y-[10%] select-none invisible group-hover:translate-y-[0%] group-hover:opacity-100 group-hover:select-auto border-b-2 shadow-2xl shadow-[#ffffff9f] group-hover:visible transition ease-in duration-300 flex items-stretch`}
                 >
-                  <div className="w-[30%] self-stretch ">
-                    <img
-                      className="h-full w-full object-cover img-cut-diagonal"
-                      src={banner}
-                      alt="Banner"
-                    />
-                  </div>
+                  <div className=" flex items-center ">
+                    <div className="h-full w-[22vw]">
+                      <img
+                        className="h-full self-stretch img-cut-diagonal"
+                        src={banner}
+                        alt="Banner"
+                      />
+                    </div>
 
-                  {products ? (
-                    <div className="h-auto w-[50%] flex justify-between gap-x-14 py-16">
-                      {pages?.map(({ name, brands }, index) => (
-                        <div className="w-full max-w-[200px]" key={index}>
-                          {" "}
-                          {/* Add consistent width */}
-                          <div className="bg-primary rounded-2xl px-6 py-1.5 flex items-center justify-center">
-                            <p className="text-white text-center font-[400] text-lg">
-                              {name}
-                            </p>
-                          </div>
-                          <div className="grid grid-cols-1 gap-4 mt-8  text-white">
-                            {brands?.map(({ name, id }, index) => (
-                              <Link
-                                to={`products/${id}`}
-                                className="block w-max  text-start menu-link-group hover:scale-105 transform transition-transform duration-300"
-                                key={index}
-                              >
+                    {products ? (
+                      <div className="py-6  w-auto max-h-max flex gap-x-14 items-start">
+                        {pages?.map(({ name, brands }, index) => (
+                          <div className="w-full max-w-[200px]" key={index}>
+                            <div className="bg-primary rounded-2xl px-6 py-1.5 flex items-center justify-center">
+                              <p className="text-white text-center font-[400] text-lg">
                                 {name}
-                              </Link>
-                            ))}
+                              </p>
+                            </div>
+                            <div className="grid grid-cols-1 gap-4 mt-8 text-white">
+                              {brands?.map(({ name, id }, index) => (
+                                <Link
+                                  to={`products/${id}`}
+                                  className="block w-max text-start menu-link-group hover:scale-105 transform transition-transform duration-300"
+                                  key={index}
+                                >
+                                  {name}
+                                </Link>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="h-auto flex flex-col gap-y-2 py-16">
-                      {pages?.map(({ name, id, slug }, pageIndex) =>
-                        dynamic ? (
-                          <button
-                            key={pageIndex}
-                            onMouseEnter={() => setHoveredIndex(pageIndex)}
-                            className="block mb-2 font-bold text-lg flex items-center gap-x-8 menu-link-group hover:scale-105 transform transition-transform duration-300"
-                          >
-                            {name}
-                          </button>
-                        ) : (
-                          <Link
-                            key={pageIndex}
-                            to={`${about ? slug : `/shop/${id}`}`}
-                            className="block mb-2 font-bold text-lg flex items-center gap-x-8 menu-link-group hover:scale-105 transform transition-transform duration-300"
-                          >
-                            {name}
-                          </Link>
-                        )
-                      )}
-                    </div>
-                  )}
+                        ))}
+                      </div>
+                    ) : (
+                      <div className=" py-6 max-h-max flex flex-col gap-y-2">
+                        {pages?.map(({ name, id, slug }, pageIndex) =>
+                          dynamic ? (
+                            <button
+                              key={pageIndex}
+                              onMouseEnter={() => setHoveredIndex(pageIndex)}
+                              className="block mb-2 font-bold text-lg flex items-center gap-x-8 menu-link-group hover:scale-105 transform transition-transform duration-300"
+                            >
+                              {name}
+                            </button>
+                          ) : (
+                            <Link
+                              key={pageIndex}
+                              to={`${about ? slug : `/shop/${id}`}`}
+                              className="block mb-2 font-bold text-lg flex items-center gap-x-8 menu-link-group hover:scale-105 transform transition-transform duration-300"
+                            >
+                              {name}
+                            </Link>
+                          )
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </li>
             ) : (

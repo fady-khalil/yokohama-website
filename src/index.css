@@ -122,7 +122,7 @@ body {
 /*  */
 .img-cut-diagonal {
   position: relative;
-  overflow: hidden; /* Ensure content stays within the clipped area */
+  overflow: hidden;
 }
 
 .img-cut-diagonal::after {
