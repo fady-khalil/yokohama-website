@@ -67,7 +67,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     </div>
   );
 };
-
 const Listing = ({ data, totalPages, currentPage, onPageChange }) => {
   return (
     <div className="col-span-3 relative z-[0]">
@@ -99,9 +98,11 @@ const Listing = ({ data, totalPages, currentPage, onPageChange }) => {
                 <p className="rb-medium text-sm mt-3">Brand:{brand}</p>
                 <div className="flex items-center gap-x-2 my-3 font-medium">
                   <p>{price}</p>
-                  <p>{currency}</p>
+                  <p>{currency}*</p>
                 </div>{" "}
-                <div className="flex mb-2">
+                * Shop now to verifie your special price
+                <p className="text-xs mb-2"></p>
+                {/* <div className="flex mb-2">
                   {[1, 2, 3, 4, 5].map((star) => {
                     const starClass =
                       star <= Math.floor(avg_review)
@@ -122,29 +123,19 @@ const Listing = ({ data, totalPages, currentPage, onPageChange }) => {
                       </svg>
                     );
                   })}
-                </div>
+                </div> */}
               </div>
+
               <div className="flex-[2]">
                 <img className="w-full h-full" src={images} alt="" />
               </div>
               <div
-                className={`absolute left-0 -bottom-14 w-full h-auto bg-primary transform translate-y-[30%] opacity-0 select-none group-hover:select-auto group-hover:opacity-100 group-hover:translate-y-0 transition-transform duration-500`}
+                className={`absolute flex items-center gap-x-4 left-0 -bottom-6 w-3/4 mx-auto h-auto transform translate-y-[30%] opacity-0 select-none group-hover:select-auto group-hover:opacity-100 group-hover:translate-y-0 transition-transform duration-500`}
               >
-                <div className="flex items-center justify-between px-2">
-                  <span className="flex flex-col items-center justify-center gap-y-1 text-white border-r flex-1 border-white">
-                    <img className="w-8 h-8" src={listImage1} alt="" />
-                    <p className="text-xs pb-1 rb-medium">Fuel efficiency</p>
-                  </span>
-                  <span className="flex flex-col items-center justify-center gap-y-1 text-white border-r flex-1 border-white">
-                    <img className="w-8 h-8" src={listImage2} alt="" />
-                    <p className="text-xs pb-1 rb-medium">Wet grip</p>
-                  </span>
-                  <span className="flex flex-col items-center justify-center gap-y-1 text-white flex-1">
-                    <img className="w-8 h-8" src={listImage3} alt="" />
-                    <p className="text-xs pb-1 rb-medium">Crossover</p>
-                  </span>
-                </div>
-                <button className="bg-dark text-center uppercase rb-bold py-1 border-t border-white flex-1 text-white w-full">
+                <button className="bg-dark text-center uppercase rb-bold py-1  flex-1 text-white w-full">
+                  View Details
+                </button>
+                <button className="border bg-primary text-white  text-center uppercase rb-bold py-1  flex-1 w-full">
                   Shop Now
                 </button>
               </div>

@@ -2,21 +2,19 @@ import Container from "Components/Container/Container";
 import React, { useState, useContext, useEffect } from "react";
 import Spinner from "Components/RequestHandler/Spinner";
 import { Heart } from "@phosphor-icons/react";
-// Import Swiper React components
-import { Swiper, SwiperSlide } from "swiper/react";
-
+import logo from "assests/brand-cart.jpg";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
-
-import { FreeMode, Navigation, Thumbs } from "swiper/modules";
-
+import icon from "assests/Auth/y1/y1.png";
+import image from "assests/product-3-removebg-preview.png";
 // context
 import { UserLoginContext } from "context/Auth/UserLoginContext";
 import { GuestCartContext } from "context/Guest/GuestCartContext";
 import { UserCartContext } from "context/User/CartContext";
+import { WhatsappLogo } from "@phosphor-icons/react";
 import { UserWishlistContext } from "context/User/WishlistContext";
 const ProductInfo = ({ product }) => {
   const {
@@ -32,6 +30,7 @@ const ProductInfo = ({ product }) => {
     displayProductHandler,
     cart,
     updateCart,
+    updateCartIsLoading,
     removeFromCart,
   } = useContext(UserCartContext);
 
@@ -86,8 +85,6 @@ const ProductInfo = ({ product }) => {
       const foundWishlistItem = wishlist?.wishlist?.find(
         (item) => item.id === product.id
       );
-      console.log(foundWishlistItem);
-
       setIsInWishlist(!!foundWishlistItem);
     }
   }, [cart, product.id, guestCart, userIsSignIn, wishlist]);
@@ -112,47 +109,35 @@ const ProductInfo = ({ product }) => {
     <Container>
       <div className="flex flex-col flex-col-reverse lg:flex-row items-center gap-y-6 gap-x-32 py-secondary lg:py-primary">
         <div className="flex-1">
+          {/* cat */}
           <div className="flex items-center gap-x-16 border-b pb-4">
-            <img className="w-32" src={product?.category?.[0]?.image} alt="" />
-            <p className="text-2xl capitalize">
-              {product?.category?.[0]?.name}
-            </p>
+            <img className="w-32" src={logo} alt="" />
+            {/* <img className="w-32" src={product?.category?.[0]?.image} alt="" /> */}
           </div>
-          <div className="flex items-center justify-between my-4">
+          {/* name and description */}
+          <div className="flex items-center justify-between my-6">
             <p className="text-2xl">{product?.name}</p>
-            <p
-              className="my-3 text-sm rb-medium"
-              dangerouslySetInnerHTML={{ __html: product?.description }}
-            />
           </div>
 
-          <div className="flex items-center mb-3 gap-x-2">
-            <p className="text-2xl rb-light">
+          {/* price */}
+          <div className="flex items-center gap-x-6">
+            <p className="text-lg rb-medium line-through text-red-600">
               {product?.price} {product?.currency}
             </p>
+            <p className="text-2xl rb-medium">
+              {product?.retail_price} {product?.currency}
+            </p>
           </div>
-
-          <div className="flex items-center justify-between py-3 border-t border-b">
-            {product?.feature_ids &&
-              product?.feature_ids.map(({ icon, text }, index) => (
-                <div className="flex flex-col" key={index}>
-                  <img
-                    className="w-6 h-6 lg:w-10 lg:h-10 mb-2"
-                    src={icon}
-                    alt=""
-                  />
-                  <p className="rb-bold text-sm sm:text-base">{text}</p>
-                </div>
-              ))}
+          {/* specs */}
+          <div className="flex gap-x-6 my-8">
+            <p className="text text-primary rb-bold">{product?.pattern}</p>{" "}
+            <img className="h-6 w-6" src={icon} alt={""} />
+            <p className="text text-primary rb-bold">{product?.series}</p>{" "}
+            <img className="h-6 w-6" src={icon} alt={""} />
+            <p className="text text-primary rb-bold">
+              {product?.classification}
+            </p>
           </div>
-
-          <div className="flex my-6 gap-x-3 rb-medium">
-            <div className="flex-1 flex items-center gap-x-2 border">
-              <p className="border-r px-4 py-3">Size</p>
-              <p className="px-2">{product?.size}</p>
-            </div>
-          </div>
-
           <div className="flex items-center gap-x-3">
             <div className="flex-1 rb-bold text-white flex items-center bg-dark">
               <p className="border-r px-6 py-3">Qty</p>
@@ -167,7 +152,7 @@ const ProductInfo = ({ product }) => {
                 >
                   +
                 </p>
-                <p>{quantity}</p>
+                {updateCartIsLoading ? <Spinner /> : <p>{quantity}</p>}
                 <p
                   onClick={() =>
                     handleQuantityChange(product?.id, quantity - 1)
@@ -204,12 +189,26 @@ const ProductInfo = ({ product }) => {
             )}
           </div>
 
-          <button className="mt-6 uppercase underline rb-bold">
-            Ask an expert
-          </button>
+          <div className="mt-10">
+            <p className=" mb-2">
+              After placing your order, our team will promptly contact you to
+              arrange a convenient time and location for delivery and
+              installation of your items. <br /> We’re committed to providing
+              you with seamless service.
+            </p>
+            <p className="text-lg">Thank you for choosing us!</p>
+
+            <button className="flex items-center gap-x-2 mt-4 ">
+              <span className="block text-6xl bg-[#25D366] rounded-xl">
+                <WhatsappLogo color="white " />
+              </span>
+              Need Help?
+            </button>
+          </div>
         </div>
         <div className="flex-1 flex flex-col items-center justify-center p-12">
-          <img className="w-3/4 h-3/4 mx-auto" src={product?.images} alt="" />
+          <img className="w-3/4 h-3/4 mx-auto" src={image} alt="" />
+          {/* <img className="w-3/4 h-3/4 mx-auto" src={product?.images} alt="" /> */}
         </div>
       </div>
     </Container>

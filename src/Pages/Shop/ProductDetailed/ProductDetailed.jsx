@@ -27,32 +27,6 @@ const ProductDetailed = () => {
   const warrantyRef = useRef(null);
   const reviewsRef = useRef(null);
 
-  const scrollToSection = (id) => {
-    setSelectedTabs(id);
-    switch (id) {
-      case 1:
-        descriptionRef.current.scrollIntoView({ behavior: "smooth" });
-        break;
-      case 2:
-        specsRef.current.scrollIntoView({ behavior: "smooth" });
-        break;
-      case 3:
-        sizeInfoRef.current.scrollIntoView({ behavior: "smooth" });
-        break;
-      case 4:
-        galleryRef.current.scrollIntoView({ behavior: "smooth" });
-        break;
-      case 5:
-        warrantyRef.current.scrollIntoView({ behavior: "smooth" });
-        break;
-      case 6:
-        reviewsRef.current.scrollIntoView({ behavior: "smooth" });
-        break;
-      default:
-        break;
-    }
-  };
-
   // fetching
   const { id } = useParams();
   const [data, setData] = useState([]);
@@ -78,18 +52,20 @@ const ProductDetailed = () => {
     getData();
   }, [id]);
 
+  console.log(data);
+
   if (isLoading) return <IsLoading />;
   if (isError || error) return <IsError />;
   if (data) {
     return (
       <main>
         <ProductInfo product={data} />
-        <ProductInfoTabs
+        {/* <ProductInfoTabs
           activeTabs={selectedTabs}
           data={data}
           onTabClick={scrollToSection}
-        />
-        {data?.description_sale?.title && (
+        /> */}
+        {/* {data?.description_sale?.title && (
           <div ref={descriptionRef}>
             <ProductDescription data={data?.description_sale} />
           </div>
@@ -114,7 +90,7 @@ const ProductDetailed = () => {
         )}
         <div ref={reviewsRef}>
           <ProductReview product_id={data?.id} isSignIn={userIsSignIn} />
-        </div>
+        </div> */}
       </main>
     );
   }

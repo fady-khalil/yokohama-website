@@ -17,18 +17,21 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
   const { loading, error, postData } = usePostData();
   const [notValid, setNotValid] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
-
+  const [isClicked, setIsClicked] = useState(false);
   const clearErrors = () => {
     setNotValid(false);
     setErrorMessage(null);
+    setIsClicked(false);
   };
 
   const clearInputs = () => {
-    fullNameReset();
+    firstNameReset();
+    lastNameReset();
     passwordReset();
     confirmPasswordReset();
     emailReset();
     setPhone("");
+    birthdayReset();
   };
 
   const [rememberMe, setRememberMe] = useState(false);
@@ -36,14 +39,29 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
   const [phone, setPhone] = useState("");
 
   const {
-    value: fullNameInput,
-    isValid: fullNameIsValid,
-    isTouched: fullNameIsTouched,
-    HasError: fullNameHasError,
-    inputChangeHandler: fullNameChangeHandler,
-    inputBlurHandler: fullNameBlurHanlder,
-    reset: fullNameReset,
-  } = useInput((value) => /^[a-zA-Z]+\s[a-zA-Z]+$/.test(value));
+    value: firstNameInput,
+    isValid: firstNameIsValid,
+    isTouched: firstNameIsTouched,
+    HasError: firstNameHasError,
+    inputChangeHandler: firstNameChangeHandler,
+    inputBlurHandler: firstNameBlurHanlder,
+    reset: firstNameReset,
+  } = useInput((value) => {
+    const isValid = value.trim() !== "" && value.length >= 1;
+    return isValid;
+  });
+  const {
+    value: lastNameInput,
+    isValid: lastNameIsValid,
+    isTouched: lastNameIsTouched,
+    HasError: lastNameHasError,
+    inputChangeHandler: lastNameChangeHandler,
+    inputBlurHandler: lastNameBlurHanlder,
+    reset: lastNameReset,
+  } = useInput((value) => {
+    const isValid = value.trim() !== "" && value.length >= 1;
+    return isValid;
+  });
   const {
     value: emailInput,
     isValid: emailIsValid,
@@ -53,6 +71,20 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
     inputBlurHandler: emailBlurHanlder,
     reset: emailReset,
   } = useInput((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value));
+
+  const {
+    value: birthdayInput,
+    isValid: birthdayIsValid,
+    isTouched: birthdayIsTouched,
+    HasError: birthdayHasError,
+    inputChangeHandler: birthdayChangeHandler,
+    inputBlurHandler: birthdayBlurHandler,
+    reset: birthdayReset,
+  } = useInput((value) => {
+    // Simple date validation (YYYY-MM-DD format)
+    const regex = /^\d{4}-\d{2}-\d{2}$/;
+    return regex.test(value);
+  });
 
   const {
     value: passwordInput,
@@ -83,25 +115,37 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
   });
 
   const formIsValid =
-    fullNameIsValid &&
+    firstNameIsValid &&
+    lastNameIsValid &&
     emailIsValid &&
     phone.length !== 0 &&
     passwordIsValid &&
+    birthdayIsValid &&
     confirmPasswordIsValid;
 
   const submitForm = async () => {
     setErrorMessage(null);
+    setIsClicked(true);
     if (!formIsValid) {
       setNotValid(true);
       return;
     }
+
+    const formattedBirthday = new Date(birthdayInput)
+      .toLocaleDateString("en-GB") // This will return dd/mm/yyyy
+      .split("/") // Split into parts
+      .join("/"); // Join back to string (no need to reverse anymore)
+
     const formData = {
-      full_name: fullNameInput,
+      first_name: firstNameInput,
+      last_name: lastNameInput,
       password: passwordInput,
       confirm_password: confirmPasswordInput,
+      birth_date: formattedBirthday,
       email: emailInput,
       phone: phone,
     };
+
     try {
       const result = await postData("yokohama/auth/register", formData);
       if (result && result?.is_success) {
@@ -117,7 +161,7 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
     }
   };
   return (
-    <div className="p-4  h-[90vh] overflow-scroll w-[90vw]  lg:h-auto lg:w-auto lg:overflow-auto lg:p-10">
+    <div className="p-4 w-[70vw] lg:p-10">
       <div className="border-b border-[#ccc] pb-2 flex items-center justify-between mb-14">
         <div>
           <h5 className="text-3xl rb-bold">Sign up</h5>
@@ -138,38 +182,39 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
         </button>
       </div>
       <form>
-        <span className="flex flex-col lg:flex-row items-center gap-x-4 mb-8 lg:mb-14">
+        <span className="flex flex-col lg:flex-row items-center gap-x-4 mb-8 lg:mb-6">
           <Input
             type="text"
-            label={`Full Name`}
-            id="register-full-name"
-            value={fullNameInput}
+            label={`First Name`}
+            id="register-first-name"
+            value={firstNameInput}
             onChange={(e) => {
-              fullNameChangeHandler(e);
+              firstNameChangeHandler(e);
               clearErrors();
             }}
-            onBlur={fullNameBlurHanlder}
-            hasError={fullNameHasError}
-            errorMessage={``}
+            onBlur={firstNameBlurHanlder}
+            hasError={(isClicked && !firstNameIsValid) || firstNameHasError}
+            errorMessage="Please enter a valid  name."
           />
           <Input
-            type="email"
-            label={`Email`}
-            id="register-email"
-            value={emailInput}
+            type="text"
+            label={`Last Name`}
+            id="register-last-name"
+            value={lastNameInput}
             onChange={(e) => {
-              emailChangeHandler(e);
+              lastNameChangeHandler(e);
               clearErrors();
             }}
-            onBlur={emailBlurHanlder}
-            hasError={emailHasError}
-            errorMessage={``}
+            onBlur={lastNameBlurHanlder}
+            hasError={(isClicked && !lastNameIsValid) || lastNameHasError}
+            errorMessage="Please enter a name."
           />
+        </span>
 
-          <div className=" flex-1 flex gap-y-1 flex-col  w-full">
+        <span className="flex flex-col lg:flex-row items-center gap-x-4 mb-8 lg:mb-6">
+          <div className="flex-1  flex gap-y-1 flex-col  w-full">
             <label className="text-sm rb-bold capitalize">Phone</label>
             <PhoneInput
-              // containerClass="test"
               inputClass="test "
               buttonClass="test-2"
               country={"lb"}
@@ -184,10 +229,46 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
                 autoFocus: true,
               }}
             />
+            <p
+              className={`text-xs text-red-600 ${
+                isClicked && phone.length === 0 ? "opacity-1" : "opacity-0"
+              }`}
+            >
+              Please enter a valid number
+            </p>
           </div>
+
+          <Input
+            type="email"
+            label={`Email`}
+            id="register-email"
+            value={emailInput}
+            onChange={(e) => {
+              emailChangeHandler(e);
+              clearErrors();
+            }}
+            onBlur={emailBlurHanlder}
+            hasError={(isClicked && !emailIsValid) || emailHasError}
+            errorMessage="Please enter a valid email address (e.g., john.snow@example.com)."
+          />
+        </span>
+        <span className="block lg:w-1/2 mb-8 lg:mb-6">
+          <Input
+            type="date"
+            label={`Birthday`}
+            id="register-birthday"
+            value={birthdayInput}
+            onChange={(e) => {
+              birthdayChangeHandler(e);
+              clearErrors();
+            }}
+            onBlur={birthdayBlurHandler}
+            hasError={(isClicked && !birthdayIsValid) || birthdayHasError}
+            errorMessage="Please enter a valid date"
+          />
         </span>
 
-        <span className="flex flex-col lg:flex-row items-center gap-x-4 mb-8 lg:mb-14">
+        <span className="flex flex-col lg:flex-row items-center gap-x-4 mb-8 lg:mb-6">
           <PasswordInput
             id="register-password"
             value={passwordInput}
@@ -197,8 +278,8 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
               clearErrors();
             }}
             onBlur={passwordBlurHandler}
-            hasError={passwordHasError}
-            errorMessage={``}
+            hasError={(isClicked && !passwordIsValid) || passwordHasError}
+            errorMessage="Password must be 8+ chars, letters, numbers & symbols.."
           />
 
           <PasswordInput
@@ -210,8 +291,10 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
               clearErrors();
             }}
             onBlur={confirmPasswordBlurHandler}
-            hasError={confirmPasswordHasError}
-            errorMessage={``}
+            hasError={
+              (isClicked && !confirmPasswordIsValid) || confirmPasswordHasError
+            }
+            errorMessage="Passwords do not match. Please re-enter the same password."
           />
         </span>
         {/* check box */}

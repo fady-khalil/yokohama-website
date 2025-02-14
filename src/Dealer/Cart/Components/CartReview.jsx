@@ -143,7 +143,7 @@ const CartReview = () => {
 
                 <div className="border-b border-white pb-4">
                   <p className="text-white text-xl rb-bold mt-4 mb-2">
-                    Order Summury
+                    Order Summuary
                   </p>
 
                   <div className="mt-3">

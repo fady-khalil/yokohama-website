@@ -1,9 +1,10 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import MainButton from "Components/Buttons/MainButton";
 import { UserCartContext } from "context/User/CartContext";
 
 const CartSummury = ({ onSelectingTabs, isShipping }) => {
   const { cart } = useContext(UserCartContext);
+
   return (
     <div className="flex-1 h-fit lg:sticky lg:top-10 bg-dark border-t-4 border-primary p-6">
       {isShipping && (
@@ -17,9 +18,9 @@ const CartSummury = ({ onSelectingTabs, isShipping }) => {
                 <div className="">
                   <img className="w-20" src={image} alt="" />
                 </div>
-                <div className="flex-[2] rb-bold ">
+                <div className="rb-bold ">
                   <p>{name}</p>
-                  <p className="my-2">
+                  <p className="my-2 ">
                     {price} {currency}
                   </p>
                   <p>QTY {quantity}</p>
@@ -31,20 +32,24 @@ const CartSummury = ({ onSelectingTabs, isShipping }) => {
       )}
       <div className="border-b border-white pb-4">
         <p className="text-white text-lg rb-bold mt-4 mb-2 uppercase">
-          Order Summury
+          Order summary
         </p>
 
         <div className="mt-3">
           <span className="flex items-center justify-between text-[#ddd]">
             <p>Subtotal</p>
-            <p>{cart?.invoice_details?.[0]?.amount_total}$</p>
+            <p>{cart?.invoice_details?.[0]?.untaxed_amount_total}$</p>
           </span>
           <span className="flex items-center justify-between text-[#ddd]">
             <p>Tax Vat</p>
             <p>{cart?.invoice_details?.[0]?.amount_tax}$</p>
           </span>
           <span className="flex items-center justify-between text-[#ddd]">
-            <p>Shipping Charge</p>
+            <p>Delivery Charge</p>
+            <p>0</p>
+          </span>
+          <span className="flex items-center justify-between text-[#ddd]">
+            <p>Mounting Charge</p>
             <p>0</p>
           </span>
         </div>

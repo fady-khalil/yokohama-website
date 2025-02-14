@@ -25,16 +25,13 @@ const AddressForm = ({
   extraData,
 }) => {
   // context
-  const { userToken } = useContext(UserLoginContext);
+  const { userToken, userData } = useContext(UserLoginContext);
   const { postData } = usePostDataToken();
   const { postData: postQuestData } = usePostDataJson();
-  // form state
   const [phone, setPhone] = useState("");
-  const [selectedCountry, setSelectedCountry] = useState(null);
-  const countries = UseCountries().map((country) => ({
-    value: country?.id,
-    label: country?.country_name,
-  }));
+
+  console.log(userData);
+
   const {
     value: firstNameInput,
     isValid: firstNameIsValid,
@@ -52,7 +49,7 @@ const AddressForm = ({
     inputChangeHandler: lastNameChangeHandler,
     inputBlurHandler: lastNameBlurHanlder,
     reset: lastNameReset,
-  } = useInput((value) => "");
+  } = useInput((value) => value.trim("") !== "");
 
   const {
     value: emailInput,
@@ -66,24 +63,7 @@ const AddressForm = ({
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(value);
   });
-  const {
-    value: zipInput,
-    isValid: zipIsValid,
-    isTouched: zipIsTouched,
-    HasError: zipHasError,
-    inputChangeHandler: zipChangeHandler,
-    inputBlurHandler: zipBlurHanlder,
-    reset: zipReset,
-  } = useInput((value) => value.trim("") !== "");
-  const {
-    value: cityInput,
-    isValid: cityIsValid,
-    isTouched: cityIsTouched,
-    HasError: cityHasError,
-    inputChangeHandler: cityChangeHandler,
-    inputBlurHandler: cityBlurHanlder,
-    reset: cityReset,
-  } = useInput((value) => value.trim("") !== "");
+
   const {
     value: addressInput,
     isValid: addressIsValid,
@@ -94,15 +74,13 @@ const AddressForm = ({
     reset: addressReset,
   } = useInput((value) => value.trim("") !== "");
 
-  const countryChangeHandler = (selectedOption) => {
-    setSelectedCountry(selectedOption);
-  };
-
   const [selectAddress, setSelectAddress] = useState("");
   const onSelectingAddress = (address) => {
     setSelectAddress(address);
+    addressChangeHandler({ target: { value: address } });
   };
   const [isClicked, setIsClicked] = useState(false);
+  const [isValid, setIsValid] = useState(false);
   const addressIsValids = addressIsValid || selectAddress.length !== 0;
   const clearErrors = () => {
     setIsClicked(false);
@@ -115,24 +93,16 @@ const AddressForm = ({
     lastNameReset();
     emailReset();
     setPhone("");
-    zipReset();
-    cityReset();
-    setSelectedCountry("");
     addressReset();
   };
 
   const formIsValid =
-    firstNameIsValid &&
-    emailIsValid &&
-    addressIsValids &&
-    cityIsValid &&
-    phone.length !== 0 &&
-    selectedCountry?.value?.length !== 0 &&
-    zipIsValid;
+    firstNameIsValid && emailIsValid && addressIsValids && phone.length !== 0;
+
   const createNewBillingAddress = async () => {
     setIsClicked(true);
     if (!formIsValid) {
-      alert("Please make sure all filed are filled");
+      setIsValid(true);
       return;
     }
     const formData = {
@@ -140,9 +110,9 @@ const AddressForm = ({
       email: emailInput,
       phone: phone,
       street: addressInput || selectAddress,
-      city: cityInput,
-      country_id: selectedCountry?.value,
-      zip: zipInput,
+      country_id: 126,
+      city: "lebanon",
+      zip: "0000",
     };
 
     const guestData = {
@@ -172,6 +142,60 @@ const AddressForm = ({
     }
   };
 
+  const getUserLocation = () => {
+    return new Promise((resolve, reject) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+
+            fetch(
+              `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                if (data && data.address) {
+                  const address = data.address;
+                  const fullAddress = [
+                    address.road,
+                    address.suburb,
+                    address.city || address.town || address.village,
+                    address.state,
+                    address.country,
+                    address.postcode,
+                  ]
+                    .filter(Boolean) // Remove any undefined or null values
+                    .join(", ");
+                  resolve(fullAddress);
+                  onSelectingAddress(fullAddress);
+                  setSelectAddress(fullAddress);
+                } else {
+                  reject("Address not found");
+                }
+              })
+              .catch((error) => {
+                reject(`Error fetching address: ${error}`);
+              });
+          },
+          (error) => {
+            reject(`Error getting geolocation: ${error.message}`);
+          }
+        );
+      } else {
+        reject("Geolocation is not supported by this browser.");
+      }
+    });
+  };
+
+  const useMyInfo = () => {
+    if (userData) {
+      firstNameChangeHandler({ target: { value: userData.first_name } });
+      lastNameChangeHandler({ target: { value: userData.last_name } });
+      emailChangeHandler({ target: { value: userData.email } });
+      setPhone(userData.phone);
+    }
+  };
+
   return (
     <div className="flex-[2]">
       {isIntial && (
@@ -186,7 +210,16 @@ const AddressForm = ({
 
       <div>
         {title && <p className="text-2xl rb-bold mt-secondary">{title}</p>}
-        <div className="flex flex-wrap items-center gap-y-3 gap-x-6 my-6"></div>
+
+        <div className="my-6">
+          <button
+            type="button"
+            className="bg-primary text-white px-4 py-1   rounded"
+            onClick={useMyInfo}
+          >
+            Use My Sign In Info
+          </button>
+        </div>
 
         <form className="">
           <span className="flex flex-col lg:flex-row lg:items-center gap-4 mb-6">
@@ -201,8 +234,8 @@ const AddressForm = ({
                 clearErrors();
               }}
               onBlur={firstNameBlurHanlder}
-              hasError={firstNameHasError || (!firstNameIsTouched && isClicked)}
-              errorMessage={"This field is required"}
+              hasError={(isClicked && !firstNameIsValid) || firstNameHasError}
+              errorMessage={"Please enter a valid  name."}
             />
             <Input
               type="text"
@@ -214,8 +247,8 @@ const AddressForm = ({
                 // clearErrors();
               }}
               onBlur={lastNameBlurHanlder}
-              // hasError={lastNameHasError}
-              errorMessage="write a valid field"
+              hasError={(isClicked && !lastNameIsValid) || lastNameHasError}
+              errorMessage="Please enter a valid  name."
             />
           </span>
           <span className="flex flex-col lg:flex-row lg:items-center gap-4 mb-6">
@@ -230,7 +263,9 @@ const AddressForm = ({
               }}
               hasError={emailHasError || (!emailIsTouched && isClicked)}
               onBlur={emailBlurHanlder}
-              errorMessage={"This field is required"}
+              errorMessage={
+                "Please enter a valid email address (e.g., john.snow@example.com)."
+              }
             />
 
             <div className="flex-1 flex gap-y-1 flex-col w-full ">
@@ -247,86 +282,48 @@ const AddressForm = ({
                   autoFocus: true,
                 }}
               />
-              {isClicked && phone.length === 0 && (
-                <p
-                  className={`text-xs text-red-600  mt-1 mb-4 opacity-100`}
-                ></p>
-              )}
               <p
-                className={`text-xs text-red-600 opacity-0  ${
-                  isClicked && phone.length === 0 && "opacity-1 "
+                className={`text-xs text-red-600 ${
+                  isClicked && phone.length === 0 ? "opacity-1" : "opacity-0"
                 }`}
               >
-                This field is required
+                Please enter a valid number
               </p>
             </div>
           </span>
 
-          <span className="flex flex-col lg:flex-row lg:items-center gap-4 mb-6">
-            <Input
-              type="text"
-              label="Zip code"
-              id="register-zip-code"
-              value={zipInput}
-              onChange={(e) => {
-                zipChangeHandler(e);
-                clearErrors();
-              }}
-              onBlur={zipBlurHanlder}
-              hasError={zipHasError || (!zipIsTouched && isClicked)}
-              errorMessage="This field is required"
-            />
-            <Input
-              type="text"
-              label="City / state"
-              id="register-city"
-              value={cityInput}
-              onChange={(e) => {
-                cityChangeHandler(e);
-                clearErrors();
-              }}
-              onBlur={cityBlurHanlder}
-              hasError={cityHasError || (!cityIsTouched && isClicked)}
-              errorMessage="This field is required"
-            />
-          </span>
-          <div className="flex lg:w-1/2 flex-col gap-x-4 mb-16">
-            <label className="text-sm rb-bold capitalize">Country</label>
-            <Select
-              className={`text-black  px-2 py-3 rounded-sm bg-gray-200 px-10 ${
-                isClicked && !selectedCountry ? "border border-primary" : ""
-              }`}
-              options={countries}
-              value={selectedCountry}
-              onChange={countryChangeHandler}
-              placeholder="Select a country"
-            />
-          </div>
-
           <span className="flex flex-col lg:flex-row  gap-4 mb-6">
-            <span className="flex-1 -mt-6">
+            <span className="flex-1">
               <Textarea
                 type="text"
                 label="Address"
                 id="register-Address"
                 value={selectAddress || addressInput}
-                placeholder="Type your loaction, or pin it from the map"
+                placeholder="Type your location, or pin it from the map"
                 onChange={(e) => {
                   addressChangeHandler(e);
                   clearErrors();
                   setSelectAddress("");
                 }}
-                rows={row}
+                rows={2}
                 onBlur={addressBlurHanlder}
-                // hasError={addressHasError}
                 hasError={!addressIsValids && isClicked}
                 errorMessage="This field is required"
               />
+              <div className="">
+                <button
+                  type="button"
+                  className="bg-primary text-white  px-4 py-1 rounded"
+                  onClick={getUserLocation}
+                >
+                  Use Current Location
+                </button>
+              </div>
             </span>
-            <MapComponent onSelectingAddress={onSelectingAddress} />
+            {/* <MapComponent onSelectingAddress={onSelectingAddress} /> */}
           </span>
 
-          <div className="mt-6 flex w-1/4">
+          <div className="mt-12 flex w-1/4">
             <MainButton
               isLoading={isLoading}
               onClick={createNewBillingAddress}

@@ -18,7 +18,7 @@ const Modal = ({ children, isActive, onHandleClose, bigModal }) => {
             : "opacity-0 select-none invisible scale-[0.4]"
         } -translate-x-1/2 -translate-y-1/2 h-auto ${
           bigModal ? "w-[75vw]" : "w-auto"
-        }  max-h-[80vh] bg-white z-[10000]`}
+        }  max-h-[80vh] bg-white z-[10000000]`}
       >
         {children}
       </div>

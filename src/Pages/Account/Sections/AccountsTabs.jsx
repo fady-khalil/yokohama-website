@@ -17,10 +17,10 @@ const AccountsTabs = ({ onSelectingTabs, activeTabs }) => {
       id: 2,
       name: "Order History",
     },
-    {
-      id: 3,
-      name: "Address Book",
-    },
+    // {
+    //   id: 3,
+    //   name: "Address Book",
+    // },
     {
       id: 4,
       name: "My Wishlist",

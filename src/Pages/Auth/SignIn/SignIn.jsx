@@ -71,6 +71,7 @@ const SignIn = ({ onToggleForms, onHandleClose }) => {
 
     try {
       const result = await postData("yokohama/auth/login", formData);
+      console.log(result);
       if (result && result?.is_success) {
         handleUerData(result?.data);
         setUserIsSignIn(true);

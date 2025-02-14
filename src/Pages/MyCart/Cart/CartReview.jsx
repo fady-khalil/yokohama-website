@@ -5,6 +5,7 @@ import Spinner from "Components/RequestHandler/Spinner";
 import MainButton from "Components/Buttons/MainButton";
 import EmptyCart from "Components/Screens/EmptyCart";
 import { Link } from "react-router-dom";
+import imagee from "assests/product-3-removebg-preview.png";
 // context
 import { UserCartContext } from "context/User/CartContext";
 
@@ -13,7 +14,6 @@ import CartSummury from "./Summry/CartSummury";
 const CartReview = ({ onSelectingTabs }) => {
   const { cart, cartIsLoading, removeFromCart, loadingItems, updateCart } =
     useContext(UserCartContext);
-
   const handleQuantityChange = (productId, quantity) => {
     if (quantity < 1) {
       removeFromCart(productId);
@@ -39,55 +39,77 @@ const CartReview = ({ onSelectingTabs }) => {
               <div className="flex-[2] flex flex-col gap-y-3">
                 {cart?.cart_items?.map(
                   (
-                    { name, image, price, currency, quantity, product_id },
+                    {
+                      name,
+                      image,
+                      price,
+                      currency,
+                      quantity,
+                      product_id,
+                      retail_price,
+                    },
                     index
                   ) => (
                     <div
                       className="flex flex-wrap gap-6 items-center justify-between w-full border-b pb-3"
                       key={index}
                     >
-                      <Link to={`/product-detailed/${product_id}`}>
-                        <img className="w-28" src={image} alt="" />
+                      {/* image */}
+                      <Link
+                        className="flex-1"
+                        to={`/product-detailed/${product_id}`}
+                      >
+                        <img className="w-28" src={imagee} alt="" />
                       </Link>
-                      <div>
+                      {/* name and price */}
+                      <div className="flex-[3]">
                         <Link
                           to={`/product-detailed/${product_id}`}
                           className="f min-w-[fit-content] font-medium"
                         >
                           {name}
                         </Link>
-                        <span className="mt-2 flex items-center gap-x-2">
-                          <p>{price}</p>
-                          <p>{currency}</p>
-                        </span>
+                        <div className="flex items-center gap-x-8">
+                          <span className="mt-2 flex items-center line-through text-red-500">
+                            <p>{price}</p>
+                            <p>{currency}</p>
+                          </span>
+                          <span className="mt-2 flex items-center gap-x-1">
+                            <p>{retail_price}</p>
+                            <p>{currency}</p>
+                          </span>
+                        </div>
                       </div>
-                      <div className="border py-2 px-4 flex items-center justify-between gap-x-6">
+                      {/* quantity and delet from cart */}
+                      <div className="flex-1 gap-x-2 flex items-center">
+                        <div className="border py-2 px-4 flex items-center justify-between gap-x-6">
+                          <button
+                            onClick={() =>
+                              handleQuantityChange(product_id, quantity + 1)
+                            }
+                          >
+                            +
+                          </button>
+                          <p>{quantity}</p>
+                          <button
+                            onClick={() =>
+                              handleQuantityChange(product_id, quantity - 1)
+                            }
+                          >
+                            -
+                          </button>
+                        </div>
                         <button
-                          onClick={() =>
-                            handleQuantityChange(product_id, quantity + 1)
-                          }
+                          onClick={() => removeFromCart(product_id)}
+                          className=" flex items-center justify-center"
                         >
-                          +
-                        </button>
-                        <p>{quantity}</p>
-                        <button
-                          onClick={() =>
-                            handleQuantityChange(product_id, quantity - 1)
-                          }
-                        >
-                          -
+                          {loadingItems[product_id] ? (
+                            <Spinner />
+                          ) : (
+                            <Trash weight="fill" size={26} />
+                          )}
                         </button>
                       </div>
-                      <button
-                        onClick={() => removeFromCart(product_id)}
-                        className=" flex items-center justify-center"
-                      >
-                        {loadingItems[product_id] ? (
-                          <Spinner />
-                        ) : (
-                          <Trash weight="fill" size={26} />
-                        )}
-                      </button>
                     </div>
                   )
                 )}

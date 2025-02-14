@@ -10,8 +10,8 @@ export const UserCartProvider = ({ children }) => {
   const { userToken, userIsSignIn } = useContext(UserLoginContext);
   const [displayProduct, setDisplayProduct] = useState("");
   // fetcing
-  const { error, fetchData } = useGetDataToken();
-  const { error: postAddToCartError, postData } = usePostToken();
+  const { fetchData } = useGetDataToken();
+  const { postData } = usePostToken();
 
   // get cart
   const [cart, setCart] = useState([]);
@@ -20,6 +20,8 @@ export const UserCartProvider = ({ children }) => {
 
   // add to cart
   const [addToCartLoading, setAddToCartLoading] = useState(false);
+  // update cart
+  const [updateCartIsLoading, setUpdateCartIsLoading] = useState(false);
 
   // detel item from car
   const [loadingItems, setLoadingItems] = useState({});
@@ -66,6 +68,7 @@ export const UserCartProvider = ({ children }) => {
 
   const updateCart = async (productId, quantity) => {
     try {
+      setUpdateCartIsLoading(true);
       const dataUpdatedData = await fetchData(
         `/yokohama/cart/update/${productId}?quantity=${quantity}`,
         userToken
@@ -73,6 +76,8 @@ export const UserCartProvider = ({ children }) => {
       setCart(dataUpdatedData?.data);
     } catch (error) {
       console.error("Error updating cart:", error);
+    } finally {
+      setUpdateCartIsLoading(false);
     }
   };
 
@@ -115,6 +120,7 @@ export const UserCartProvider = ({ children }) => {
         // update products
         updateCart,
         clearCart,
+        updateCartIsLoading,
         // billing
       }}
     >

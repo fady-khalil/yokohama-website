@@ -10,17 +10,11 @@ import UseCountries from "Components/RequestHandler/GetCountries";
 import { UserLoginContext } from "context/Auth/UserLoginContext";
 import useGetDataToken from "Hooks/Fetching/useGetDataToken";
 import usePostDataTokenJson from "Hooks/Fetching/usePostDataTokenJson";
+import { Placeholder } from "@phosphor-icons/react";
 
 const EditProfileForm = () => {
   const [phone, setPhone] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
-  const [emailMarketing, setEmailMarketing] = useState(false);
-
-  const [selectedCountry, setSelectedCountry] = useState(null);
-  const countries = UseCountries()?.map((country) => ({
-    value: country?.id,
-    label: country?.country_name,
-  }));
 
   const {
     value: fullNameInput,
@@ -42,12 +36,22 @@ const EditProfileForm = () => {
     reset: emailReset,
   } = useInput((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value));
 
+  const {
+    value: birthdayInput,
+    isValid: birthdayIsValid,
+    isTouched: birthdayIsTouched,
+    HasError: birthdayHasError,
+    inputChangeHandler: birthdayChangeHandler,
+    inputBlurHandler: birthdayBlurHandler,
+    reset: birthdayReset,
+  } = useInput((value) => {
+    // Simple date validation (YYYY-MM-DD format)
+    const regex = /^\d{4}-\d{2}-\d{2}$/;
+    return regex.test(value);
+  });
+
   const dateOfBirthChangeHandler = (e) => {
     setDateOfBirth(e.target.value);
-  };
-
-  const countryChangeHandler = (selectedOption) => {
-    setSelectedCountry(selectedOption);
   };
 
   // handling edit profile
@@ -56,11 +60,15 @@ const EditProfileForm = () => {
   const { postData } = usePostDataTokenJson();
 
   const [profileData, setprofileData] = useState("");
-
+  const formattedBirthday = new Date(birthdayInput)
+    .toLocaleDateString("en-GB") // This will return dd/mm/yyyy
+    .split("/") // Split into parts
+    .join("/");
   const getUserProfileDataHandler = async () => {
     try {
       const data = await fetchData("yokohama/profile", userToken);
       setprofileData(data?.data);
+      console.log(data?.data);
     } catch (error) {
     } finally {
     }
@@ -70,18 +78,13 @@ const EditProfileForm = () => {
     getUserProfileDataHandler();
   }, []);
 
-  const userCountry = countries?.find(
-    (country) => country.value === profileData.country_id
-  );
-
   const [isLoading, setIsLoading] = useState(false);
 
   const editProfileHandler = async () => {
     const FormdDta = {
-      name: fullNameInput,
-      phone: phone,
-      birth_day: setDateOfBirth,
-      country_id: selectedCountry?.value,
+      name: fullNameInput ? fullNameInput : profileData.name,
+      phone: phone ? phone : profileData.phone,
+      country_id: 126,
     };
 
     try {
@@ -104,7 +107,7 @@ const EditProfileForm = () => {
       <span className="flex flex-col lg:flex-row lg:items-center gap-4 mb-6">
         <Input
           type="text"
-          label="Full Name"
+          label="First Name"
           id="register-full-name"
           value={fullNameInput}
           placeholder={profileData?.name}
@@ -116,6 +119,34 @@ const EditProfileForm = () => {
           hasError={fullNameHasError}
           errorMessage=""
         />
+        <Input
+          type="text"
+          label="Last Name"
+          id="register-full-name"
+          value={fullNameInput}
+          placeholder={profileData?.name}
+          onChange={(e) => {
+            fullNameChangeHandler(e);
+            // clearErrors();
+          }}
+          onBlur={fullNameBlurHanlder}
+          hasError={fullNameHasError}
+          errorMessage=""
+        />
+      </span>
+
+      <div className="flex flex-col lg:flex-row lg:items-center gap-4 mb-6">
+        <div className="flex-1 flex gap-y-1 flex-col w-full">
+          <label className="text-sm rb-bold capitalize">Phone</label>
+          <PhoneInput
+            inputClass="test"
+            buttonClass="test-2"
+            placeholder={"lala"}
+            country={"lb"}
+            value={phone}
+            onChange={(phone) => setPhone(phone)}
+          />
+        </div>
         <Input
           type="email"
           label="Email"
@@ -131,51 +162,20 @@ const EditProfileForm = () => {
           hasError={emailHasError}
           errorMessage=""
         />
-      </span>
-      <span className="flex flex-col lg:flex-row lg:items-center gap-4 mb-6">
-        <div className="flex-1 lg:items-center gap-x-4 ">
-          <Input
-            type="date"
-            placeholder={profileData?.date}
-            label="Date of Birth"
-            id="register-dob"
-            value={dateOfBirth}
-            onChange={dateOfBirthChangeHandler}
-            hasError={false}
-            errorMessage=""
-          />
-        </div>
-
-        <div className="flex-1 flex gap-y-1 flex-col w-full">
-          <label className="text-sm rb-bold capitalize">Phone</label>
-          <PhoneInput
-            inputClass="test"
-            buttonClass="test-2"
-            country={"lb"}
-            value={phone}
-            onChange={(phone) => setPhone(phone)}
-            inputProps={{
-              name: "phone",
-              required: true,
-              autoFocus: true,
-            }}
-          />
-        </div>
-      </span>
-      <div className="flex flex-col gap-x-4 mb-6">
-        <label className="text-sm rb-bold capitalize">Country</label>
-        <Select
-          className="text-black px-2 py-3 rounded-sm bg-gray-200 px-10"
-          options={countries}
-          value={selectedCountry}
-          onChange={countryChangeHandler}
-          placeholder={`${
-            userCountry ? userCountry.label : "Select a country"
-          }`}
-        />
       </div>
+      <Input
+        type="date"
+        label={`Birthday`}
+        placeholder={"hello"}
+        id="register-birthday"
+        value={birthdayInput}
+        onChange={(e) => {
+          birthdayChangeHandler(e);
+        }}
+        onBlur={birthdayBlurHandler}
+      />
 
-      <span>
+      {/* <span>
         <input
           type="checkbox"
           id="emailMarketing"
@@ -187,7 +187,7 @@ const EditProfileForm = () => {
           I will like to recieve product updates, news and promotional email
           from HMG.
         </label>
-      </span>
+      </span> */}
       <div className="mt-16 w-max ml-auto">
         <MainButton
           isLoading={isLoading}

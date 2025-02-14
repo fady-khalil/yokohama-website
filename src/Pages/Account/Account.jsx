@@ -23,10 +23,10 @@ const Account = () => {
       id: 2,
       component: <OrderHistory />,
     },
-    {
-      id: 3,
-      component: <AddressBook />,
-    },
+    // {
+    //   id: 3,
+    //   component: <AddressBook />,
+    // },
     {
       id: 4,
       component: <Wishlist />,
