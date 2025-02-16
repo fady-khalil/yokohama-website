@@ -92,10 +92,10 @@ const FooterLinks = () => {
     //   mega: true,
     //   pages: content.sub_cat_child || [], // Use sub_cat_child as pages
     // })) || []),
-    {
-      name: "Dealers",
-      path: "/dealers",
-    },
+    // {
+    //   name: "Dealers",
+    //   path: "/dealers",
+    // },
     {
       name: "Safety",
       path: "safety",

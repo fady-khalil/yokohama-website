@@ -54,6 +54,7 @@ const Filter = ({
       behavior: "smooth", // This will create a smooth scrolling effect
     });
   };
+  console.log(allData);
 
   return (
     <div

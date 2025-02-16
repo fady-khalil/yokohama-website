@@ -10,7 +10,7 @@ import "swiper/css/navigation";
 import { Pagination, Navigation, Autoplay } from "swiper/modules";
 import bg from "assests/find-your-tires-bg.jpg";
 import "./style.css";
-const Oil = () => {
+const Oil = ({ data }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   return (
@@ -79,21 +79,26 @@ const Oil = () => {
               },
             }}
           >
-            {oilData?.map((item, index) => (
-              <SwiperSlide key={index}>
-                <div className={"flex flex-col items-center"}>
-                  <img className="w-full rounded-2xl" src={item.image} alt="" />
-                  <p className="text-center rb-bold text-white text-xl mt-2">
-                    {item.name}
-                  </p>
-                  <p className="text-center text-white my-3 text-xl rb-bold">
-                    {item.description}
-                  </p>
+            {data &&
+              data?.map((item, index) => (
+                <SwiperSlide key={index}>
+                  <div className={"flex flex-col items-center"}>
+                    <img
+                      className="w-full rounded-2xl"
+                      src={item.image}
+                      alt=""
+                    />
+                    <p className="text-center rb-bold text-white text-xl mt-2">
+                      {item.product_id?.name}
+                    </p>
+                    {/* <p className="text-center text-white my-3 text-xl rb-bold">
+                      {item.description}
+                    </p> */}
 
-                  <p className="text-3xl text-white">{item.price}</p>
-                </div>
-              </SwiperSlide>
-            ))}
+                    <p className="text-3xl text-white">{item.product_price}$</p>
+                  </div>
+                </SwiperSlide>
+              ))}
           </Swiper>
         </div>
       </Container>

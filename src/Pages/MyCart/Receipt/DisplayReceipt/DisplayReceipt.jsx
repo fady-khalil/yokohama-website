@@ -24,6 +24,7 @@ const DisplayReceipt = ({
   const navigate = useNavigate();
   const { postData } = usePostToken();
   const [isLoading, setIsLoading] = useState(false);
+  console.log(cartData);
 
   const confirmOrderHandler = async () => {
     try {

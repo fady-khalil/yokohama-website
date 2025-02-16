@@ -116,13 +116,13 @@ const GetLinks = () => {
         },
       ],
     },
-    {
-      text: "Our Products",
-      banner: productsImage,
-      pages: productsData,
-      mega: true,
-      products: true,
-    },
+    // {
+    //   text: "Our Products",
+    //   banner: productsImage,
+    //   pages: productsData,
+    //   mega: true,
+    //   products: true,
+    // },
     // Dynamic rendering of dataContent
     ...(dataContent?.map((content) => ({
       banner: saftyImage,

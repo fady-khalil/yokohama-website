@@ -1,7 +1,7 @@
 import Container from "Components/Container/Container";
 import React, { useState, useContext, useEffect } from "react";
 import Spinner from "Components/RequestHandler/Spinner";
-import { Heart } from "@phosphor-icons/react";
+import { Heart, Trash, ShoppingCart } from "@phosphor-icons/react";
 import logo from "assests/brand-cart.jpg";
 // Import Swiper styles
 import "swiper/css";
@@ -16,6 +16,7 @@ import { GuestCartContext } from "context/Guest/GuestCartContext";
 import { UserCartContext } from "context/User/CartContext";
 import { WhatsappLogo } from "@phosphor-icons/react";
 import { UserWishlistContext } from "context/User/WishlistContext";
+import { Link } from "react-router-dom";
 const ProductInfo = ({ product }) => {
   const {
     addToCart,
@@ -32,29 +33,14 @@ const ProductInfo = ({ product }) => {
     updateCart,
     updateCartIsLoading,
     removeFromCart,
+    loadingItems,
   } = useContext(UserCartContext);
 
   const { getWishlistData, userAddToWihlist, addTowishlistLoading, wishlist } =
     useContext(UserWishlistContext);
 
-  const addToCartHandler = (product) => {
-    displayProductHandler(product);
-    if (userIsSignIn) {
-      userAddToCart(product?.id);
-    } else {
-      addToCart(product);
-    }
-  };
-  const addToWishlitandler = (product) => {
-    if (userIsSignIn) {
-      userAddToWihlist(product?.id);
-    } else {
-      userAddToWihlist(product);
-    }
-  };
-
   const [isInCart, setIsInCart] = useState(false);
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
   const [isInWishlist, setIsInWishlist] = useState(false);
 
   useEffect(() => {
@@ -68,7 +54,7 @@ const ProductInfo = ({ product }) => {
         setQuantity(foundItem.quantity);
       } else {
         setIsInCart(false);
-        setQuantity(0);
+        setQuantity(1);
       }
     } else if (!userIsSignIn && guestCart) {
       const foundItem = guestCart.find((item) => item.id === product.id);
@@ -77,7 +63,7 @@ const ProductInfo = ({ product }) => {
         setQuantity(foundItem.quantity);
       } else {
         setIsInCart(false);
-        setQuantity(0);
+        setQuantity(1);
       }
     }
 
@@ -89,25 +75,50 @@ const ProductInfo = ({ product }) => {
     }
   }, [cart, product.id, guestCart, userIsSignIn, wishlist]);
 
-  const handleQuantityChange = (productId, quantity) => {
+  const handleQuantityChange = (productId, newQuantity) => {
+    setQuantity(newQuantity);
+
+    if (newQuantity < 1) {
+      return;
+    }
+
+    if (isInCart) {
+      if (userIsSignIn) {
+        updateCart(productId, newQuantity);
+      } else {
+        guestUpdateCart(productId, newQuantity);
+      }
+    }
+  };
+
+  const addToCartHandler = async (product) => {
+    displayProductHandler(product);
     if (userIsSignIn) {
-      if (quantity < 1) {
-        removeFromCart(productId);
-      } else {
-        updateCart(productId, quantity);
+      // First add to cart
+      await userAddToCart(product?.id);
+      // Then update the quantity if it's different from 1
+      if (quantity > 1) {
+        updateCart(product?.id, quantity);
       }
-    } else if (!userIsSignIn) {
-      if (quantity < 1) {
-        guestRemoveFromCart(productId);
-      } else {
-        guestUpdateCart(productId, quantity);
-      }
+    } else {
+      addToCart({ ...product, quantity });
+    }
+  };
+
+  const addToWishlitandler = (product) => {
+    if (userIsSignIn) {
+      userAddToWihlist(product?.id);
+    } else {
+      userAddToWihlist(product);
     }
   };
 
   return (
     <Container>
       <div className="flex flex-col flex-col-reverse lg:flex-row items-center gap-y-6 gap-x-32 py-secondary lg:py-primary">
+        <div className="flex-1 flex flex-col items-center justify-center p-12">
+          <img className="w-3/4 h-3/4 mx-auto" src={image} alt="" />
+        </div>
         <div className="flex-1">
           {/* cat */}
           <div className="flex items-center gap-x-16 border-b pb-4">
@@ -139,12 +150,21 @@ const ProductInfo = ({ product }) => {
             </p>
           </div>
           <div className="flex items-center gap-x-3">
-            <div className="flex-1 rb-bold text-white flex items-center bg-dark">
+            <div
+              className={`${
+                isInCart ? "flex-[10]" : "flex-[1]"
+              } rb-bold text-white flex items-center bg-dark`}
+            >
               <p className="border-r px-6 py-3">Qty</p>
-              <button
-                disabled={!isInCart}
-                className="flex items-center justify-between flex-1 px-10 gap-x-2"
-              >
+              <button className="flex items-center flex-1 justify-between px-10 gap-x-2">
+                <p
+                  onClick={() =>
+                    handleQuantityChange(product?.id, Math.max(1, quantity - 1))
+                  }
+                >
+                  -
+                </p>
+                {updateCartIsLoading ? <Spinner /> : <p>{quantity}</p>}
                 <p
                   onClick={() =>
                     handleQuantityChange(product?.id, quantity + 1)
@@ -152,16 +172,9 @@ const ProductInfo = ({ product }) => {
                 >
                   +
                 </p>
-                {updateCartIsLoading ? <Spinner /> : <p>{quantity}</p>}
-                <p
-                  onClick={() =>
-                    handleQuantityChange(product?.id, quantity - 1)
-                  }
-                >
-                  -
-                </p>
               </button>
             </div>
+
             {!isInCart && (
               <div className="flex-1">
                 <button
@@ -187,13 +200,40 @@ const ProductInfo = ({ product }) => {
                 )}
               </button>
             )}
+
+            {isInCart && (
+              <button
+                onClick={() => removeFromCart(product?.id)}
+                className={`min-w-[75px] flex-1 flex items-center justify-center py-2 w-max  ${
+                  isInWishlist ? "text-primary" : ""
+                }`}
+              >
+                {loadingItems[product?.id] ? (
+                  <Spinner />
+                ) : (
+                  <Trash
+                    t
+                    weight={isInWishlist ? "fill" : "regular"}
+                    size={24}
+                  />
+                )}
+              </button>
+            )}
+            {isInCart && (
+              <Link
+                to={"/my-cart"}
+                className="hover:underline rb-bold w-full text-center py-3 flex items-center justify-center gap-x-2 flex flex-1"
+              >
+                <ShoppingCart size={24} />
+              </Link>
+            )}
           </div>
 
           <div className="mt-10">
             <p className=" mb-2">
               After placing your order, our team will promptly contact you to
               arrange a convenient time and location for delivery and
-              installation of your items. <br /> We’re committed to providing
+              installation of your items. <br /> We're committed to providing
               you with seamless service.
             </p>
             <p className="text-lg">Thank you for choosing us!</p>
@@ -205,10 +245,6 @@ const ProductInfo = ({ product }) => {
               Need Help?
             </button>
           </div>
-        </div>
-        <div className="flex-1 flex flex-col items-center justify-center p-12">
-          <img className="w-3/4 h-3/4 mx-auto" src={image} alt="" />
-          {/* <img className="w-3/4 h-3/4 mx-auto" src={product?.images} alt="" /> */}
         </div>
       </div>
     </Container>

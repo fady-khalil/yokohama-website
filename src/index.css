@@ -154,3 +154,22 @@ body {
   background-repeat: no-repeat;
   background-position: right;
 }
+
+.why-us-content p {
+  margin-bottom: 1rem;
+}
+
+.why-us-content ol,
+.why-us-content ul {
+  list-style-type: decimal;
+  list-style-position: inside;
+}
+
+.why-us-content li {
+  margin-bottom: 0.5rem;
+}
+
+.slider-arrow:disabled {
+  filter: grayscale(100%);
+  opacity: 0.5;
+}

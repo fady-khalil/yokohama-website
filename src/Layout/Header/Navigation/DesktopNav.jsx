@@ -9,7 +9,7 @@ const DesktopNav = () => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   return (
     <ul
-      className={`hidden xl:flex text-white items-center flex-[4]  justify-centser rb-mediums uppercase overflow-x-hidden`}
+      className={`hidden xl:flex text-white items-center flex-[3]  justify-centser rb-mediums uppercase overflow-x-hidden`}
     >
       {links?.map(
         (

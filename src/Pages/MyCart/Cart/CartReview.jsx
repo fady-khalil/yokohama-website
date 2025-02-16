@@ -14,6 +14,7 @@ import CartSummury from "./Summry/CartSummury";
 const CartReview = ({ onSelectingTabs }) => {
   const { cart, cartIsLoading, removeFromCart, loadingItems, updateCart } =
     useContext(UserCartContext);
+  console.log(cart);
   const handleQuantityChange = (productId, quantity) => {
     if (quantity < 1) {
       removeFromCart(productId);

@@ -100,30 +100,9 @@ const Listing = ({ data, totalPages, currentPage, onPageChange }) => {
                   <p>{price}</p>
                   <p>{currency}*</p>
                 </div>{" "}
-                * Shop now to verifie your special price
-                <p className="text-xs mb-2"></p>
-                {/* <div className="flex mb-2">
-                  {[1, 2, 3, 4, 5].map((star) => {
-                    const starClass =
-                      star <= Math.floor(avg_review)
-                        ? "text-primary" // full star
-                        : star <= Math.ceil(avg_review) && avg_review % 1 !== 0
-                        ? "text-primary-half" // half star (custom style)
-                        : "text-gray-400"; // empty star
-
-                    return (
-                      <svg
-                        key={star}
-                        className={`w-6 h-6 ${starClass}`}
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                      >
-                        <path d="M12 17.27L18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21z" />
-                      </svg>
-                    );
-                  })}
-                </div> */}
+                <p className="text-xs mb-2">
+                  * Shop now to verifie your special price
+                </p>
               </div>
 
               <div className="flex-[2]">

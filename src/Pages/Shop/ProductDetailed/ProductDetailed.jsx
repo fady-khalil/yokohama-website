@@ -18,15 +18,6 @@ import IsError from "Components/RequestHandler/IsError";
 
 const ProductDetailed = () => {
   const { userIsSignIn } = useContext(UserLoginContext);
-
-  const [selectedTabs, setSelectedTabs] = useState(1);
-  const descriptionRef = useRef(null);
-  const specsRef = useRef(null);
-  const sizeInfoRef = useRef(null);
-  const galleryRef = useRef(null);
-  const warrantyRef = useRef(null);
-  const reviewsRef = useRef(null);
-
   // fetching
   const { id } = useParams();
   const [data, setData] = useState([]);
@@ -60,37 +51,6 @@ const ProductDetailed = () => {
     return (
       <main>
         <ProductInfo product={data} />
-        {/* <ProductInfoTabs
-          activeTabs={selectedTabs}
-          data={data}
-          onTabClick={scrollToSection}
-        /> */}
-        {/* {data?.description_sale?.title && (
-          <div ref={descriptionRef}>
-            <ProductDescription data={data?.description_sale} />
-          </div>
-        )}
-        {data?.specs?.title && (
-          <div ref={specsRef}>
-            <ProductSpecs data={data?.specs} />
-          </div>
-        )}
-        {data?.size_info?.length > 0 && (
-          <div ref={sizeInfoRef}>
-            <SizeInfo data={data?.size_info} />
-          </div>
-        )}
-        <div ref={galleryRef}>
-          <ProductGallery />
-        </div>
-        {data?.warranty && (
-          <div ref={warrantyRef}>
-            <ProductWarranty name={data?.name} data={data?.warranty} />
-          </div>
-        )}
-        <div ref={reviewsRef}>
-          <ProductReview product_id={data?.id} isSignIn={userIsSignIn} />
-        </div> */}
       </main>
     );
   }

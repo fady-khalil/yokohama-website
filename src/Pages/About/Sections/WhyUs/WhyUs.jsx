@@ -32,6 +32,7 @@ const WhyUs = () => {
   if (isLoading) return <IsLoading />;
   if (error) return <IsError />;
   if (data) {
+    console.log(data);
     return (
       <section className="my-secondary">
         <h5 className="text-5xl my-20 text-primary rb-bold text-center">
@@ -48,8 +49,8 @@ const WhyUs = () => {
               </div>
               <div className="flex-1">
                 <p className="rb-bold text-3xl lg:text-4xl">{title}</p>
-                <p
-                  className="content"
+                <div
+                  className="text-lg why-us-content"
                   dangerouslySetInnerHTML={{ __html: text }}
                 />
               </div>

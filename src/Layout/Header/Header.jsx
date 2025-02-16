@@ -8,6 +8,7 @@ import { List, ShoppingCart } from "@phosphor-icons/react";
 import logo from "assests/logo/marwan-white.png";
 import { ModalContext } from "context/Auth/ModalContext";
 import { UserLoginContext } from "context/Auth/UserLoginContext";
+import { UserCartContext } from "context/User/CartContext";
 import bg from "assests/find-your-tires-bg.jpg";
 
 const Header = () => {
@@ -22,6 +23,7 @@ const Header = () => {
   const { openDealerModalHandeler, openModalHandeler } =
     useContext(ModalContext);
   const { userIsSignIn, userData } = useContext(UserLoginContext);
+  const { cart } = useContext(UserCartContext);
   return (
     <header
       style={{ backgroundImage: `url(${bg})` }}
@@ -29,13 +31,20 @@ const Header = () => {
     >
       <div className=" text-white pt-5  flex-1 min-w-full px-[1.6rem] lg:px-[3rem] ">
         <div className="xl:px-[2rem] xxl:px-[4rem] flex items-center justify-between gap-x-4 capitalize font-medium text-sm ">
-          <div>
+          <div className="relative">
             <Link
-              className="border border-primary block rounded-full p-2"
+              className="border border-primary block rounded-full p-2 "
               to={"/my-cart"}
             >
               <ShoppingCart size={20} />
             </Link>
+            <span
+              className={`absolute bg-primary flex items-center justify-center p-2 text-xs  w-4 h-4  rounded-full -top-1 -right-1 ${
+                cart?.cart_items?.length === 0 ? "hidden" : ""
+              }`}
+            >
+              <p className="">{cart?.cart_items?.length}</p>
+            </span>
           </div>
           <div className="flex items-center gap-x-6">
             {userIsSignIn ? (
@@ -57,7 +66,7 @@ const Header = () => {
         </div>
       </div>
       <div className=" xl:px-[2rem] xxl:px-[4rem]">
-        <div className=" flex items-center justify-between w-full">
+        <div className=" flex items-center gap-x-8 justify-between w-full">
           {/* logo */}
           <div className="flex-1">
             <Link
