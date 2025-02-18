@@ -101,6 +101,7 @@ const CartReview = ({ onSelectingTabs }) => {
                           </button>
                         </div>
                         <button
+                          title="remove from cart"
                           onClick={() => removeFromCart(product_id)}
                           className=" flex items-center justify-center"
                         >

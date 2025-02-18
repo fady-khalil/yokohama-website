@@ -1,10 +1,10 @@
 import React from "react";
 import logo1 from "assests/logo/HMG-white.png";
 
-const Logo = () => {
+const Logo = ({ className = "" }) => {
   return (
-    <div>
-      <img src={logo1} alt="" />
+    <div className={className}>
+      <img src={logo1} alt="HMG Logo" className="w-auto h-auto" />
     </div>
   );
   // return (

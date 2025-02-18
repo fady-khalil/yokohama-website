@@ -166,6 +166,8 @@ const Shop = () => {
     clearFilters();
   }, [id]);
 
+  console.log(allData);
+
   // if (isLoading) return <IsLoading />;
   if (isError || error) return <IsError />;
 
@@ -179,7 +181,7 @@ const Shop = () => {
         >
           <Faders size={32} />
         </button>
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-28 mb-secondary lg:my-secondary">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-20 mb-secondary lg:my-secondary">
           <Filter
             isVisible={filterIsVisible}
             onHandleFilterVisible={onHandleFilterVisible}

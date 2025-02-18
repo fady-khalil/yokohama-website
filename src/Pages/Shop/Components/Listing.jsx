@@ -1,8 +1,6 @@
 import React from "react";
-import Container from "Components/Container/Container";
-import listImage1 from "assests/listing/1.png";
-import listImage2 from "assests/listing/2.png";
-import listImage3 from "assests/listing/3.png";
+import image from "assests/product-3-removebg-preview.png";
+
 import { Link } from "react-router-dom";
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
@@ -70,7 +68,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 const Listing = ({ data, totalPages, currentPage, onPageChange }) => {
   return (
     <div className="col-span-3 relative z-[0]">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-14 gap-y-24">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-24">
         {data?.map(
           (
             {
@@ -82,41 +80,87 @@ const Listing = ({ data, totalPages, currentPage, onPageChange }) => {
               currency,
               images,
               brand,
+              quantity,
+              onSale,
             },
             dataIndex
           ) => (
             <Link
+              className="group block"
               to={`/product-detailed/${id}`}
-              className="flex items-center relative group"
               key={dataIndex}
             >
-              <div className="flex-[3] border-b-4">
-                <p className=" text-primary rb-bold text-sm">
-                  {classification}
-                </p>
-                <p className=" rb-bold">{name}</p>
-                <p className="rb-medium text-sm mt-3">Brand:{brand}</p>
-                <div className="flex items-center gap-x-2 my-3 font-medium">
-                  <p>{price}</p>
-                  <p>{currency}*</p>
-                </div>{" "}
-                <p className="text-xs mb-2">
-                  * Shop now to verifie your special price
-                </p>
-              </div>
+              <div className="flex relative">
+                {onSale && (
+                  <div className="absolute -top-0 -left-0 z-10">
+                    <div
+                      className="bg-[#CD4C4F] text-white font-bold py-1 px-8 text-sm uppercase tracking-wider"
+                      style={{
+                        clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
+                        transform:
+                          "rotate(-45deg) translateX(-20%) translateY(-50%)",
+                      }}
+                    >
+                      Sale
+                    </div>
+                  </div>
+                )}
+                <div className="flex-[1] flex flex-col border-b-4">
+                  <p className="text-primary rb-bold text-sm">
+                    {classification}
+                  </p>
+                  <p className="rb-bold">{name}</p>
+                  <p className="rb-medium text-sm mt-3">Brand:{brand}</p>
+                  <div className="flex items-center gap-x-2 my-3 font-medium">
+                    <p>{price}</p>
+                    <p>
+                      {currency}
+                      <span className="text-primary">*</span>
+                    </p>
+                  </div>
+                  <p className="text-xs mb-2 mt-auto">
+                    <span className="text-primary">*</span>
+                    {quantity?.free_quantity === 0 &&
+                    quantity?.incoming_quantity === 0
+                      ? " Contact us to check alternatives"
+                      : quantity?.free_quantity === 0 &&
+                        quantity?.incoming_quantity > 0
+                      ? " Contact us for availability date"
+                      : " Shop now to verify your special price"}
+                  </p>
+                </div>
 
-              <div className="flex-[2]">
-                <img className="w-full h-full" src={images} alt="" />
+                <div className="flex-[1] relative">
+                  <img className="w-full h-full" src={image} alt="" />
+                  {quantity?.free_quantity === 0 &&
+                    quantity?.incoming_quantity === 0 && (
+                      <div className="absolute top-0 right-0 bg-red-500 text-white px-4 py-1 rb-bold">
+                        Sold Out
+                      </div>
+                    )}
+                  {quantity?.free_quantity === 0 &&
+                    quantity?.incoming_quantity > 0 && (
+                      <div className="absolute top-0 right-0 bg-yellow-500 text-white px-4 py-1 rb-bold">
+                        Coming Soon
+                      </div>
+                    )}
+                </div>
               </div>
               <div
-                className={`absolute flex items-center gap-x-4 left-0 -bottom-6 w-3/4 mx-auto h-auto transform translate-y-[30%] opacity-0 select-none group-hover:select-auto group-hover:opacity-100 group-hover:translate-y-0 transition-transform duration-500`}
+                className={`flex  gap-x-2 mt-2 w-3/4 transform translate-y-[30%] opacity-0 select-none group-hover:select-auto group-hover:opacity-100 group-hover:translate-y-0 transition-transform duration-500`}
               >
-                <button className="bg-dark text-center uppercase rb-bold py-1  flex-1 text-white w-full">
+                <button className="bg-dark text-center uppercase rb-bold py-2 flex-1 text-white w-full">
                   View Details
                 </button>
-                <button className="border bg-primary text-white  text-center uppercase rb-bold py-1  flex-1 w-full">
-                  Shop Now
-                </button>
+                {quantity?.free_quantity === 0 ? (
+                  <button className="border bg-gray-500 text-white text-center uppercase rb-bold py-2 flex-1 w-full">
+                    Contact Us
+                  </button>
+                ) : (
+                  <button className="border bg-primary text-white text-center uppercase rb-bold py-2 flex-1 w-full">
+                    Shop Now
+                  </button>
+                )}
               </div>
             </Link>
           )

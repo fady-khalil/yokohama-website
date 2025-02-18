@@ -1,15 +1,7 @@
-import { useRef, useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { UserLoginContext } from "context/Auth/UserLoginContext";
 // components
 import ProductInfo from "./Components/ProductInfo";
-import ProductInfoTabs from "./Components/ProductInfoTabs";
-import ProductDescription from "./Components/ProductDescription";
-import ProductSpecs from "./Components/ProductSpecs";
-import SizeInfo from "./Components/SizeInfo";
-import ProductGallery from "./Components/ProductGallery";
-import ProductWarranty from "./Components/ProductWarranty";
-import ProductReview from "./Components/Reviews/ProductReview";
-
 // fetching data
 import { useParams } from "react-router-dom";
 import useGetData from "Hooks/Fetching/useGetData";
@@ -42,8 +34,6 @@ const ProductDetailed = () => {
   useEffect(() => {
     getData();
   }, [id]);
-
-  console.log(data);
 
   if (isLoading) return <IsLoading />;
   if (isError || error) return <IsError />;

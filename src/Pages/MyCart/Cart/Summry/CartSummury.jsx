@@ -38,11 +38,16 @@ const CartSummury = ({ onSelectingTabs, isShipping }) => {
         <div className="mt-3">
           <span className="flex items-center justify-between text-[#ddd]">
             <p>Subtotal</p>
-            <p>{cart?.invoice_details?.[0]?.untaxed_amount_total}$</p>
+            <p>
+              {Number(cart?.invoice_details?.[0]?.untaxed_amount_total).toFixed(
+                2
+              )}
+              $
+            </p>
           </span>
           <span className="flex items-center justify-between text-[#ddd]">
             <p>Tax Vat</p>
-            <p>{cart?.invoice_details?.[0]?.amount_tax}$</p>
+            <p>{Number(cart?.invoice_details?.[0]?.amount_tax).toFixed(2)}$</p>
           </span>
           <span className="flex items-center justify-between text-[#ddd]">
             <p>Delivery Charge</p>
@@ -61,7 +66,7 @@ const CartSummury = ({ onSelectingTabs, isShipping }) => {
             Total
           </p>
           <p className="text-white text-xl rb-bold mt-4 mb-2">
-            {cart?.invoice_details?.[0]?.amount_total}$
+            {Number(cart?.invoice_details?.[0]?.amount_total).toFixed(2)}$
           </p>
         </span>
 

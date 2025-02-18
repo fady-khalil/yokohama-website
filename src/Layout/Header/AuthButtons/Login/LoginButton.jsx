@@ -1,17 +1,21 @@
-import { Link } from "react-router-dom";
+import React from "react";
 import { useContext } from "react";
 import { ModalContext } from "context/Auth/ModalContext";
+import Button from "Components/Common/Button/Button";
+
 const LoginButton = ({ isHomePage }) => {
   const { openModalHandeler } = useContext(ModalContext);
+
   return (
-    <Link
+    <Button
       onClick={openModalHandeler}
-      className={`px-6 py-2 rounded-md border ${
-        isHomePage ? "text-black  border-font" : "text-white  border-white"
-      }`}
+      variant="outline"
+      className={
+        isHomePage ? "text-black border-font" : "text-white border-white"
+      }
     >
       Sign In
-    </Link>
+    </Button>
   );
 };
 

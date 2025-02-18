@@ -24,7 +24,6 @@ const DisplayReceipt = ({
   const navigate = useNavigate();
   const { postData } = usePostToken();
   const [isLoading, setIsLoading] = useState(false);
-  console.log(cartData);
 
   const confirmOrderHandler = async () => {
     try {
@@ -95,50 +94,47 @@ const DisplayReceipt = ({
         <p className="text-sm">Online payment</p>
       </div>
 
-      <span className="mt-10 w-full flex flex-col">
-        <thead className="w-full flex-1">
-          <tr className="bg-[#efefef] text-[#333] flex justify-between">
-            <th className="min-w-[150px] lg:min-w-auto text-center py-4 uppercase rb-bold">
-              Product
-            </th>
-            <th className="min-w-[150px] lg:min-w-auto text-center py-4 uppercase rb-bold">
-              Price
-            </th>
-            <th className="min-w-[150px] lg:min-w-auto text-center py-4 uppercase rb-bold">
-              QTY
-            </th>
-            <th className="min-w-[150px] lg:min-w-auto text-center py-4 uppercase rb-bold">
-              Subtotal
-            </th>
-          </tr>
-        </thead>
-        <tbody className="w-full flex-1">
-          {cartData?.cart_items?.map((order, index) => (
-            <tr className="flex justify-between border-b" key={index}>
-              <td className="min-w-[150px] lg:min-w-auto text-center py-6  rb-bold">
-                {order.name}
-              </td>
-              <td className="min-w-[150px] lg:min-w-auto text-center py-6  rb-bold">
-                {order.price}
-              </td>
-              <td className="min-w-[150px] lg:min-w-auto text-center py-6  rb-bold">
-                {order.quantity}
-              </td>
-              <td className="min-w-[150px] lg:min-w-auto text-center py-4  rb-bold">
-                {order.subtotal}
-              </td>
+      <div className="mt-10 w-full">
+        <table className="w-full">
+          <thead>
+            <tr className="bg-[#efefef] text-[#333]">
+              <th className="py-4 uppercase rb-bold w-1/4">Product</th>
+              <th className="py-4 uppercase rb-bold w-1/4">Price</th>
+              <th className="py-4 uppercase rb-bold w-1/4">QTY</th>
+              <th className="py-4 uppercase rb-bold w-1/4">Subtotal</th>
             </tr>
-          ))}
-        </tbody>
+          </thead>
+          <tbody>
+            {cartData?.cart_items?.map((order, index) => (
+              <tr className="border-b" key={index}>
+                <td className="py-6 rb-bold text-center">{order.name}</td>
+                <td className="py-6 rb-bold text-center">
+                  {Number(order.retail_price).toFixed(2)}$
+                </td>
+                <td className="py-6 rb-bold text-center">{order.quantity}</td>
+                <td className="py-4 rb-bold text-center">
+                  {(Number(order.retail_price) * order.quantity).toFixed(2)}$
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
-        <div className="w-1/4 mt-6 ml-auto flex flex-col gap-y-2">
+        <div className="w-1/3 mt-6 ml-auto flex flex-col gap-y-2">
           <span className="flex items-center justify-between text-[#333] rb-bold border-b pb-2">
             <p>Subtotal</p>
-            <p>{totalSubtotal}</p>
+            <p>
+              {Number(
+                cartData?.invoice_details?.[0].untaxed_amount_total
+              ).toFixed(2)}{" "}
+              $
+            </p>
           </span>
           <span className="flex items-center justify-between text-[#333] rb-bold border-b pb-2">
             <p>Taxes </p>
-            <p>{cartData?.invoice_details?.[0]?.amount_tax}</p>
+            <p>
+              {Number(cartData?.invoice_details?.[0]?.amount_tax).toFixed(2)} $
+            </p>
           </span>
           <span className="flex items-center justify-between text-[#333] rb-bold border-b pb-2">
             <p>Shipping </p>
@@ -146,7 +142,10 @@ const DisplayReceipt = ({
           </span>
           <span className="flex items-center justify-between text-[#333] rb-bold border-b pb-2">
             <p>Total</p>
-            <p>{cartData?.invoice_details?.[0]?.amount_total}</p>
+            <p>
+              {Number(cartData?.invoice_details?.[0]?.amount_total).toFixed(2)}{" "}
+              $
+            </p>
           </span>
 
           <button
@@ -156,7 +155,7 @@ const DisplayReceipt = ({
             {isLoading ? <Spinner /> : " Pay"}
           </button>
         </div>
-      </span>
+      </div>
     </div>
   );
 };

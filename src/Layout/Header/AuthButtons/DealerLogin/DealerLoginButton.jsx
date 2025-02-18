@@ -1,16 +1,15 @@
+import React from "react";
 import { useContext } from "react";
 import { ModalContext } from "context/Auth/ModalContext";
-import { Link } from "react-router-dom";
+import Button from "Components/Common/Button/Button";
 
-const DealerLoginButton = ({ isHomePage }) => {
+const DealerLoginButton = () => {
   const { openDealerModalHandeler } = useContext(ModalContext);
+
   return (
-    <Link
-      onClick={openDealerModalHandeler}
-      className={`px-6 py-2 rounded-md border border-white bg-primary text-white`}
-    >
+    <Button onClick={openDealerModalHandeler} variant="primary">
       Dealer login
-    </Link>
+    </Button>
   );
 };
 
