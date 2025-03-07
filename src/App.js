@@ -19,6 +19,7 @@ const App = () => {
       >
         <WhatsappLogo color="white" size={32} />
       </a>
+      {/* <DealerRouting /> */}
       {dealerIsSignIn ? <DealerRouting /> : <UserRouting />}
     </div>
   );

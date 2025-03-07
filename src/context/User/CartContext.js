@@ -29,6 +29,8 @@ export const UserCartProvider = ({ children }) => {
   useEffect(() => {
     if (userIsSignIn) {
       getCartData();
+    } else {
+      setCart([]);
     }
   }, [userIsSignIn]);
 
@@ -101,6 +103,7 @@ export const UserCartProvider = ({ children }) => {
   const clearCart = () => {
     setCart([]);
   };
+
   return (
     <UserCartContext.Provider
       value={{

@@ -36,8 +36,8 @@ const ShopLanding = ({ selectedId }) => {
 
     try {
       const result = await fetchData(
-        `yokohama/ctegories/dealer/sub_categories?id=${selectedId}`,
-        dealerToken
+        `yokohama/ctegories/dealer/sub_categories?id=${selectedId}`
+        // dealerToken
       );
       setData(result);
       // setFilteredData(result?.data || []);

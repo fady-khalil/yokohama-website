@@ -25,12 +25,10 @@ const AddressForm = ({
   extraData,
 }) => {
   // context
-  const { userToken, userData } = useContext(UserLoginContext);
+  const { userToken, userData, userIsSignIn } = useContext(UserLoginContext);
   const { postData } = usePostDataToken();
   const { postData: postQuestData } = usePostDataJson();
   const [phone, setPhone] = useState("");
-
-  console.log(userData);
 
   const {
     value: firstNameInput,
@@ -209,17 +207,19 @@ const AddressForm = ({
       )}
 
       <div>
-        {title && <p className="text-2xl rb-bold mt-secondary">{title}</p>}
+        {title && <p className="text-2xl rb-bold mt-secondary mb-4">{title}</p>}
 
-        <div className="my-6">
-          <button
-            type="button"
-            className="bg-primary text-white px-4 py-1   rounded"
-            onClick={useMyInfo}
-          >
-            Use My Sign In Info
-          </button>
-        </div>
+        {userIsSignIn && (
+          <div className="my-6">
+            <button
+              type="button"
+              className="bg-primary text-white px-4 py-1   rounded"
+              onClick={useMyInfo}
+            >
+              Use My Sign In Info
+            </button>
+          </div>
+        )}
 
         <form className="">
           <span className="flex flex-col lg:flex-row lg:items-center gap-4 mb-6">
@@ -297,6 +297,8 @@ const AddressForm = ({
               <Textarea
                 type="text"
                 label="Address"
+                extraLabel="use my current location"
+                onGetLocation={getUserLocation}
                 id="register-Address"
                 value={selectAddress || addressInput}
                 placeholder="Type your location, or pin it from the map"
@@ -310,20 +312,12 @@ const AddressForm = ({
                 hasError={!addressIsValids && isClicked}
                 errorMessage="This field is required"
               />
-              <div className="">
-                <button
-                  type="button"
-                  className="bg-primary text-white  px-4 py-1 rounded"
-                  onClick={getUserLocation}
-                >
-                  Use Current Location
-                </button>
-              </div>
             </span>
+
             {/* <MapComponent onSelectingAddress={onSelectingAddress} /> */}
           </span>
 
-          <div className="mt-12 flex w-1/4">
+          <div className="mt-12 flex w-1/4 mx-auto">
             <MainButton
               isLoading={isLoading}
               onClick={createNewBillingAddress}

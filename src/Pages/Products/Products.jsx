@@ -53,6 +53,15 @@ const Products = () => {
       </Container>
 
       <Container>
+        <div className="text-white mt-10">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          <p>
+            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+        </div>
+      </Container>
+
+      {/* <Container>
         <div className="my-mega flex flex-col gap-y-12">
           {data.map(
             (
@@ -77,10 +86,6 @@ const Products = () => {
                 </div>
                 <div className="flex-[3]">
                   <p className="font-bold text-3xl">{name}</p>
-                  {/* <p
-                    className="mt-2 mb-6"
-                    dangerouslySetInnerHTML={{ __html: description }}
-                  /> */}
 
                   <p className="mt-2 mb-6 w-3/4">
                     Lorem ipsum dolor sit amet consectetur, adipisicing elit.
@@ -115,7 +120,7 @@ const Products = () => {
             )
           )}
         </div>
-      </Container>
+      </Container> */}
     </main>
   );
 };

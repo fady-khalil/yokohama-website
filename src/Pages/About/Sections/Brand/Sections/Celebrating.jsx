@@ -33,7 +33,7 @@ const Celebrating = ({ data }) => {
                 }`}
               >
                 <div
-                  className="rb-bold text-4xl lg:text-5xl text-primary"
+                  className="rb-bold text-4xl  text-primary"
                   dangerouslySetInnerHTML={{ __html: title }}
                 />
                 <p className="rb-bold text-4xl lg:text-5xl text-font my-4">
@@ -41,7 +41,7 @@ const Celebrating = ({ data }) => {
                 </p>
 
                 <div
-                  className="rb-light lg:w-1/2 mx-auto"
+                  className="rb-light  mx-auto"
                   dangerouslySetInnerHTML={{ __html: text }}
                 />
               </div>

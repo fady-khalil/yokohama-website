@@ -55,7 +55,7 @@ const About = () => {
       component: (
         <Brand
           hero={{
-            title: data?.hero_title,
+            // title: data?.hero_title,
             text: data?.hero_Text,
           }}
           story={data?.story_ids}
@@ -89,12 +89,12 @@ const About = () => {
   if (data) {
     return (
       <main>
-        <HeroTabs
+        {/* <HeroTabs
           activeTabs={selectedTabs}
           onSelectingTabs={selectedTabsHandler}
         />
 
-        {selectedComponent}
+        {selectedComponent} */}
       </main>
     );
   }

@@ -15,16 +15,26 @@ import { Placeholder } from "@phosphor-icons/react";
 const EditProfileForm = () => {
   const [phone, setPhone] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const {
-    value: fullNameInput,
-    isValid: fullNameIsValid,
-    isTouched: fullNameIsTouched,
-    hasError: fullNameHasError,
-    inputChangeHandler: fullNameChangeHandler,
-    inputBlurHandler: fullNameBlurHanlder,
-    reset: fullNameReset,
-  } = useInput((value) => /^[a-zA-Z]+\s[a-zA-Z]+$/.test(value));
+    value: firstNameInput,
+    isValid: firstNameIsValid,
+    isTouched: firstNameIsTouched,
+    hasError: firstNameHasError,
+    inputChangeHandler: firstNameChangeHandler,
+    inputBlurHandler: firstNameBlurHanlder,
+    reset: firstNameReset,
+  } = useInput((value) => value.trim() !== "");
+  const {
+    value: lastNameInput,
+    isValid: lastNameIsValid,
+    isTouched: lastNameIsTouched,
+    hasError: lastNameHasError,
+    inputChangeHandler: lastNameChangeHandler,
+    inputBlurHandler: lastNameBlurHanlder,
+    reset: lastNameReset,
+  } = useInput((value) => value.trim() !== "");
 
   const {
     value: emailInput,
@@ -64,6 +74,7 @@ const EditProfileForm = () => {
     .toLocaleDateString("en-GB") // This will return dd/mm/yyyy
     .split("/") // Split into parts
     .join("/");
+
   const getUserProfileDataHandler = async () => {
     try {
       const data = await fetchData("yokohama/profile", userToken);
@@ -78,13 +89,22 @@ const EditProfileForm = () => {
     getUserProfileDataHandler();
   }, []);
 
+  // Add this new useEffect to set phone state when profileData loads
+  useEffect(() => {
+    if (profileData?.phone) {
+      setPhone(profileData.phone);
+    }
+  }, [profileData]);
+
   const [isLoading, setIsLoading] = useState(false);
 
   const editProfileHandler = async () => {
     const FormdDta = {
-      name: fullNameInput ? fullNameInput : profileData.name,
+      first_name: firstNameInput || profileData?.first_name,
+      last_name: lastNameInput || profileData?.last_name,
       phone: phone ? phone : profileData.phone,
       country_id: 126,
+      birthday: formattedBirthday,
     };
 
     try {
@@ -92,45 +112,60 @@ const EditProfileForm = () => {
       const data = await postData("yokohama/edit_profile", FormdDta, userToken);
       if (data?.is_success) {
         getUserProfileDataHandler();
+        setIsSuccess(true);
+        firstNameReset();
+        lastNameReset();
+        emailReset();
+        birthdayReset();
+        setTimeout(() => {
+          setIsSuccess(false);
+        }, 2000);
       }
     } catch (error) {
     } finally {
       setIsLoading(false);
     }
   };
+
+  console.log(profileData?.phone);
   return (
     <div className="flex-1 border-b pb-12 lg:pb-0 lg:border-b-0  lg:border-r lg:pr-8">
       <div className="mb-6">
         <h6 className="text-2xl rb-bold">Personal Details</h6>
+        {isSuccess && (
+          <p className="text-sm rb-medium text-green-500">
+            Profile has been successfully updated.
+          </p>
+        )}
       </div>
 
       <span className="flex flex-col lg:flex-row lg:items-center gap-4 mb-6">
         <Input
           type="text"
           label="First Name"
-          id="register-full-name"
-          value={fullNameInput}
-          placeholder={profileData?.name}
+          id="edit-first-name"
+          value={firstNameInput}
+          placeholder={profileData?.first_name}
           onChange={(e) => {
-            fullNameChangeHandler(e);
+            firstNameChangeHandler(e);
             // clearErrors();
           }}
-          onBlur={fullNameBlurHanlder}
-          hasError={fullNameHasError}
+          onBlur={firstNameBlurHanlder}
+          hasError={firstNameHasError}
           errorMessage=""
         />
         <Input
           type="text"
           label="Last Name"
-          id="register-full-name"
-          value={fullNameInput}
-          placeholder={profileData?.name}
+          id="edit-last-name"
+          value={lastNameInput}
+          placeholder={profileData?.last_name}
           onChange={(e) => {
-            fullNameChangeHandler(e);
+            lastNameChangeHandler(e);
             // clearErrors();
           }}
-          onBlur={fullNameBlurHanlder}
-          hasError={fullNameHasError}
+          onBlur={lastNameBlurHanlder}
+          hasError={lastNameHasError}
           errorMessage=""
         />
       </span>
@@ -141,9 +176,9 @@ const EditProfileForm = () => {
           <PhoneInput
             inputClass="test"
             buttonClass="test-2"
-            placeholder={"lala"}
+            placeholder="Enter phone number"
             country={"lb"}
-            value={phone}
+            value={phone || profileData?.phone}
             onChange={(phone) => setPhone(phone)}
           />
         </div>

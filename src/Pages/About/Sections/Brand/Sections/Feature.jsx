@@ -8,10 +8,10 @@ const Feature = ({ data }) => {
       style={{ backgroundImage: `url(${channelBg})` }}
     >
       <Container>
-        <div className="flex flex-col lg:flex-row gap-y-10 items-center justify-between">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-y-16 items-center justify-between">
           {data?.map(({ title, logo, num }, index) => (
             <div
-              className="flex-1 lg:even:mt-32 flex flex-col items-center justify-center"
+              className="flex-1  flex flex-col items-center justify-center"
               key={index}
             >
               <div className="flex-1 mb-3">

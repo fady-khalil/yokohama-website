@@ -31,41 +31,41 @@ const GetLinks = () => {
     }
   };
 
-  const getContentData = async () => {
-    setIsLoading(true);
-    setIsError(false);
+  // const getContentData = async () => {
+  //   setIsLoading(true);
+  //   setIsError(false);
 
-    try {
-      const data = await fetchData("yokohama/content/categories");
-      setDataContent(data?.data);
-    } catch (error) {
-      setIsError(true);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //   try {
+  //     const data = await fetchData("yokohama/content/categories");
+  //     setDataContent(data?.data);
+  //   } catch (error) {
+  //     setIsError(true);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
-  const getAboutData = async () => {
-    setIsLoading(true);
-    setIsError(false);
+  // const getAboutData = async () => {
+  //   setIsLoading(true);
+  //   setIsError(false);
 
-    try {
-      const data = await fetchData("yokohama/content/AboutUs");
-      setAboutData(data?.data);
-    } catch (error) {
-      setIsError(true);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //   try {
+  //     const data = await fetchData("yokohama/content/AboutUs");
+  //     setAboutData(data?.data);
+  //   } catch (error) {
+  //     setIsError(true);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const getProducts = async () => {
     setIsLoading(true);
     setIsError(false);
 
     try {
-      const data = await fetchData("yokohama/category/brand");
-      setProductsData(data?.data);
+      const data = await fetchData("brand/11/products/yokohama");
+      setProductsData(data?.categories);
     } catch (error) {
       setIsError(true);
     } finally {
@@ -75,10 +75,11 @@ const GetLinks = () => {
 
   useEffect(() => {
     getData();
-    getContentData();
-    getAboutData();
+    // getAboutData();
     getProducts();
   }, []);
+
+  console.log(productsData);
 
   const updatedNavLinks = [
     {
@@ -116,25 +117,22 @@ const GetLinks = () => {
         },
       ],
     },
-    // {
-    //   text: "Our Products",
-    //   banner: productsImage,
-    //   pages: productsData,
-    //   mega: true,
-    //   products: true,
-    // },
-    // Dynamic rendering of dataContent
-    ...(dataContent?.map((content) => ({
-      banner: saftyImage,
-      dynamic: true,
-      text: content.name, // Use the name of each content as text
+    {
+      text: "Our Products",
+      banner: productsImage,
+      pages: productsData,
       mega: true,
-      pages: content.sub_cat_child || [], // Use sub_cat_child as pages
-    })) || []),
-    // {
-    //   text: "Promotion",
-    //   url: "/",
-    // },
+      products: true,
+    },
+    // Dynamic rendering of dataContent
+    // ...(dataContent?.map((content) => ({
+    //   banner: saftyImage,
+    //   dynamic: true,
+    //   text: content.name, // Use the name of each content as text
+    //   mega: true,
+    //   pages: content.sub_cat_child || [], // Use sub_cat_child as pages
+    // })) || []),
+
     {
       text: "News & events",
       url: "/news-and-event",

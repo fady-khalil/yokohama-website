@@ -7,8 +7,6 @@ const usePostToken = () => {
   const [error, setError] = useState(null);
 
   const postData = async (url, token) => {
-    console.log(url);
-    console.log(token);
     setLoading(true);
     try {
       const res = await fetch(`${BASE_URL}/${url}`, {
@@ -18,6 +16,7 @@ const usePostToken = () => {
         },
       });
 
+      console.log(res);
       if (!res.ok) throw new Error("Network response was not ok");
       const result = await res.json();
 

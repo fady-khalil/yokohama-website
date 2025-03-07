@@ -8,9 +8,9 @@ const usePostDataTokenJson = () => {
 
   const postData = async (url, data, token) => {
     setLoading(true);
-    setError(null); // Reset error state
+    setError(null);
+    console.log(token);
     try {
-      console.log(token);
       const res = await fetch(`${BASE_URL}/${url}`, {
         method: "POST",
         headers: {
@@ -19,6 +19,8 @@ const usePostDataTokenJson = () => {
         },
         body: JSON.stringify(data), // Convert data to JSON
       });
+
+      console.log(res);
 
       if (!res.ok) {
         // Check if response is not ok and throw an error

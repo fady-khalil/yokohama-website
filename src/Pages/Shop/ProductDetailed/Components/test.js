@@ -21,16 +21,11 @@ import { GuestCartContext } from "context/Guest/GuestCartContext";
 import { UserCartContext } from "context/User/CartContext";
 import { UserWishlistContext } from "context/User/WishlistContext";
 import { Link } from "react-router-dom";
-
-// Constants
-const POPUP_TIMEOUT = 5000;
-
 const ProductInfo = ({ product }) => {
   const {
     addToCart,
     cart: guestCart,
     updateCart: guestUpdateCart,
-    removeFromCart: guestRemoveFromCart,
   } = useContext(GuestCartContext);
   const { userIsSignIn } = useContext(UserLoginContext);
   const {
@@ -86,27 +81,28 @@ const ProductInfo = ({ product }) => {
   }, [cart, product.id, guestCart, userIsSignIn, wishlist]);
 
   const handleQuantityChange = (productId, newQuantity) => {
-    const freeQuantity = product?.quantity?.free_quantity;
-
-    if (freeQuantity && newQuantity > freeQuantity) {
-      setQuantity(freeQuantity);
+    if (
+      product?.quantity?.free_quantity &&
+      newQuantity > product.quantity.free_quantity
+    ) {
+      setQuantity(product.quantity.free_quantity);
       setShowStockPopup(true);
 
       if (isInCart) {
         if (userIsSignIn) {
-          updateCart(productId, freeQuantity);
+          updateCart(productId, product.quantity.free_quantity);
         } else {
-          guestUpdateCart(productId, freeQuantity);
+          guestUpdateCart(productId, product.quantity.free_quantity);
         }
       }
       return;
     }
 
+    setQuantity(newQuantity);
+
     if (newQuantity < 1) {
       return;
     }
-
-    setQuantity(newQuantity);
 
     if (isInCart) {
       if (userIsSignIn) {
@@ -120,19 +116,26 @@ const ProductInfo = ({ product }) => {
   const addToCartHandler = async (product) => {
     displayProductHandler(product);
     if (userIsSignIn) {
+      // First add to cart
       await userAddToCart(product?.id);
+      // Then update the quantity if it's different from 1
       if (quantity > 1) {
         await updateCart(product?.id, quantity);
       }
+      // Add delay before showing popup
+      setTimeout(() => {
+        setShowPopup(true);
+      }, 800);
     } else {
       addToCart({ ...product, quantity });
+      // Add delay before showing popup
+      setTimeout(() => {
+        setShowPopup(true);
+      }, 800);
     }
-    setTimeout(() => {
-      setShowPopup(true);
-    }, 800);
   };
 
-  const addToWishlistHandler = (product) => {
+  const addToWishlitandler = (product) => {
     if (userIsSignIn) {
       userAddToWihlist(product?.id);
     } else {
@@ -145,7 +148,7 @@ const ProductInfo = ({ product }) => {
     if (showPopup) {
       timer = setTimeout(() => {
         setShowPopup(false);
-      }, POPUP_TIMEOUT);
+      }, 5000);
     }
     return () => clearTimeout(timer);
   }, [showPopup]);
@@ -155,66 +158,10 @@ const ProductInfo = ({ product }) => {
     if (showStockPopup) {
       timer = setTimeout(() => {
         setShowStockPopup(false);
-      }, POPUP_TIMEOUT);
+      }, 5000);
     }
     return () => clearTimeout(timer);
   }, [showStockPopup]);
-
-  const renderStockStatus = () => {
-    const { free_quantity, incoming_quantity } = product?.quantity || {};
-
-    if (free_quantity === 0 && incoming_quantity === 0) {
-      return (
-        <>
-          <p className="mb-2">
-            This product is currently out of stock. Talk to an expert to explore
-            alternative products. Don't worry, we always have options for you.
-          </p>
-          <button className="flex items-center gap-x-2 mt-4">
-            <span className="block text-6xl bg-[#25D366] rounded-xl">
-              <WhatsappLogo color="white" />
-            </span>
-            Talk to an Expert
-          </button>
-        </>
-      );
-    }
-
-    if (free_quantity === 0 && incoming_quantity > 0) {
-      return (
-        <>
-          <p className="mb-2">
-            Coming soon! Contact us to find out the expected availability date
-            and more details.
-          </p>
-          <button className="flex items-center gap-x-2 mt-4">
-            <span className="block text-6xl bg-[#25D366] rounded-xl">
-              <WhatsappLogo color="white" />
-            </span>
-            Contact Us
-          </button>
-        </>
-      );
-    }
-
-    return (
-      <>
-        <p className="mb-2">
-          After placing your order, our team will promptly contact you to
-          arrange a convenient time and location for delivery and installation
-          of your items. <br /> We're committed to providing you with seamless
-          service.
-        </p>
-        <p className="text-lg">Thank you for choosing us!</p>
-        <button className="flex items-center gap-x-2 mt-4">
-          <span className="block text-6xl bg-[#25D366] rounded-xl">
-            <WhatsappLogo color="white" />
-          </span>
-          Need Help?
-        </button>
-      </>
-    );
-  };
 
   return (
     <Container>
@@ -345,7 +292,7 @@ const ProductInfo = ({ product }) => {
 
               {!isInCart && (
                 <button
-                  onClick={() => addToWishlistHandler(product)}
+                  onClick={() => addToWishlitandler(product)}
                   className={`min-w-[75px] flex items-center justify-center py-2 w-max  ${
                     isInWishlist ? "text-primary" : ""
                   }`}
@@ -363,13 +310,7 @@ const ProductInfo = ({ product }) => {
 
               {isInCart && (
                 <button
-                  onClick={() => {
-                    if (userIsSignIn) {
-                      removeFromCart(product?.id);
-                    } else {
-                      guestRemoveFromCart(product?.id);
-                    }
-                  }}
+                  onClick={() => removeFromCart(product?.id)}
                   title="Remove from cart"
                   className={`min-w-[75px] flex-1 flex items-center justify-center py-2 w-max  ${
                     isInWishlist ? "text-primary" : ""
@@ -398,7 +339,54 @@ const ProductInfo = ({ product }) => {
             </div>
           )}
 
-          <div className="mt-10">{renderStockStatus()}</div>
+          <div className="mt-10">
+            {product?.quantity?.free_quantity === 0 &&
+            product?.quantity?.incoming_quantity === 0 ? (
+              <>
+                <p className="mb-2">
+                  This product is currently out of stock. Talk to an expert to
+                  explore alternative products. Don't worry, we always have
+                  options for you.
+                </p>
+                <button className="flex items-center gap-x-2 mt-4">
+                  <span className="block text-6xl bg-[#25D366] rounded-xl">
+                    <WhatsappLogo color="white" />
+                  </span>
+                  Talk to an Expert
+                </button>
+              </>
+            ) : product?.quantity?.free_quantity === 0 &&
+              product?.quantity?.incoming_quantity > 0 ? (
+              <>
+                <p className="mb-2">
+                  Coming soon! Contact us to find out the expected availability
+                  date and more details.
+                </p>
+                <button className="flex items-center gap-x-2 mt-4">
+                  <span className="block text-6xl bg-[#25D366] rounded-xl">
+                    <WhatsappLogo color="white" />
+                  </span>
+                  Contact Us
+                </button>
+              </>
+            ) : (
+              <>
+                <p className="mb-2">
+                  After placing your order, our team will promptly contact you
+                  to arrange a convenient time and location for delivery and
+                  installation of your items. <br /> We're committed to
+                  providing you with seamless service.
+                </p>
+                <p className="text-lg">Thank you for choosing us!</p>
+                <button className="flex items-center gap-x-2 mt-4">
+                  <span className="block text-6xl bg-[#25D366] rounded-xl">
+                    <WhatsappLogo color="white" />
+                  </span>
+                  Need Help?
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </Container>

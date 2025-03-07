@@ -14,12 +14,25 @@ const Textarea = (props) => {
     onBlur = () => {},
     hasError = false,
     errorMessage = "error",
+    extraLabel = "",
+    onGetLocation = () => {},
   } = props;
   return (
     <span className={"flex-1 flex gap-y-1 flex-col  w-full"}>
-      <label htmlFor={id} className="text-sm rb-bold capitalize">
-        {label}
-      </label>
+      <span className="flex items-center gap-x-6">
+        <label htmlFor={id} className="text-sm rb-bold capitalize">
+          {label}
+        </label>
+        {extraLabel && (
+          <button
+            type="button"
+            className="text-xs text-primary font-medium underline"
+            onClick={onGetLocation}
+          >
+            {extraLabel}
+          </button>
+        )}
+      </span>
       <textarea
         className={`px-2 py-2 rounded-sm bg-gray-200 placeholder:text-sm  ${
           hasError ? "border border-primary" : ""
