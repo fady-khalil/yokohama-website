@@ -64,7 +64,7 @@ const GetLinks = () => {
     setIsError(false);
 
     try {
-      const data = await fetchData("brand/11/products/yokohama");
+      const data = await fetchData("brand/by/categories/yokohama");
       setProductsData(data?.categories);
     } catch (error) {
       setIsError(true);
@@ -78,8 +78,6 @@ const GetLinks = () => {
     // getAboutData();
     getProducts();
   }, []);
-
-  console.log(productsData);
 
   const updatedNavLinks = [
     {
