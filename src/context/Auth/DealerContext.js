@@ -10,8 +10,10 @@ export const DealerLoginProvider = ({ children }) => {
   const navigate = useNavigate();
   const { loading, postData } = usePostToken();
   const [dealerIsSignIn, setDealerIsSignIn] = useState(false);
+  const [allDealerData, setAllDealerData] = useState();
   const [dealerData, setDealerData] = useState();
   const [dealerToken, setDealerToken] = useState();
+  const [hasChosenAccount, setHasChosenAccount] = useState(false);
 
   const handleDealderSignIn = () => {
     setDealerIsSignIn(true);
@@ -25,6 +27,7 @@ export const DealerLoginProvider = ({ children }) => {
       localStorage.removeItem("dealerIsSignIn");
       localStorage.removeItem("dealerToken");
       localStorage.removeItem("dealerData");
+      localStorage.removeItem("delaerHasChosen");
     } catch (err) {
       console.error("Error:", err);
     }
@@ -32,12 +35,20 @@ export const DealerLoginProvider = ({ children }) => {
   };
 
   const handleUerData = (data) => {
-    setDealerData(data?.user);
-    setDealerToken(data?.token);
+    setAllDealerData(data);
+  };
 
+  const handleDealerUser = (data) => {
+    setDealerData(data);
+    setDealerToken(data.token);
+    setDealerIsSignIn(true);
+    setHasChosenAccount(true);
+
+    // Save to localStorage
     localStorage.setItem("dealerIsSignIn", JSON.stringify(true));
-    localStorage.setItem("dealerToken", data?.token);
-    localStorage.setItem("dealerData", JSON.stringify(data?.user));
+    localStorage.setItem("dealerToken", data.token);
+    localStorage.setItem("dealerData", JSON.stringify(data));
+    localStorage.setItem("delaerHasChosen", JSON.stringify(true));
   };
 
   useEffect(() => {
@@ -46,6 +57,8 @@ export const DealerLoginProvider = ({ children }) => {
       setDealerToken(localStorage.getItem("dealerToken"));
       const storedUserData = localStorage.getItem("dealerData");
       setDealerData(JSON.parse(storedUserData));
+      const storedHasChosen = localStorage.getItem("delaerHasChosen");
+      setHasChosenAccount(JSON.parse(storedHasChosen));
     }
   }, []);
 
@@ -56,13 +69,16 @@ export const DealerLoginProvider = ({ children }) => {
         setDealerIsSignIn,
         handleDealderSignIn,
         handleDealderLogout,
-
+        handleDealerUser,
         // data
         setDealerData,
+        allDealerData,
         dealerData,
         setDealerToken,
         handleUerData,
         dealerToken,
+        hasChosenAccount,
+        setHasChosenAccount,
 
         dealerLoading: loading,
       }}

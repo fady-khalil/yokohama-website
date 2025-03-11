@@ -15,8 +15,8 @@ const Products = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [classifications, setClassifications] = useState([]);
-  const [selectedClassification, setSelectedClassification] = useState(null);
+  const [kinds, setKinds] = useState([]);
+  const [selectedKind, setSelectedKind] = useState(null);
   const { fetchData, error } = useGetData();
 
   const getData = async () => {
@@ -27,17 +27,17 @@ const Products = () => {
       const result = await fetchData(`brand/${id}/products/yokohama`);
       setData(result);
 
-      // Extract unique classifications and filter out false/null values
+      // Extract unique kind names and filter out false/null values
       if (result?.products && result.products.length > 0) {
-        const uniqueClassifications = [
+        const uniqueKinds = [
           ...new Set(
             result.products
-              .map((product) => product.classification)
-              .filter((classification) => classification) // This filters out false, null, undefined, etc.
+              .map((product) => product.kind?.name)
+              .filter((kindName) => kindName) // This filters out false, null, undefined, etc.
           ),
         ];
-        setClassifications(uniqueClassifications);
-        setSelectedClassification(uniqueClassifications[0]); // Select the first classification by default
+        setKinds(uniqueKinds);
+        setSelectedKind(uniqueKinds[0]); // Select the first kind by default
       }
     } catch (error) {
       setIsError(true);
@@ -50,12 +50,10 @@ const Products = () => {
     getData();
   }, [id]);
 
-  // Filter products based on selected classification
+  // Filter products based on selected kind name
   const filteredProducts =
     data?.products?.filter(
-      (product) =>
-        !selectedClassification ||
-        product.classification === selectedClassification
+      (product) => !selectedKind || product.kind?.name === selectedKind
     ) || [];
 
   if (isError || error) return <IsError />;
@@ -64,21 +62,19 @@ const Products = () => {
     <main className="bg-dark">
       <Header header={"Products"} />
       <Container>
-        {/* Classification Tabs - Dropdown for small screens, Buttons for md and up */}
+        {/* Kind Tabs - Dropdown for small screens, Buttons for md and up */}
         <div className="pt-14 md:py-14 flex justify-center items-center">
           {/* Dropdown for small screens (hidden on md and up) */}
           <div className="relative w-full max-w-xs md:hidden">
             <select
               className="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-lg appearance-none cursor-pointer"
-              value={selectedClassification || ""}
-              onChange={(e) =>
-                setSelectedClassification(e.target.value || null)
-              }
+              value={selectedKind || ""}
+              onChange={(e) => setSelectedKind(e.target.value || null)}
             >
-              <option value="">All Classifications</option>
-              {classifications.map((classification) => (
-                <option key={classification} value={classification}>
-                  {classification}
+              <option value="">All Types</option>
+              {kinds.map((kind) => (
+                <option key={kind} value={kind}>
+                  {kind}
                 </option>
               ))}
             </select>
@@ -97,25 +93,25 @@ const Products = () => {
           <div className="hidden md:flex flex-wrap gap-2 justify-center items-center">
             <button
               className={`px-4 py-2 rounded-lg ${
-                !selectedClassification
+                !selectedKind
                   ? "bg-primary text-white"
                   : "bg-gray-200 text-gray-800"
               }`}
-              onClick={() => setSelectedClassification(null)}
+              onClick={() => setSelectedKind(null)}
             >
               All
             </button>
-            {classifications.map((classification) => (
+            {kinds.map((kind) => (
               <button
-                key={classification}
+                key={kind}
                 className={`px-4 py-2 rounded-lg ${
-                  selectedClassification === classification
+                  selectedKind === kind
                     ? "bg-primary text-white"
                     : "bg-gray-200 text-gray-800"
                 }`}
-                onClick={() => setSelectedClassification(classification)}
+                onClick={() => setSelectedKind(kind)}
               >
-                {classification}
+                {kind}
               </button>
             ))}
           </div>
@@ -145,7 +141,7 @@ const Products = () => {
               </div>
               <div className="p-4 flex flex-col ">
                 <span className="text-xs font-semibold bg-gray-100 px-2 py-1 rounded mb-2 inline-block">
-                  {product.classification}
+                  {product.kind?.name || "N/A"}
                 </span>
                 <h3 className="text-lg font-semibold mb-6 ">{product.name}</h3>
                 <div className="flex justify-between items-center mt-auto h-full flex-1">
@@ -161,7 +157,7 @@ const Products = () => {
           ))}
           {filteredProducts.length === 0 && (
             <div className="col-span-full text-center text-gray-400 py-10">
-              No products found for the selected classification.
+              No products found for the selected type.
             </div>
           )}
         </div>

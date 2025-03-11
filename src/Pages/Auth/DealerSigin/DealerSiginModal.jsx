@@ -36,7 +36,7 @@ const DealerSiginModal = () => {
     inputChangeHandler: emailChangeHandler,
     inputBlurHandler: emailBlurHanlder,
     reset: emailReset,
-  } = useInput((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value));
+  } = useInput((value) => value.trim() !== 0);
 
   const {
     value: passwordInput,
@@ -45,7 +45,7 @@ const DealerSiginModal = () => {
     inputChangeHandler: passwordChangeHandler,
     inputBlurHandler: passwordBlurHandler,
     reset: passwordReset,
-  } = useInput(passwordValidator);
+  } = useInput((value) => value.trim() !== 0);
 
   const submitForm = async () => {
     setErrorMessage(null);
@@ -60,7 +60,7 @@ const DealerSiginModal = () => {
     };
 
     try {
-      const result = await postData("yokohama/auth/login_dealer", formData);
+      const result = await postData("yokohama/auth/login", formData);
       if (result && result?.is_success) {
         handleUerData(result?.data);
         setDealerIsSignIn(true);
