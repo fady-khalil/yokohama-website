@@ -90,7 +90,7 @@ const Listing = ({ data, totalPages, currentPage, onPageChange }) => {
               to={`/product-detailed/${id}`}
               key={dataIndex}
             >
-              <div className="flex flex-col-reverse relative">
+              <div className="flex flex-col-reverse md:flex-row relative">
                 {onSale && (
                   <div className="absolute -top-0 -left-0 z-10">
                     <div
@@ -131,7 +131,11 @@ const Listing = ({ data, totalPages, currentPage, onPageChange }) => {
                 </div>
 
                 <div className="flex-[1] relative">
-                  <img className="w-full h-full" src={image} alt="" />
+                  <img
+                    className="w-3/4 h-3/4 mx-auto md:w-full md:h-full"
+                    src={image}
+                    alt=""
+                  />
                   {quantity?.free_quantity === 0 &&
                     quantity?.incoming_quantity === 0 && (
                       <div className="absolute top-0 right-0 bg-red-500 text-white px-4 py-1 rb-bold">
@@ -147,7 +151,7 @@ const Listing = ({ data, totalPages, currentPage, onPageChange }) => {
                 </div>
               </div>
               <div
-                className={`flex  gap-x-2 mt-2 w-3/4 transform translate-y-[30%] opacity-0 select-none group-hover:select-auto group-hover:opacity-100 group-hover:translate-y-0 transition-transform duration-500`}
+                className={`flex gap-x-2 mt-2 md:w-3/4 transform md:translate-y-[30%] md:opacity-0 md:select-none md:group-hover:select-auto md:group-hover:opacity-100 md:group-hover:translate-y-0 transition-transform duration-500`}
               >
                 <button className="bg-dark text-center uppercase rb-bold py-2 flex-1 text-white w-full">
                   View Details
