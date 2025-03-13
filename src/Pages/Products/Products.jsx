@@ -8,6 +8,70 @@ import { useParams } from "react-router-dom";
 import useGetData from "Hooks/Fetching/useGetData";
 import IsLoading from "Components/RequestHandler/IsLoading";
 import IsError from "Components/RequestHandler/IsError";
+import { ArrowUp } from "@phosphor-icons/react";
+// Add Pagination component
+const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+  const createPageArray = () => {
+    let pages = [];
+    if (totalPages <= 5) {
+      pages = Array.from({ length: totalPages }, (_, index) => index + 1);
+    } else {
+      if (currentPage <= 3) {
+        pages = [1, 2, 3, 4, totalPages];
+      } else if (currentPage >= totalPages - 2) {
+        pages = [
+          1,
+          totalPages - 4,
+          totalPages - 3,
+          totalPages - 2,
+          totalPages - 1,
+          totalPages,
+        ];
+      } else {
+        pages = [1, currentPage - 1, currentPage, currentPage + 1, totalPages];
+      }
+      pages = [...new Set(pages)];
+      if (pages[1] > 2) pages.splice(1, 0, "...");
+      if (pages[pages.length - 2] < totalPages - 1)
+        pages.splice(pages.length - 1, 0, "...");
+    }
+    return pages;
+  };
+
+  const pages = createPageArray();
+
+  return (
+    <div className="flex justify-center mt-44">
+      <button
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        className="mx-2 px-2 sm:px-4 py-1 sm:py-2 rounded bg-gray-200 text-gray-700 disabled:opacity-50"
+      >
+        &lt;
+      </button>
+      {pages.map((page, index) => (
+        <button
+          key={index}
+          onClick={() => typeof page === "number" && onPageChange(page)}
+          className={`mx-1 sm:mx-2 px-2 sm:px-4 py-1 sm:py-2 rounded ${
+            typeof page === "number" && page === currentPage
+              ? "bg-primary text-white"
+              : "bg-gray-200 text-gray-700"
+          }`}
+        >
+          {page}
+        </button>
+      ))}
+      <button
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className="mx-2 px-2 sm:px-4 py-1 sm:py-2 rounded bg-gray-200 text-gray-700 disabled:opacity-50"
+      >
+        &gt;
+      </button>
+    </div>
+  );
+};
 
 const Products = () => {
   // fetching
@@ -71,113 +135,11 @@ const Products = () => {
     window.scrollTo(0, 0); // Scroll to top when changing page
   };
 
-  // Generate pagination buttons
-  const renderPagination = () => {
-    if (!data?.total_product_pages || data.total_product_pages <= 1)
-      return null;
-
-    const totalPages = data.total_product_pages;
-    const pageButtons = [];
-
-    // Previous button
-    pageButtons.push(
-      <button
-        key="prev"
-        onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        className="mx-2 px-2 sm:px-4 py-1 sm:py-2 rounded bg-gray-200 text-gray-700 disabled:opacity-50 text-xl"
-      >
-        &lt;
-      </button>
-    );
-
-    // Calculate range of pages to show
-    let startPage = Math.max(1, currentPage - 2);
-    let endPage = Math.min(totalPages, startPage + 4);
-
-    // Adjust if we're at the end
-    if (endPage - startPage < 4) {
-      startPage = Math.max(1, endPage - 4);
-    }
-
-    // First page and ellipsis if needed
-    if (startPage > 1) {
-      pageButtons.push(
-        <button
-          key="1"
-          onClick={() => handlePageChange(1)}
-          className="px-3 py-2 rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300"
-        >
-          1
-        </button>
-      );
-
-      if (startPage > 2) {
-        pageButtons.push(
-          <span key="ellipsis1" className="px-3 py-2">
-            ...
-          </span>
-        );
-      }
-    }
-
-    // Page buttons
-    for (let i = startPage; i <= endPage; i++) {
-      pageButtons.push(
-        <button
-          key={i}
-          onClick={() => handlePageChange(i)}
-          className={`mx-1 sm:mx-1 px-1 sm:px-4 py-1 sm:py-2 rounded ${
-            currentPage === i
-              ? "bg-primary text-white"
-              : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-          }`}
-        >
-          {i}
-        </button>
-      );
-    }
-
-    // Last page and ellipsis if needed
-    if (endPage < totalPages) {
-      if (endPage < totalPages - 1) {
-        pageButtons.push(
-          <span key="ellipsis2" className="px-3 py-2">
-            ...
-          </span>
-        );
-      }
-
-      pageButtons.push(
-        <button
-          key={totalPages}
-          onClick={() => handlePageChange(totalPages)}
-          className="px-3 py-2 rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300"
-        >
-          {totalPages}
-        </button>
-      );
-    }
-
-    // Next button
-    pageButtons.push(
-      <button
-        key="next"
-        onClick={() =>
-          currentPage < totalPages && handlePageChange(currentPage + 1)
-        }
-        disabled={currentPage === totalPages}
-        className="text-xl mx-2 px-2 sm:px-4 py-1 sm:py-2 rounded bg-gray-200 text-gray-700 disabled:opacity-50"
-      >
-        &gt;
-      </button>
-    );
-
-    return (
-      <div className="flex justify-center items-center gap-2 py-secondary">
-        {pageButtons}
-      </div>
-    );
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   if (isError || error) return <IsError />;
@@ -287,9 +249,22 @@ const Products = () => {
             ))}
         </div>
 
-        {/* Pagination */}
-        {renderPagination()}
+        {/* Replace renderPagination() with the Pagination component */}
+        {data?.total_product_pages > 1 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={data.total_product_pages}
+            onPageChange={handlePageChange}
+          />
+        )}
       </Container>
+
+      <button
+        onClick={scrollToTop}
+        className="fixed right-4 bottom-44 bg-primary rounded-full p-1 z-[10000] text-white"
+      >
+        <ArrowUp size={22} />
+      </button>
     </main>
   );
 };

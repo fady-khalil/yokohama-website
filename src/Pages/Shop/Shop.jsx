@@ -7,7 +7,7 @@ import useGetData from "Hooks/Fetching/useGetData";
 import IsLoading from "Components/RequestHandler/IsLoading";
 import IsError from "Components/RequestHandler/IsError";
 import Container from "Components/Container/Container";
-import { Faders } from "@phosphor-icons/react";
+import { Faders, ArrowUp } from "@phosphor-icons/react";
 
 const Shop = () => {
   const [filteredData, setFilteredData] = useState([]);
@@ -126,7 +126,7 @@ const Shop = () => {
 
   // price high to low
   useEffect(() => {
-    let filtered = [...data];
+    let filtered = Array.isArray(data) ? [...data] : [];
 
     if (sortOrder) {
       filtered = filtered.sort((a, b) => {
@@ -166,11 +166,14 @@ const Shop = () => {
     clearFilters();
   }, [id]);
 
-  console.log(allData);
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
-  // if (isLoading) return <IsLoading />;
   if (isError || error) return <IsError />;
-
   return (
     <main className="relative">
       <Header header={"Shop"} />
@@ -203,7 +206,7 @@ const Shop = () => {
             </div>
           ) : (
             <div className="col-span-3">
-              {filteredData.length === 0 ? (
+              {filteredData?.length === 0 ? (
                 <p className="text-lg">Showing 0 Products</p>
               ) : (
                 <Listing
@@ -217,6 +220,13 @@ const Shop = () => {
           )}
         </div>
       </Container>
+
+      <button
+        onClick={scrollToTop}
+        className="fixed right-4 bottom-44 bg-primary rounded-full p-1 z-[10000] text-white"
+      >
+        <ArrowUp size={22} />
+      </button>
     </main>
   );
 };
