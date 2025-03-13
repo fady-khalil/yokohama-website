@@ -3,8 +3,6 @@ import useGetData from "Hooks/Fetching/useGetData";
 
 const FooterLinks = () => {
   const [data, setData] = useState();
-  const [aboutData, setAboutData] = useState([]);
-  const [dataContent, setDataContent] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const { fetchData, error } = useGetData();
@@ -23,38 +21,8 @@ const FooterLinks = () => {
     }
   };
 
-  const getContentData = async () => {
-    setIsLoading(true);
-    setIsError(false);
-
-    try {
-      const data = await fetchData("yokohama/content/categories");
-      setDataContent(data?.data);
-    } catch (error) {
-      setIsError(true);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const getAboutData = async () => {
-    setIsLoading(true);
-    setIsError(false);
-
-    try {
-      const data = await fetchData("yokohama/content/AboutUs");
-      setAboutData(data?.data);
-    } catch (error) {
-      setIsError(true);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
     getData();
-    getContentData();
-    getAboutData();
   }, []);
 
   return [
@@ -85,17 +53,7 @@ const FooterLinks = () => {
         },
       ],
     },
-    // Dynamic rendering of dataContent
-    // ...(dataContent?.map((content) => ({
-    //   dynamic: true,
-    //   text: content.name, // Use the name of each content as text
-    //   mega: true,
-    //   pages: content.sub_cat_child || [], // Use sub_cat_child as pages
-    // })) || []),
-    // {
-    //   name: "Dealers",
-    //   path: "/dealers",
-    // },
+
     {
       name: "Safety",
       path: "safety",
@@ -104,10 +62,7 @@ const FooterLinks = () => {
       name: "Contact",
       path: "contact-us",
     },
-    {
-      name: "Videos",
-      path: "",
-    },
+
     {
       name: "Original Equipment",
       path: "original-equipment",

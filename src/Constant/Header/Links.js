@@ -31,34 +31,6 @@ const GetLinks = () => {
     }
   };
 
-  // const getContentData = async () => {
-  //   setIsLoading(true);
-  //   setIsError(false);
-
-  //   try {
-  //     const data = await fetchData("yokohama/content/categories");
-  //     setDataContent(data?.data);
-  //   } catch (error) {
-  //     setIsError(true);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
-  // const getAboutData = async () => {
-  //   setIsLoading(true);
-  //   setIsError(false);
-
-  //   try {
-  //     const data = await fetchData("yokohama/content/AboutUs");
-  //     setAboutData(data?.data);
-  //   } catch (error) {
-  //     setIsError(true);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
   const getProducts = async () => {
     setIsLoading(true);
     setIsError(false);
@@ -75,7 +47,6 @@ const GetLinks = () => {
 
   useEffect(() => {
     getData();
-    // getAboutData();
     getProducts();
   }, []);
 
