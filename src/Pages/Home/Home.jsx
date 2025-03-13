@@ -43,11 +43,17 @@ const Home = () => {
       <main>
         <Hero data={data?.banner} />
         <Brands data={data?.brand_logo} />
+
         <SearchTires />
+
         <About data={data?.home_about_us} />
+
         <Shop />
+
         <Offer data={data?.special_offer} />
+
         <BestSeller />
+
         <Oil data={data?.essentials_for_your_vehicle} />
       </main>
     );

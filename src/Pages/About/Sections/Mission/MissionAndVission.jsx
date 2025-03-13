@@ -35,7 +35,7 @@ const MissionAndVission = () => {
   if (data) {
     return (
       <section className="my-secondary">
-        <h5 className="text-5xl my-20 text-primary rb-bold text-center">
+        <h5 className="text-4xl lg:text-5xl my-20 text-primary rb-bold text-center">
           Mission and Vision
         </h5>
         <Container>
@@ -49,7 +49,7 @@ const MissionAndVission = () => {
               </div>
               <div className="flex-1">
                 <div
-                  className="rb-bold text-4xl"
+                  className="rb-bold text-3xl lg:text-4xl"
                   dangerouslySetInnerHTML={{ __html: title }}
                 />
                 <div

@@ -4,7 +4,7 @@ import MainButton from "Components/Buttons/MainButton";
 
 const About = ({ data }) => {
   return (
-    <div className="bg-dark">
+    <div className="bg-dark pt-secondary xl:pt-primary">
       <Container>
         <section
           className="bg-cover  bg-center py-superMega relative z-[10]"
@@ -15,7 +15,7 @@ const About = ({ data }) => {
             <h4 className="text-4xl lg:text-5xl mb-4 rb-bold">
               {data?.[0]?.title}
             </h4>
-            <p className="text-xl mb-8">{data?.[0]?.text}</p>
+            <p className="md:text-xl mb-8">{data?.[0]?.text}</p>
 
             <MainButton to={"/brand_overview"}>Learn More</MainButton>
           </div>

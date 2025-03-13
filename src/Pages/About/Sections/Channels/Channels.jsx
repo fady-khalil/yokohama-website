@@ -36,7 +36,7 @@ const Channels = () => {
     return (
       <section className="my-secondary">
         <Container>
-          <h5 className="text-5xl my-20 text-primary rb-bold text-center">
+          <h5 className="text-4xl lg:text-5xl my-20 text-primary rb-bold text-center">
             Distribution channels
           </h5>
 

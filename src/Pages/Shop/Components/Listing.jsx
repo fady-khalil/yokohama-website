@@ -90,7 +90,7 @@ const Listing = ({ data, totalPages, currentPage, onPageChange }) => {
               to={`/product-detailed/${id}`}
               key={dataIndex}
             >
-              <div className="flex relative">
+              <div className="flex flex-col-reverse relative">
                 {onSale && (
                   <div className="absolute -top-0 -left-0 z-10">
                     <div

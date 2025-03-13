@@ -32,9 +32,8 @@ const WhyUs = () => {
   if (isLoading) return <IsLoading />;
   if (error) return <IsError />;
   if (data) {
-    console.log(data);
     return (
-      <section className="my-secondary">
+      <section className="my-secondary ">
         <h5 className="text-5xl my-20 text-primary rb-bold text-center">
           Why us
         </h5>

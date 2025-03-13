@@ -9,7 +9,7 @@ const Brands = ({ data }) => {
   return (
     <div
       style={{ backgroundImage: `url(${bg})` }}
-      className="slider-container bg-dark pt-mega"
+      className="slider-container bg-dark pt-secondary xl:pt-mega"
     >
       <Container>
         <div className="slider-track">

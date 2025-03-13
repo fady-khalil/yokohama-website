@@ -14,7 +14,9 @@ const Content = ({ data }) => {
                 <img className="w-full" src={content_image_path} alt="" />
               </div>
               <div className="flex-1">
-                <p className="rb-bold text-4xl mt-2">{content_title}</p>
+                <p className="rb-bold text-3xl lg:text-4xl mt-2">
+                  {content_title}
+                </p>
                 <div
                   className="mt-4"
                   dangerouslySetInnerHTML={{ __html: content_Text }}

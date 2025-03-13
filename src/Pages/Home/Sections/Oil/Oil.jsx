@@ -27,13 +27,13 @@ const Oil = ({ data }) => {
         <div className="relative ">
           <button
             ref={prevRef}
-            className="absolute top-1/2 -left-10 -translate-y-1/2 z-[1000] solution-prev-button flex items-center justify-center bg-[#444] h-[72px] text-2xl text-white p-[1px] rounded-lg"
+            className="hidden lg:flex absolute top-1/2 -left-10 -translate-y-1/2 z-[1000] solution-prev-button  items-center justify-center bg-[#444] h-[72px] text-2xl text-white p-[1px] rounded-lg"
           >
             <CaretLeft />
           </button>
           <button
             ref={nextRef}
-            className="absolute top-1/2 -right-10 -translate-y-1/2 z-[1000] solution-prev-button flex items-center justify-center bg-[#444] h-[72px] text-2xl text-white p-[1px] rounded-lg"
+            className="hidden lg:flex absolute top-1/2 -right-10 -translate-y-1/2 z-[1000] solution-prev-button  items-center justify-center bg-[#444] h-[72px] text-2xl text-white p-[1px] rounded-lg"
           >
             <CaretRight />
           </button>

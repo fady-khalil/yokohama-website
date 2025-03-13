@@ -109,10 +109,10 @@ const GetLinks = () => {
           name: "Distribution Channels",
           slug: "distribution_channels",
         },
-        {
-          name: "Find a dealer",
-          slug: "dealers",
-        },
+        // {
+        //   name: "Find a dealer",
+        //   slug: "dealers",
+        // },
       ],
     },
     {

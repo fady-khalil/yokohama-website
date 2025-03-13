@@ -1,10 +1,8 @@
-import aboutData from "Constant/About";
 import bg from "assests/about/Brand/bg3.jpg";
 // inner
 import Hero from "./Sections/Hero";
 import Feature from "./Sections/Feature";
 import Celebrating from "./Sections/Celebrating";
-import Brands from "Pages/Home/Sections/Brands/Brands";
 import OurClients from "./Sections/OurClients";
 import Content from "./Sections/Content";
 
@@ -16,6 +14,7 @@ import IsError from "Components/RequestHandler/IsError";
 const Brand = ({ hero, statics, story, content }) => {
   const { fetchData, error } = useGetData();
   const [data, setData] = useState([]);
+  const [clientData, setClientData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
@@ -25,7 +24,9 @@ const Brand = ({ hero, statics, story, content }) => {
 
     try {
       const result = await fetchData(`yokohama/content/brand_overview`);
+
       setData(result?.data[0]);
+      setClientData(result?.client_logos);
     } catch (error) {
       setIsError(true);
     } finally {
@@ -36,21 +37,20 @@ const Brand = ({ hero, statics, story, content }) => {
   useEffect(() => {
     getData();
   }, []);
-  return (
-    <section>
-      <Hero data={data?.hero} />
-      <Feature data={data?.statistics_ids} />
-      <div
-        className="brand-bg py-mega "
-        style={{ backgroundImage: `url(${bg})` }}
-      >
+
+  if (isLoading) return <IsLoading />;
+  if (isError) return <IsError />;
+  if (data) {
+    return (
+      <section>
+        <Hero data={data?.hero} />
+        <Feature data={data?.statistics_ids} />
         <Celebrating data={data?.story_ids} />
-        <Brands noSpace={true} />
-      </div>
-      <OurClients data={aboutData.brand.ourClients} />
-      <Content data={data?.content_ids} />
-    </section>
-  );
+        <OurClients data={clientData} />
+        <Content data={data?.content_ids} />
+      </section>
+    );
+  }
 };
 
 export default Brand;

@@ -45,11 +45,11 @@ const Shop = () => {
   return (
     <section
       style={{ backgroundImage: `url(${bg})` }}
-      className="bg-dark  py-mega"
+      className="bg-dark  pt-secondary xl:pt-mega"
     >
       <Container>
         <div className="pb-6 mb-6  border-b border-white">
-          <h1 className="text-center  rb-bold text-white text-5xl">
+          <h1 className="text-center  rb-bold text-white text-4xl xl:text-5xl">
             Shop NOW !
           </h1>
         </div>

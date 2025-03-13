@@ -26,7 +26,7 @@ const Offer = ({ data }) => {
             <ArrowLeft />
           </button>
 
-          <h1 className="text-center rb-bold text-white text-5xl">
+          <h1 className="text-center rb-bold text-white text-3xl ss:text-4xl xl:text-5xl">
             Special Offer
           </h1>
           <button
@@ -64,10 +64,10 @@ const Offer = ({ data }) => {
                 </div>
                 <div className="flex-1 py-8 lg:py-0">
                   <Container>
-                    <p className="text-5xl rb-bold text-primary">
+                    <p className="text-4xl xl:text-5xl rb-bold text-primary">
                       {offer?.title}
                     </p>
-                    <h6 className="text-white rb-bold text-4xl">
+                    <h6 className="text-white rb-bold text-3xl  xl:text-4xl">
                       {offer.sub_title}
                     </h6>
                     <p className="text-white mb-14 mt-2">{offer.description}</p>
