@@ -161,7 +161,7 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
     }
   };
   return (
-    <div className="p-4 w-[70vw] lg:p-10">
+    <div className="p-4 w-[90vw] lg:w-[70vw] lg:p-10">
       <div className="border-b border-[#ccc] pb-2 flex items-center justify-between mb-14">
         <div>
           <h5 className="text-3xl rb-bold">Sign up</h5>
