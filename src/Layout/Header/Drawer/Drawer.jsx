@@ -2,6 +2,7 @@ import { X } from "@phosphor-icons/react";
 import logo from "assests/logo.png";
 import { Link } from "react-router-dom";
 import FooterLinks from "Constant/Footer";
+import { UserLoginContext } from "context/Auth/UserLoginContext";
 
 import {
   FacebookLogo,
@@ -15,10 +16,10 @@ import { useContext, useState } from "react";
 import { ModalContext } from "context/Auth/ModalContext";
 
 const Drawer = ({ onHandleClose, isActive }) => {
-  const { openModalHandeler, openDealerModalHandeler, userIsLoggedIn } =
+  const { openModalHandeler, openDealerModalHandeler } =
     useContext(ModalContext);
   const [openIndex, setOpenIndex] = useState(null); // Track which dropdown is open
-
+  const { userIsSignIn, userData } = useContext(UserLoginContext);
   const toggleDropdown = (index) => {
     setOpenIndex(openIndex === index ? null : index); // Toggle open/close
   };
@@ -121,7 +122,7 @@ const Drawer = ({ onHandleClose, isActive }) => {
             </li>
           </ul>
 
-          {!userIsLoggedIn && (
+          {!userIsSignIn && (
             <div className="px-4 flex item-center gap-x-4 lg:hidden">
               <button
                 onClick={() => {
@@ -144,10 +145,15 @@ const Drawer = ({ onHandleClose, isActive }) => {
             </div>
           )}
 
-          {userIsLoggedIn && (
-            <button className="py-4 bg-white text-primary rb-bold border border-white w-[90%] mx-auto flex items-center  justify-center gap-x-2">
+          {userIsSignIn && (
+            <button
+              onClick={onHandleClose}
+              className="py-4 bg-white text-primary rb-bold border border-white w-[90%] mx-auto flex items-center  justify-center gap-x-2"
+            >
               <User weight="bold" size={22} />
-              <Link to={"/Account"}>User Name</Link>
+              <Link to={"/Account"}>
+                {userData?.first_name} {userData?.last_name}
+              </Link>
             </button>
           )}
 

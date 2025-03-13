@@ -5,7 +5,7 @@ import AddressForm from "form/AddressForm";
 const AddNewAddress = ({ isActive, onHandleClose, onHandleSuccess }) => {
   return (
     <Modal bigModal={true} isActive={isActive} onHandleClose={onHandleClose}>
-      <div className="flex flex-col py-10 px-20">
+      <div className="flex flex-col py-10 px-20 w-[90vw]">
         <div className="my-2 flex items-center justify-between">
           <p className="text-2xl rb-bold ">Add New Shipping Address</p>
           <button onClick={onHandleClose}>

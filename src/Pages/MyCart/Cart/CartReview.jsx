@@ -57,10 +57,10 @@ const CartReview = ({ onSelectingTabs }) => {
                     >
                       {/* image */}
                       <Link
-                        className="flex-1"
+                        className="lg:flex-1"
                         to={`/product-detailed/${product_id}`}
                       >
-                        <img className="w-28" src={imagee} alt="" />
+                        <img className="w-32" src={imagee} alt="" />
                       </Link>
                       {/* name and price */}
                       <div className="flex-[3]">
@@ -82,7 +82,7 @@ const CartReview = ({ onSelectingTabs }) => {
                         </div>
                       </div>
                       {/* quantity and delet from cart */}
-                      <div className="flex-1 gap-x-2 flex items-center">
+                      <div className="flex-1 gap-x-2 flex items-center justify-end lg:justify-start">
                         <div className="border py-2 px-4 flex items-center justify-between gap-x-6">
                           <button
                             onClick={() =>
