@@ -218,9 +218,9 @@ const ProductInfo = ({ product }) => {
 
   return (
     <Container>
-      <div className="flex flex-col flex-col-reverse lg:flex-row items-center gap-y-6 gap-x-32 py-secondary lg:py-primary">
+      <div className="flex flex-col flex-col lg:flex-row items-center gap-y-6 gap-x-32 py-secondary lg:py-primary">
         <div className="flex-1 flex flex-col items-center justify-center p-12">
-          <img className="w-3/4 h-3/4 mx-auto" src={image} alt="" />
+          <img className="lg:w-3/4 lg:h-3/4 mx-auto" src={image} alt="" />
         </div>
         <div className="flex-1">
           {/* cat */}
@@ -243,7 +243,7 @@ const ProductInfo = ({ product }) => {
             </p>
           </div>
           {/* specs */}
-          <div className="flex gap-x-6 my-8">
+          <div className="hidden sm:flex gap-x-6 my-8">
             <p className="text text-primary rb-bold">{product?.pattern}</p>{" "}
             <img className="h-6 w-6" src={icon} alt={""} />
             <p className="text text-primary rb-bold">{product?.series}</p>{" "}
@@ -254,13 +254,12 @@ const ProductInfo = ({ product }) => {
           </div>
 
           {product?.quantity?.free_quantity > 0 && (
-            <div className="flex items-center gap-x-3">
+            <div className="flex items-center gap-x-1 my-8 sm:my-0">
               <div
                 className={`${
                   isInCart ? "flex-[10]" : "flex-[1] "
-                } rb-bold text-white flex items-center bg-dark relative`}
+                } rb-bold text-white flex  items-center bg-dark relative`}
               >
-                {/* <p className="border-r ">Qty</p> */}
                 <button className="flex items-center flex-1 justify-between px-10 gap-x-2 px-6 py-3">
                   <p
                     onClick={() =>
@@ -346,7 +345,7 @@ const ProductInfo = ({ product }) => {
               {!isInCart && (
                 <button
                   onClick={() => addToWishlistHandler(product)}
-                  className={`min-w-[75px] flex items-center justify-center py-2 w-max  ${
+                  className={`min-w-[45px] lg:min-w-[75px] flex items-center justify-center py-2 w-max  ${
                     isInWishlist ? "text-primary" : ""
                   }`}
                 >
