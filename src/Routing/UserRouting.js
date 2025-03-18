@@ -69,7 +69,7 @@ const UserRouting = () => {
         <Route path="products/:id" element={<Products />} />
         <Route path="content/:slug" element={<Content />} />
         <Route path="product-detailed/:id" element={<ProductDetailed />} />
-        <Route path="Success-Page" element={<SuccessPage />} />
+        <Route path="success" element={<SuccessPage />} />
         <Route path="search" element={<Search />} />
         <Route path="brand_overview" element={<Brand />} />
         <Route path="mission_and_values" element={<MissionAndVission />} />

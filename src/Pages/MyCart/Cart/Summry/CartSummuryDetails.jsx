@@ -1,11 +1,20 @@
 import { useContext, useEffect } from "react";
 import MainButton from "Components/Buttons/MainButton";
 import { UserCartContext } from "context/User/CartContext";
-
-const CartSummuryDetails = ({ onSelectingTabs }) => {
+import Spinner from "Components/RequestHandler/Spinner";
+const CartSummuryDetails = ({
+  addShippingIdToCartLoading,
+  addShippingIdToCart,
+  addShippingIdToCartIsError,
+}) => {
   const { cart } = useContext(UserCartContext);
   return (
     <div className="flex-1 h-fit lg:sticky lg:top-10 bg-dark border-t-4 border-primary p-6">
+      {addShippingIdToCartIsError && (
+        <p className="text-primary mb-6 text-center">
+          Failed to add the shipping, Try again later
+        </p>
+      )}
       <div className="border-b border-white pb-4">
         {cart?.cart_items?.map(
           ({ name, quantity, price, currency, image }, index) => (
@@ -60,8 +69,8 @@ const CartSummuryDetails = ({ onSelectingTabs }) => {
         </span>
 
         <div className="mt-6 w-full flex-1 flex">
-          <MainButton onClick={() => onSelectingTabs(3)} isSmall={true}>
-            Confirm
+          <MainButton onClick={() => addShippingIdToCart()} isSmall={true}>
+            {addShippingIdToCartLoading ? <Spinner /> : "Confirm"}
           </MainButton>
         </div>
       </div>

@@ -9,6 +9,7 @@ import EmptyCart from "Components/Screens/EmptyCart";
 
 // fetching
 import useGetDataToken from "Hooks/Fetching/useGetDataToken";
+import usePostToken from "Hooks/Fetching/usePostToken";
 import AddressForm from "form/AddressForm";
 import DisplayAddress from "./Components/DisplayAddress";
 
@@ -20,7 +21,12 @@ const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
   const { fetchData } = useGetDataToken();
   const [billingIsValid, setBillingIsValid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [shippingId, setShippingId] = useState(null);
+  // adding shipping id to cart
+  const { postData } = usePostToken();
+  const [addShippingIdToCartLoading, setAddShippingIdToCartLoading] =
+    useState(false);
+  const [isError, setIsError] = useState(false);
   // intial call billing addrees to check if the user have valid billing, if yes we display the addrss, if no we open a form to add a bolling address
   const getBillingAddress = async () => {
     try {
@@ -43,7 +49,7 @@ const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
     getBillingAddress();
   }, []);
 
-  // state and useEffect to update the view after the user add billing address and display the addrss
+  // state and useEffect to update the view after the user add billing address and display the addrss, we do this process when the user don't have a valid billing address,
   const [isSuccess, setIsSucces] = useState(false);
   const handleSuccess = () => {
     setIsSucces(true);
@@ -54,7 +60,33 @@ const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
     }
   }, [isSuccess]);
 
-  //
+  const addShippingIdToCart = async () => {
+    try {
+      setAddShippingIdToCartLoading(true);
+      const addShippingIdToCartData = await postData(
+        `yokohama/shipping/confirm?shipping_id=${shippingId}&order_id=${cart?.cart_id}`,
+        userToken
+      );
+
+      if (addShippingIdToCartData?.is_success) {
+        onSelectingTabs(3);
+        getShippingAddressId(shippingId);
+      } else {
+        setIsError(true);
+        setTimeout(() => {
+          setIsError(false);
+        }, 2000);
+      }
+    } catch (error) {
+      console.log(error);
+      setIsError(true);
+      setTimeout(() => {
+        setIsError(false);
+      }, 2000);
+    } finally {
+      setAddShippingIdToCartLoading(false);
+    }
+  };
 
   return (
     <div className="py-secondary">
@@ -79,12 +111,16 @@ const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
             )}
             {billingIsValid && (
               <DisplayAddress
-                getShippingAddressId={getShippingAddressId}
+                getShippingAddressId={setShippingId}
                 // confirmSwitchHandler={confirmSwitchHandler}
               />
             )}
             {billingIsValid && (
-              <CartSummuryDetails onSelectingTabs={onSelectingTabs} />
+              <CartSummuryDetails
+                addShippingIdToCartIsError={isError}
+                addShippingIdToCartLoading={addShippingIdToCartLoading}
+                addShippingIdToCart={addShippingIdToCart}
+              />
             )}
           </div>
         )}

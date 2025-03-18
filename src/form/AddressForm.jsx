@@ -122,7 +122,6 @@ const AddressForm = ({
       setIsLoading(true);
       if (extraData) {
         const data = await postQuestData(route, guestData);
-        console.log(data);
         if (data?.is_success) {
           onHandleSuccess();
           clearInputs();

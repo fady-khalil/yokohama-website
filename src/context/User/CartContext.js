@@ -13,6 +13,9 @@ export const UserCartProvider = ({ children }) => {
   const { fetchData } = useGetDataToken();
   const { postData } = usePostToken();
 
+  // payment states
+  const [paymentRef, setPaymentRef] = useState(null);
+  const [orderId, setOrderId] = useState(null);
   // get cart
   const [cart, setCart] = useState([]);
   const [cartIsLoading, setcCatIsLoading] = useState(false);
@@ -107,6 +110,11 @@ export const UserCartProvider = ({ children }) => {
   return (
     <UserCartContext.Provider
       value={{
+        // payment states
+        paymentRef,
+        setPaymentRef,
+        orderId,
+        setOrderId,
         // display product
         displayProductHandler,
         displayProduct,

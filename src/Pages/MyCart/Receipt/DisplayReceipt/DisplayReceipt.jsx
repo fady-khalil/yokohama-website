@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Logo from "assests/logo.png";
-import usePostToken from "Hooks/Fetching/usePostToken";
 import Spinner from "Components/RequestHandler/Spinner";
-import { useNavigate } from "react-router-dom";
+import { UserLoginContext } from "context/Auth/UserLoginContext.js";
+import { UserCartContext } from "context/User/CartContext.js";
+import useGetDataToken from "Hooks/Fetching/useGetDataToken.jsx";
 
 const DisplayReceipt = ({
   userData,
@@ -21,21 +22,35 @@ const DisplayReceipt = ({
     (total, order) => total + order.subtotal,
     0
   );
-  const navigate = useNavigate();
-  const { postData } = usePostToken();
+
+  const { fetchData } = useGetDataToken();
+  const { userToken } = useContext(UserLoginContext);
+  const { setPaymentRef, setOrderId } = useContext(UserCartContext);
   const [isLoading, setIsLoading] = useState(false);
 
   const confirmOrderHandler = async () => {
     try {
       setIsLoading(true);
-      const data = await postData(
-        `/yokohama/cart/confirm?ship_id=${shippingId}&cart_id=${cartData?.cart_id}`,
-        token
+      const data = await fetchData(
+        `yokohama/areeba/pay/${cartData?.cart_id}`,
+        userToken
       );
-      if (data?.is_success) {
-        navigate("/Success-Page");
-        clearCart();
+
+      if (data) {
+        setPaymentRef(data?.payment_ref);
+        setOrderId(data?.order_id);
+        // window.location.href = data?.url_payment;
       }
+
+      console.log(data);
+      // const data = await postData(
+      //   `/yokohama/cart/confirm?ship_id=${shippingId}&cart_id=${cartData?.cart_id}`,
+      //   token
+      // );
+      // if (data?.is_success) {
+      //   navigate("/Success-Page");
+      //   clearCart();
+      // }
     } catch (error) {
     } finally {
       setIsLoading(false);

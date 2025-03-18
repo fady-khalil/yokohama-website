@@ -84,7 +84,7 @@ const Shop = () => {
           aspectRatio ? `&size_aspects=${aspectRatio}` : ""
         }${diameter ? `&size_inch=${diameter}` : ""}${
           sizeName ? `&size_name=${sizeName}` : ""
-        }&limit=16&page=${page}`
+        }&limit=10&page=${page}`
       );
 
       setTotalPages(result?.totalpages);

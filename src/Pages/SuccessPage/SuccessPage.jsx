@@ -1,7 +1,28 @@
-import React from "react";
+import { useContext, useEffect } from "react";
 import "./style.css";
 import MainButton from "Components/Buttons/MainButton";
+import { UserCartContext } from "context/User/CartContext";
+import useGetDataToken from "Hooks/Fetching/useGetDataToken.jsx";
+import { UserLoginContext } from "context/Auth/UserLoginContext.js";
+
 const SuccessPage = () => {
+  const { paymentRef, orderId } = useContext(UserCartContext);
+  const { fetchData } = useGetDataToken();
+  const { userToken } = useContext(UserLoginContext);
+
+  const submitPayment = async () => {
+    console.log("paymentRef", paymentRef);
+    console.log("orderId", orderId);
+    const data = await fetchData(
+      `yokohama/areeba/payment/paid/${paymentRef}/${orderId}`,
+      userToken
+    );
+    console.log(data);
+  };
+  useEffect(() => {
+    submitPayment();
+  }, [paymentRef, orderId]);
+
   return (
     <div className="h-[80vh] flex flex-col justify-center">
       <div class="success-checkmark mx-auto ">

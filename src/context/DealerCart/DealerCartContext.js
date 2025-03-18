@@ -24,11 +24,11 @@ export const DealerCartProvider = ({ children }) => {
   // detel item from car
   const [loadingItems, setLoadingItems] = useState({});
 
-  useEffect(() => {
-    if (dealerIsSignIn) {
-      getCartData();
-    }
-  }, [dealerIsSignIn]);
+  // useEffect(() => {
+  //   if (dealerIsSignIn) {
+  //     getCartData();
+  //   }
+  // }, [dealerIsSignIn]);
 
   const displayProductHandler = (product) => {
     setDisplayProduct(product);
