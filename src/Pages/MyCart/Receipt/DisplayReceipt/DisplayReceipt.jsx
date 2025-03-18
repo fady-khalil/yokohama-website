@@ -39,7 +39,7 @@ const DisplayReceipt = ({
       if (data) {
         setPaymentRef(data?.payment_ref);
         setOrderId(data?.order_id);
-        // window.location.href = data?.url_payment;
+        window.location.href = data?.url_payment;
       }
 
       console.log(data);
