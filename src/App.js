@@ -7,7 +7,9 @@ import UserRouting from "Routing/UserRouting";
 import DealerRouting from "Routing/DealerRouting";
 
 const App = () => {
-  const { dealerIsSignIn } = useContext(DealerLoginContext);
+  const { dealerHasGetAccess } = useContext(DealerLoginContext);
+
+  console.log(dealerHasGetAccess);
 
   return (
     <div className="App">
@@ -20,7 +22,7 @@ const App = () => {
         <WhatsappLogo color="white" size={32} />
       </a>
       {/* <DealerRouting /> */}
-      {dealerIsSignIn ? <DealerRouting /> : <UserRouting />}
+      {dealerHasGetAccess ? <DealerRouting /> : <UserRouting />}
     </div>
   );
 };

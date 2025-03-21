@@ -11,7 +11,8 @@ import MainButton from "Components/Buttons/MainButton";
 import usePostData from "Hooks/Fetching/usePostData";
 
 const DealerSiginModal = () => {
-  const { setDealerIsSignIn, handleUerData } = useContext(DealerLoginContext);
+  const { handleUerData, setDealerHasGetAccess } =
+    useContext(DealerLoginContext);
   const { loading, error, postData } = usePostData();
   const [notValid, setNotValid] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -63,8 +64,8 @@ const DealerSiginModal = () => {
       const result = await postData("yokohama/auth/login", formData);
       if (result && result?.is_success) {
         handleUerData(result?.data);
-        setDealerIsSignIn(true);
         closeDealerModalHandeler();
+        setDealerHasGetAccess(true);
       } else {
         setErrorMessage(result?.message);
       }

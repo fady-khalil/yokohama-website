@@ -10,9 +10,14 @@ export const DealerLoginProvider = ({ children }) => {
   const navigate = useNavigate();
   const { loading, postData } = usePostToken();
   const [dealerIsSignIn, setDealerIsSignIn] = useState(false);
+  // this state when the usr login with the main account, it save all teh data of parent and child company to render them in the welcom page
   const [allDealerData, setAllDealerData] = useState();
+  // this two state is to store the choosen accountr from the dealer after he choose the accoount
   const [dealerData, setDealerData] = useState();
   const [dealerToken, setDealerToken] = useState();
+  // this state when the user login to switch between user and dealer Routing and redirect the delaer to welcom page to choose the account
+  const [dealerHasGetAccess, setDealerHasGetAccess] = useState(false);
+  // this state to track the dealer when he choose an account to redirect hom from dealer welcom page to the main pages
   const [hasChosenAccount, setHasChosenAccount] = useState(false);
 
   const handleDealderSignIn = () => {
@@ -23,6 +28,8 @@ export const DealerLoginProvider = ({ children }) => {
     try {
       const result = await postData("yokohama/auth/logout", dealerToken);
       setDealerIsSignIn(false);
+      setDealerHasGetAccess(false);
+      setHasChosenAccount(false);
       navigate("/");
       localStorage.removeItem("dealerIsSignIn");
       localStorage.removeItem("dealerToken");
@@ -31,12 +38,13 @@ export const DealerLoginProvider = ({ children }) => {
     } catch (err) {
       console.error("Error:", err);
     }
-    // setDealerIsSignIn(false);
   };
 
   const handleUerData = (data) => {
     setAllDealerData(data);
   };
+
+  console.log(dealerIsSignIn, " dealerIsSignIn dealer auth  ");
 
   const handleDealerUser = (data) => {
     setDealerData(data);
@@ -49,6 +57,7 @@ export const DealerLoginProvider = ({ children }) => {
     localStorage.setItem("dealerToken", data.token);
     localStorage.setItem("dealerData", JSON.stringify(data));
     localStorage.setItem("delaerHasChosen", JSON.stringify(true));
+    localStorage.setItem("dealerHasGetAccess", JSON.stringify(true));
   };
 
   useEffect(() => {
@@ -59,6 +68,9 @@ export const DealerLoginProvider = ({ children }) => {
       setDealerData(JSON.parse(storedUserData));
       const storedHasChosen = localStorage.getItem("delaerHasChosen");
       setHasChosenAccount(JSON.parse(storedHasChosen));
+      const storedDealerHasGetAccess =
+        localStorage.getItem("dealerHasGetAccess");
+      setDealerHasGetAccess(JSON.parse(storedDealerHasGetAccess));
     }
   }, []);
 
@@ -70,6 +82,8 @@ export const DealerLoginProvider = ({ children }) => {
         handleDealderSignIn,
         handleDealderLogout,
         handleDealerUser,
+        dealerHasGetAccess,
+        setDealerHasGetAccess,
         // data
         setDealerData,
         allDealerData,

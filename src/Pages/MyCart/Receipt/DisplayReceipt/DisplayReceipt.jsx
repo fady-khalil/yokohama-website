@@ -41,16 +41,6 @@ const DisplayReceipt = ({
         setOrderId(data?.order_id);
         window.location.href = data?.url_payment;
       }
-
-      console.log(data);
-      // const data = await postData(
-      //   `/yokohama/cart/confirm?ship_id=${shippingId}&cart_id=${cartData?.cart_id}`,
-      //   token
-      // );
-      // if (data?.is_success) {
-      //   navigate("/Success-Page");
-      //   clearCart();
-      // }
     } catch (error) {
     } finally {
       setIsLoading(false);

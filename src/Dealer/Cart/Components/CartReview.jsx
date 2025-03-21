@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import usePostToken from "Hooks/Fetching/usePostToken";
 import { DealerLoginContext } from "context/Auth/DealerContext";
 import { useNavigate } from "react-router-dom";
-const CartReview = () => {
+const CartReview = ({ onSelectingTabs }) => {
   const { dealerToken } = useContext(DealerLoginContext);
   const {
     displayProductHandler,
@@ -45,22 +45,22 @@ const CartReview = () => {
   const { postData } = usePostToken();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const confirmOrderHandler = async () => {
-    try {
-      setIsLoading(true);
-      const data = await postData(
-        `/yokohama/cart/confirm?&cart_id=${cart?.cart_id}`,
-        dealerToken
-      );
-      if (data?.is_success) {
-        clearCart();
-        navigate("/Success-Page");
-      }
-    } catch (error) {
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // const confirmOrderHandler = async () => {
+  //   try {
+  //     setIsLoading(true);
+  //     const data = await postData(
+  //       `/yokohama/cart/confirm?&cart_id=${cart?.cart_id}`,
+  //       dealerToken
+  //     );
+  //     if (data?.is_success) {
+  //       clearCart();
+  //       navigate("/Success-Page");
+  //     }
+  //   } catch (error) {
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   if (cartIsLoading)
     return (
@@ -128,19 +128,6 @@ const CartReview = () => {
                 )}
               </div>
               <div className="flex-1 h-fit lg:sticky lg:top-10 bg-dark border-t-4 border-primary p-6">
-                {/* <div className="border-b border-white pb-4">
-                  <label className="flex items-center space-x-2 ">
-                    <input
-                      type="checkbox"
-                      className="form-checkbox h-4 w-4 text-white"
-                    />
-                    <span className={"text-white"}>Use my credits (200$)</span>
-                  </label>
-                  <p className="text-[#aaa]">
-                    each credit is equivalent to 1 litres
-                  </p>
-                </div> */}
-
                 <div className="border-b border-white pb-4">
                   <p className="text-white text-xl rb-bold mt-4 mb-2">
                     Order Summuary
@@ -149,12 +136,12 @@ const CartReview = () => {
                   <div className="mt-3">
                     <span className="flex items-center justify-between text-[#ddd]">
                       <p>Subtotal</p>
-                      <p>{calculateSubtotal()}$</p>
+                      <p>{calculateSubtotal()} USD</p>
                     </span>
                     <span className="flex items-center justify-between text-[#ddd]">
                       <p>Tax Vat</p>
                       <p>
-                        {cart?.invoice_details[0]?.amount_tax}{" "}
+                        {cart?.invoice_details[0]?.amount_tax.toFixed(2)}{" "}
                         {cart?.invoice_details[0]?.currency}
                       </p>
                     </span>
@@ -163,8 +150,8 @@ const CartReview = () => {
                       <p>0</p>
                     </span>
                     <span className="flex items-center justify-between text-[#ddd]">
-                      <p>Discount 10%</p>
-                      <p>pending</p>
+                      <p>Mounting Charge</p>
+                      <p>0</p>
                     </span>
                   </div>
                 </div>
@@ -184,8 +171,9 @@ const CartReview = () => {
                   </p>
                   <div className="mt-6 w-full flex-1 flex">
                     <MainButton
-                      isLoading={isLoading}
-                      onClick={confirmOrderHandler}
+                      onClick={() => onSelectingTabs(3)}
+                      // isLoading={isLoading}
+                      // onClick={confirmOrderHandler}
                       isSmall={true}
                     >
                       Continue to checkout

@@ -8,7 +8,7 @@ import useGetData from "Hooks/Fetching/useGetData";
 import Spinner from "Components/RequestHandler/Spinner";
 
 const Shop = () => {
-  const [selectedTabs, setSelectedTabs] = useState(1);
+  const [selectedTabs, setSelectedTabs] = useState(null);
   const selectedTabsHandler = (id) => {
     setSelectedTabs(id);
   };
@@ -25,6 +25,10 @@ const Shop = () => {
     try {
       const data = await fetchData("yokohama/ctegories/all");
       setData(data?.data);
+      // Set the initial selected tab to the first tab's ID
+      if (data?.data?.length > 0) {
+        setSelectedTabs(data.data[0].id);
+      }
     } catch (error) {
       setIsError(true);
     } finally {
@@ -35,6 +39,18 @@ const Shop = () => {
   useEffect(() => {
     getData();
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center mt-32 h-[100vh]">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return <div>Error loading data</div>;
+  }
 
   return (
     <main>

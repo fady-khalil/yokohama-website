@@ -13,6 +13,7 @@ import Shop from "Dealer/Shop/Shop";
 import Cart from "Dealer/Cart/Cart";
 import CartDetailed from "Dealer/Cart/CartDetailed";
 import SuccessPage from "Pages/SuccessPage/SuccessPage";
+import ProductDetailed from "Dealer/Shop/Components/ProductDetailed";
 import WelcomePage from "Dealer/WelcomePage/WelcomePage";
 const DealerRouting = () => {
   const { dealerIsSignIn, hasChosenAccount } = useContext(DealerLoginContext);
@@ -29,9 +30,12 @@ const DealerRouting = () => {
             <Route path="loyality" element={<Loyality />} />
             <Route path="my-orders" element={<MyOrders />} />
             <Route path="shop" element={<Shop />} />
+            <Route
+              path="dealer-product-detailed/:id"
+              element={<ProductDetailed />}
+            />
             <Route path="my-cart" element={<Cart />} />
-            <Route path="Success-Page" element={<SuccessPage />} />
-            <Route path="product-detailed" element={<CartDetailed />} />
+            <Route path="success" element={<SuccessPage />} />
           </Routes>
         </>
       ) : (

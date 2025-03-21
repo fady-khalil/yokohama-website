@@ -24,12 +24,6 @@ const Desktop = ({ onclose }) => {
           <Link onClick={onclose} to={"/gift"}>
             Gift shop
           </Link>
-          <span className="flex text-5xl items-center justify-center text-primary">
-            <Dot />
-          </span>
-        </li>
-        <li>
-          <Link>Marketing Materials</Link>
         </li>
       </ul>
     </div>

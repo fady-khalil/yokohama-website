@@ -7,10 +7,10 @@ const CartTabs = ({ onSelectingTabs, activeTabs }) => {
       id: 1,
       name: "Cart Review",
     },
-    {
-      id: 2,
-      name: "Shipping & Payment",
-    },
+    // {
+    //   id: 2,
+    //   name: "Shipping & Payment",
+    // },
     {
       id: 3,
       name: "Receipt",

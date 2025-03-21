@@ -6,11 +6,13 @@ import useGetDataToken from "Hooks/Fetching/useGetDataToken.jsx";
 import { UserLoginContext } from "context/Auth/UserLoginContext.js";
 
 const SuccessPage = () => {
-  const { paymentRef, orderId } = useContext(UserCartContext);
+  // const { paymentRef, orderId } = useContext(UserCartContext);
   const { fetchData } = useGetDataToken();
   const { userToken } = useContext(UserLoginContext);
 
   const submitPayment = async () => {
+    const paymentRef = localStorage.getItem("payment_ref");
+    const orderId = localStorage.getItem("order_id");
     console.log("paymentRef", paymentRef);
     console.log("orderId", orderId);
     const data = await fetchData(
@@ -21,7 +23,7 @@ const SuccessPage = () => {
   };
   useEffect(() => {
     submitPayment();
-  }, [paymentRef, orderId]);
+  }, []);
 
   return (
     <div className="h-[80vh] flex flex-col justify-center">

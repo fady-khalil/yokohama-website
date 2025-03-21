@@ -7,7 +7,6 @@ const usePostToken = () => {
   const [error, setError] = useState(null);
   const postData = async (url, token) => {
     setLoading(true);
-    console.log(`${BASE_URL}/${url}`);
     try {
       const res = await fetch(`${BASE_URL}/${url}`, {
         method: "POST",

@@ -12,7 +12,7 @@ const WelcomePage = () => {
       <Container>
         <img className="w-60 my-16 mx-auto" src={darkLogo} alt="" />
 
-        <button onClick={handleDealderLogout}>Logout</button>
+        <button onClick={handleDealderLogout}>New Update to tets</button>
 
         <div className="mb-16">
           <p className="text-2xl font-bold mb-6">Parent Company</p>

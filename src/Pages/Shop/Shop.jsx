@@ -76,16 +76,31 @@ const Shop = () => {
     setIsError(false);
     try {
       const result = await fetchData(
-        `yokohama/ctegories/all/sub_categories?id=${id}${
-          classificationID ? `&class_ids=${classificationID}` : ""
-        }${brandId ? `&brand_ids=${brandId}` : ""}${
-          categoryId ? `&categ_ids=[${categoryId}]` : ""
-        }${width ? `&size_width=${width}` : ""}${
-          aspectRatio ? `&size_aspects=${aspectRatio}` : ""
-        }${diameter ? `&size_inch=${diameter}` : ""}${
-          sizeName ? `&size_name=${sizeName}` : ""
-        }&limit=10&page=${page}`
+        `yokohama/categories/subcategs/all?category_id=${id}${
+          classificationID ? `&classification_id=${classificationID}` : ""
+        }${brandId ? `&brand_id=${brandId}` : ""}${
+          categoryId ? `&kind_id=[${categoryId}]` : ""
+        }${width ? `&width=${width}` : ""}${
+          aspectRatio ? `&aspect=${aspectRatio}` : ""
+        }${diameter ? `&inch=${diameter}` : ""}${
+          sizeName ? `&size=${sizeName}` : ""
+        }&page=${page}`
       );
+
+      console.log(result);
+
+      // try {
+      //   const result = await fetchData(
+      //     `yokohama/ctegories/all/sub_categories?id=${id}${
+      //       classificationID ? `&class_ids=${classificationID}` : ""
+      //     }${brandId ? `&brand_ids=${brandId}` : ""}${
+      //       categoryId ? `&categ_ids=[${categoryId}]` : ""
+      //     }${width ? `&size_width=${width}` : ""}${
+      //       aspectRatio ? `&size_aspects=${aspectRatio}` : ""
+      //     }${diameter ? `&size_inch=${diameter}` : ""}${
+      //       sizeName ? `&size_name=${sizeName}` : ""
+      //     }&limit=10&page=${page}`
+      //   );
 
       setTotalPages(result?.totalpages);
       setData(result?.data);
@@ -173,7 +188,7 @@ const Shop = () => {
     });
   };
 
-  if (isError || error) return <IsError />;
+  // if (isError || error) return <IsError />;
   return (
     <main className="relative">
       <Header header={"Shop"} />

@@ -73,7 +73,6 @@ const Filter = ({
       {allData && allData?.size_name?.length > 0 && (
         <BySizeName
           selectedSizeName={selectedSizeName}
-          k
           setSelectedSizeName={setSelectedSizeName}
           data={allData?.size_name}
           onHandleSizeName={onHandleSizeName}

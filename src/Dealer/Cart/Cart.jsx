@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import Container from "Components/Container/Container";
 
 import CartTabs from "./Components/CartTabs";
 import CartReview from "./Components/CartReview";
@@ -17,12 +16,12 @@ const MyCart = ({ onSelectingTabs, activeTabs }) => {
   const components = [
     {
       id: 1,
-      component: <CartReview />,
+      component: <CartReview onSelectingTabs={selectedTabsHandler} />,
     },
-    {
-      id: 2,
-      component: <ShippingAndPayment />,
-    },
+    // {
+    //   id: 2,
+    //   component: <ShippingAndPayment />,
+    // },
     {
       id: 3,
       component: <Reciept />,

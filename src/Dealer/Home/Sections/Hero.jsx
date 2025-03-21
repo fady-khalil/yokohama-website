@@ -25,7 +25,9 @@ const Hero = () => {
             </p>
           </div>
           <div className="flex flex-col lg:flex-row items-center gap-6">
-            <MainButton to={"/shop"}>Shop Your Products</MainButton>
+            <WhiteButton to={"/shop"}>Shop Your Products</WhiteButton>
+            <WhiteButton to={"/my-orders"}>Check your Balance </WhiteButton>
+            {/* <MainButton to={"/shop"}>Shop Your Products</MainButton> */}
             <WhiteButton to={"/gift"}>Redeem your Points</WhiteButton>
           </div>
         </div>

@@ -3,6 +3,7 @@ import Container from "Components/Container/Container";
 import { Info, DotsThreeVertical } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
 import Spinner from "Components/RequestHandler/Spinner";
+import image from "assests/product-3-removebg-preview.png";
 
 // fetcing data
 import useGetDataToken from "Hooks/Fetching/useGetDataToken";
@@ -18,37 +19,29 @@ const ShopLanding = ({ selectedId }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isInCart, setIsInCart] = useState(false);
-  const [quantity, setQuantity] = useState(0);
+  const [quantities, setQuantities] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [loadingItems, setLoadingItems] = useState({});
+  const [addToCartLoadingItems, setAddToCartLoadingItems] = useState({});
   // context
   const { dealerToken } = useContext(DealerLoginContext);
-  const {
-    AddToCart,
-    addToCartLoading,
-    displayProductHandler,
-    cart,
-    updateCart,
-    removeFromCart,
-  } = useContext(DealerCartContext);
+  const { AddToCart, displayProductHandler, cart, updateCart, removeFromCart } =
+    useContext(DealerCartContext);
 
   const getData = async (page = 1) => {
     setIsLoading(true);
     setIsError(false);
-
-    console.log("is called for page:", page);
 
     try {
       const result = await fetchData(
         `yokohama/dealer/subcategs?categ_id=${selectedId}&page=${page}`,
         dealerToken
       );
-      console.log(result);
       setData(result);
       if (result?.total_pages) {
         setTotalPages(result.total_pages);
       }
-      // setFilteredData(result?.data || []);
     } catch (error) {
       setIsError(true);
     } finally {
@@ -56,22 +49,44 @@ const ShopLanding = ({ selectedId }) => {
     }
   };
 
-  const handleQuantityChange = (productId, quantity) => {
-    if (quantity < 1) {
-      removeFromCart(productId);
-    } else {
-      updateCart(productId, quantity);
-    }
-  };
-
-  useEffect(() => {
-    setCurrentPage(1); // Reset to page 1 when selectedId changes
-    getData(1);
-  }, [selectedId]);
-
   useEffect(() => {
     getData(currentPage);
   }, [currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1); // Reset to page 1 when selectedId changes
+    getData();
+  }, [selectedId]);
+
+  // cart
+  const addToCartHandler = async (id) => {
+    setAddToCartLoadingItems((prev) => ({ ...prev, [id]: true }));
+    try {
+      await AddToCart(id);
+      if (quantities[id] > 1) {
+        await updateCart(id, quantities[id]);
+      }
+    } finally {
+      setAddToCartLoadingItems((prev) => ({ ...prev, [id]: false }));
+    }
+  };
+
+  const handleQuantityChange = async (productId, newQuantity) => {
+    if (newQuantity < 1) {
+      return;
+    }
+    setQuantities((prev) => ({ ...prev, [productId]: newQuantity }));
+
+    // Only update cart if the product is already in cart
+    if (cart?.cart_items?.some((item) => item.product_id === productId)) {
+      setLoadingItems((prev) => ({ ...prev, [productId]: true }));
+      try {
+        await updateCart(productId, newQuantity);
+      } finally {
+        setLoadingItems((prev) => ({ ...prev, [productId]: false }));
+      }
+    }
+  };
 
   const [foundProducts, setFoundProducts] = useState();
 
@@ -84,6 +99,13 @@ const ShopLanding = ({ selectedId }) => {
           )
         )
       );
+
+      // Initialize quantities from cart items
+      const cartQuantities = {};
+      cart.cart_items.forEach((item) => {
+        cartQuantities[item.product_id] = item.quantity;
+      });
+      setQuantities(cartQuantities);
 
       // Do something with the foundItems, such as setting state
       if (foundItems?.length > 0) {
@@ -108,185 +130,147 @@ const ShopLanding = ({ selectedId }) => {
     window.scrollTo(0, 0);
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center  mt-32 h-[100vh]">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return <IsError />;
+  }
+
+  // const data = await postData(
+  //   `/yokohama/cart/confirm?&cart_id=${cart?.cart_id}`,
+  //   dealerToken
+  // );
   return (
-    <div className="mb-primary">
+    <div className="my-primary">
       <Container>
-        <div className="flex items-center justify-end gap-x-6 my-8">
-          <span className="flex items-center gap-x-3 ">
-            <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-44">
+          {data?.products?.map(
+            (
+              {
+                id,
+                name,
+                avg_review,
+                price,
+                classification,
+                currency,
+                images,
+                brand,
+                onSale,
+                price_pricelist_rule,
+                qty_available,
+              },
+              dataIndex
+            ) => (
+              <Link className="group block" key={dataIndex}>
+                <div className="flex flex-col-reverse md:flex-row relative">
+                  {onSale && (
+                    <div className="absolute -top-0 -left-0 z-10">
+                      <div
+                        className="bg-[#CD4C4F] text-white font-bold py-1 px-8 text-sm uppercase tracking-wider"
+                        style={{
+                          clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
+                          transform:
+                            "rotate(-45deg) translateX(-20%) translateY(-50%)",
+                        }}
+                      >
+                        Sale
+                      </div>
+                    </div>
+                  )}
+                  <div className="flex-[1] flex flex-col border-b-4">
+                    <p className="text-primary rb-bold text-sm">
+                      {classification}
+                    </p>
+                    <p className="rb-bold">{name}</p>
+                    <p className="rb-medium text-sm mt-3">Brand:{brand}</p>
+                    <div className="flex items-center gap-x-2 my-3 font-medium">
+                      <p>{price_pricelist_rule}$</p>
+                      <p>
+                        {currency}
+                        <span className="text-primary">*</span>
+                      </p>
+                    </div>
+                  </div>
 
-            <p>available</p>
-          </span>
-          <span className="flex items-center gap-x-3">
-            <span className="w-3 h-3 bg-primary rounded-full"></span>
-            <p>Not available</p>
-          </span>
-        </div>
-        <div className="overflow-scroll xl:overflow-hidden">
-          {isLoading ? (
-            <div className="flex w-max justify-center mx-auto  flex-col items-center">
-              <Spinner />
-              <p className="mt-3">Loading data...</p>
-            </div>
-          ) : (
-            <table className="w-full ">
-              <thead>
-                <tr className="bg-primary text-white">
-                  <th className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 uppercase rb-bold text-sm">
-                    <span className="flex items-center justify-center ">
-                      <DotsThreeVertical size={32} />
-                      <p>Tire Size</p>
-                    </span>
-                  </th>
-                  <th className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 uppercase rb-bold text-sm">
-                    <span className="flex items-center justify-center ">
-                      <DotsThreeVertical size={32} />
-                      <p>Brand</p>
-                    </span>
-                  </th>
-                  <th className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 uppercase rb-bold text-sm">
-                    <span className="flex items-center justify-center ">
-                      <DotsThreeVertical size={32} />
-                      <p>Pattern</p>
-                    </span>
-                  </th>
-                  <th className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 uppercase rb-bold text-sm">
-                    <span className="flex items-center justify-center ">
-                      <DotsThreeVertical size={32} />
-                      <p>Price</p>
-                    </span>
-                  </th>
-                  <th className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 uppercase rb-bold text-sm">
-                    <span className="flex items-center justify-center ">
-                      <DotsThreeVertical size={32} />
-                      <p>Discount</p>
-                    </span>
-                  </th>
-                  <th className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 uppercase rb-bold text-sm">
-                    <span className="flex items-center justify-center ">
-                      <DotsThreeVertical size={32} />
-                      <p>available QTY</p>
-                    </span>
-                  </th>
-                  <th className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 uppercase rb-bold text-sm">
-                    <span className="flex items-center justify-center ">
-                      <DotsThreeVertical size={32} />
-                      <p>QTY</p>
-                    </span>
-                  </th>
-                  <th className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 uppercase rb-bold text-sm">
-                    Subtotal
-                  </th>
-                  <th className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 uppercase rb-bold text-sm"></th>
-                  <th className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 uppercase rb-bold text-sm"></th>
-                </tr>
-              </thead>
+                  <div className="flex-[1] relative">
+                    <img
+                      className="w-3/4 h-3/4 mx-auto md:w-full md:h-full"
+                      src={image}
+                      alt=""
+                    />
+                    {qty_available === 0 && (
+                      <div className="absolute top-0 right-0 bg-red-500 text-white px-4 py-1 rb-bold">
+                        Sold Out
+                      </div>
+                    )}
+                  </div>
+                </div>
 
-              <tbody className="">
-                {data?.products?.map(
-                  (
-                    {
-                      id,
-                      name,
-                      price,
-                      brand,
-                      pattern,
-                      discount,
-                      qty_available,
-                    },
-                    index
-                  ) => {
-                    const isProductInCart = foundProducts?.some(
-                      (product) => product.id === id
-                    );
-                    const cartQuantity = getCartItemQuantity(id);
-
-                    return (
-                      <tr key={id}>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b rb-bold text-sm">
-                          <Link to={`/product-detailed/${id}`}>{name}</Link>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b rb-bold text-sm">
-                          <Link to={`/product-detailed/${id}`}>{brand}</Link>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b rb-bold text-sm">
-                          <Link to={`/product-detailed/${id}`}>{pattern}</Link>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b rb-bold text-sm">
-                          <Link to={`/product-detailed/${id}`}>
-                            {price} USD
-                          </Link>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b rb-bold text-sm">
-                          <p>{discount}</p>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b rb-bold text-sm">
-                          <div className="flex items-center gap-x-2 justify-center">
-                            <span
-                              className={`w-3 h-3 ${
-                                qty_available > 0
-                                  ? "bg-green-500"
-                                  : "bg-primary"
-                              } rounded-full block`}
-                            ></span>
-                            {qty_available}
-                          </div>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b rb-bold text-sm">
-                          <span className="w-[80%] mx-auto flex items-center gap-x-4 justify-between px-2 py-1 border">
-                            <button
-                              disabled={!isProductInCart}
-                              onClick={() =>
-                                handleQuantityChange(id, cartQuantity + 1)
-                              }
-                            >
-                              +
-                            </button>
-                            <p>{cartQuantity}</p>
-                            <button
-                              disabled={!isProductInCart}
-                              onClick={() =>
-                                handleQuantityChange(id, cartQuantity - 1)
-                              }
-                            >
-                              -
-                            </button>
-                          </span>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b rb-bold text-sm">
-                          <p>Sub Total</p>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b rb-bold text-sm">
-                          <button
-                            onClick={() => AddToCart(id)}
-                            className={`px-4 py-1.5 rb-bold text-sm text-white uppercase ${
-                              isProductInCart ? "bg-primary" : "bg-black"
-                            }`}
-                          >
-                            {addToCartLoading[id] ? (
-                              <Spinner isSmall={true} />
-                            ) : isProductInCart ? (
-                              "In your cart"
-                            ) : (
-                              "Add to cart"
-                            )}
-                          </button>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b rb-bold text-sm">
-                          <button className="text-white bg-primary p-1 rounded-full">
-                            <Info weight="fill" />
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  }
-                )}
-              </tbody>
-            </table>
+                <div className="flex items-center gap-x-2 mt-6 w-3/4 mxs-auto">
+                  <div className="flex-1 flex items-center gap-x-2 rb-bold text-white bg-dark relative">
+                    <button className="flex items-center flex-1 justify-between px-10 gap-x-2 px-6 py-2">
+                      <p
+                        onClick={() =>
+                          handleQuantityChange(
+                            id,
+                            Math.max(1, (quantities[id] || 1) - 1)
+                          )
+                        }
+                      >
+                        -
+                      </p>
+                      {loadingItems[id] ? (
+                        <Spinner />
+                      ) : (
+                        <p>{quantities[id] || getCartItemQuantity(id) || 1}</p>
+                      )}
+                      <p
+                        onClick={() =>
+                          handleQuantityChange(id, (quantities[id] || 1) + 1)
+                        }
+                      >
+                        +
+                      </p>
+                    </button>
+                  </div>
+                  {!cart?.cart_items?.some(
+                    (item) => item.product_id === id
+                  ) && (
+                    <button
+                      onClick={() => addToCartHandler(id)}
+                      className="flex-1 bg-primary text-white rb-bold w-full text-center py-2 flex items-center justify-center gap-x-2"
+                    >
+                      {addToCartLoadingItems[id] ? <Spinner /> : "Add To Cart"}
+                    </button>
+                  )}
+                </div>
+                {/* <div
+                  className={`flex gap-x-2 mt-2 md:w-3/4 transform md:translate-y-[30%] md:opacity-0 md:select-none md:group-hover:select-auto md:group-hover:opacity-100 md:group-hover:translate-y-0 transition-transform duration-500`}
+                >
+                  <button className="bg-dark text-center uppercase rb-bold py-2 flex-1 text-white w-full">
+                    View Details
+                  </button>
+                  {quantity?.free_quantity === 0 ? (
+                    <button className="border bg-gray-500 text-white text-center uppercase rb-bold py-2 flex-1 w-full">
+                      Contact Us
+                    </button>
+                  ) : (
+                    <button className="border bg-primary text-white text-center uppercase rb-bold py-2 flex-1 w-full">
+                      Shop Now
+                    </button>
+                  )}
+                </div> */}
+              </Link>
+            )
           )}
         </div>
-
-        {totalPages > 1 && !isLoading && (
+        {totalPages > 1 && (
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

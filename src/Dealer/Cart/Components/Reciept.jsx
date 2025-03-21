@@ -1,129 +1,158 @@
 import Container from "Components/Container/Container";
 import Logo from "assests/logo.png";
 import mapImage from "assests/about/map.jpeg";
+import { DealerCartContext } from "context/DealerCart/DealerCartContext";
+import { DealerLoginContext } from "context/Auth/DealerContext";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Spinner from "Components/RequestHandler/Spinner";
 
+import useGetDataToken from "Hooks/Fetching/useGetDataToken.jsx";
+import usePostToken from "Hooks/Fetching/usePostToken";
 const Reciept = () => {
-  const data = [
-    {
-      name: "GEOLANDAR - AT/G015",
-      price: "200$",
-      qnt: "2",
-      subTotal: "400$",
-    },
-    {
-      name: "GEOLANDAR - AT/G015",
-      price: "200$",
-      qnt: "2",
-      subTotal: "400$",
-    },
-  ];
+  const { cart } = useContext(DealerCartContext);
+  const { fetchData } = useGetDataToken();
+  const { postData } = usePostToken();
+  const { dealerData, dealerToken } = useContext(DealerLoginContext);
+  const navigate = useNavigate();
+  // date
+  const now = new Date();
+  const formattedDate = now.toLocaleDateString("en-US");
+  // payment
+  const [paymentIsLoading, setPaymentIsLoading] = useState(false);
+  const payNowHandler = async () => {
+    try {
+      setPaymentIsLoading(true);
+      const data = await fetchData(
+        `yokohama/areeba/pay/${cart?.cart_id}`,
+        dealerToken
+      );
+      if (data) {
+        localStorage.setItem("payment_ref", data?.payment_ref);
+        localStorage.setItem("order_id", data?.order_id);
+        window.location.href = data?.url_payment;
+      }
+    } catch (error) {
+    } finally {
+      setPaymentIsLoading(false);
+    }
+  };
+
+  const onAccountHandler = async () => {
+    try {
+      setPaymentIsLoading(true);
+      const data = await postData(
+        `yokohama/cart/confirm?&cart_id=${cart?.cart_id}`,
+        dealerToken
+      );
+      if (data) {
+        navigate("/success");
+      }
+    } catch (error) {
+    } finally {
+      setPaymentIsLoading(false);
+    }
+  };
   return (
     <div className="my-secondary">
       <Container>
         <div className=" w-3/4 mx-auto ">
           <div className="flex items-center justify-between bg-[#efefef] px-6 py-4">
-            <img className="w-56" src={Logo} alt="" />
+            <img className="w-44" src={Logo} alt="" />
 
             <div className="flex items-center gap-x-4">
               <p className="uppercase rb-bold border-r border-black px-2  text-[#333]">
-                user name
+                {dealerData?.username}
+              </p>
+              <p className="uppercase rb-bold border-r border-black px-2  text-[#333]">
+                {dealerData?.email}
+              </p>
+              <p className="uppercase rb-bold border-r border-black px-2  text-[#333]">
+                {dealerData?.phone}
+                {/* 123 */}
               </p>
               <p className="rb-bold uppercase border-r border-black px-2  text-[#333]">
-                12/12/2012
+                {formattedDate}
               </p>
-              <p className="rb-bold uppercase  text-[#333]">order #78347</p>
-            </div>
-          </div>
-
-          <div className="flex my-10">
-            <div className="flex-1">
-              <p className="text-xl text-primary mb-2 rb-bold uppercase">
-                Shipping address
+              <p className="rb-bold uppercase  text-[#333]">
+                {" "}
+                order #{cart?.cart_id}
               </p>
-
-              <div className="text-sm rb-bold">
-                <p>Chevrolet, Palm Building, 9th floor</p>
-                <p>User Name</p>
-                <p>+96171828039</p>
-                <p>email@test.com</p>
-              </div>
-
-              <img className="mt-4" src={mapImage} alt="" />
             </div>
-            <div className="flex-1">
-              <p className="text-xl text-primary mb-2 rb-bold uppercase">
-                Billing address
-              </p>
-
-              <div className="text-sm rb-bold">
-                <p>Chevrolet, Palm Building, 9th floor</p>
-                <p>User Name</p>
-                <p>+96171828039</p>
-                <p>email@test.com</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-10 border-t rb-bold">
-            <p className="text-xl text-primary mb-2  uppercase">
-              Payment method
-            </p>
-            <p className="text-sm">Online payment</p>
           </div>
 
           <div className="mt-10 w-full flex flex-col">
-            <thead className="w-full flex-1">
-              <tr className="bg-[#efefef] text-[#333] flex justify-between">
-                <th className="min-w-[150px] lg:min-w-auto text-center py-4 uppercase rb-bold">
-                  Product
-                </th>
-                <th className="min-w-[150px] lg:min-w-auto text-center py-4 uppercase rb-bold">
-                  Price
-                </th>
-                <th className="min-w-[150px] lg:min-w-auto text-center py-4 uppercase rb-bold">
-                  QTY
-                </th>
-                <th className="min-w-[150px] lg:min-w-auto text-center py-4 uppercase rb-bold">
-                  Subtotal
-                </th>
-              </tr>
-            </thead>
-            <tbody className="w-full flex-1">
-              {data.map((order, index) => (
-                <tr className="flex justify-between border-b" key={index}>
-                  <td className="min-w-[150px] lg:min-w-auto text-center py-6  rb-bold">
-                    {order.name}
-                  </td>
-                  <td className="min-w-[150px] lg:min-w-auto text-center py-6  rb-bold">
-                    {order.price}
-                  </td>
-                  <td className="min-w-[150px] lg:min-w-auto text-center py-6  rb-bold">
-                    {order.qnt}
-                  </td>
-                  <td className="min-w-[150px] lg:min-w-auto text-center py-4  rb-bold">
-                    {order.subTotal}
-                  </td>
+            <table>
+              <thead>
+                <tr className="bg-[#efefef] text-[#333]">
+                  <th className="py-4 uppercase rb-bold w-1/4">Product</th>
+                  <th className="py-4 uppercase rb-bold w-1/4">Price</th>
+                  <th className="py-4 uppercase rb-bold w-1/4">QTY</th>
+                  <th className="py-4 uppercase rb-bold w-1/4">Subtotal</th>
                 </tr>
-              ))}
-            </tbody>
+              </thead>
+              <tbody>
+                {cart?.cart_items?.map((order, index) => (
+                  <tr className="border-b" key={index}>
+                    <td className="py-6 rb-bold text-center">{order.name}</td>
+                    <td className="py-6 rb-bold text-center">
+                      {Number(order.retail_price).toFixed(2)}$
+                    </td>
+                    <td className="py-6 rb-bold text-center">
+                      {order.quantity}
+                    </td>
+                    <td className="py-4 rb-bold text-center">
+                      {(Number(order.retail_price) * order.quantity).toFixed(2)}
+                      $
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
-            <div className="w-1/4 mt-6 ml-auto flex flex-col gap-y-2">
+            <div className="w-1/3 mt-6 ml-auto flex flex-col gap-y-2">
               <span className="flex items-center justify-between text-[#333] rb-bold border-b pb-2">
                 <p>Subtotal</p>
-                <p>5000$</p>
+                <p>
+                  {Number(
+                    cart?.invoice_details?.[0].untaxed_amount_total
+                  ).toFixed(2)}{" "}
+                  $
+                </p>
               </span>
               <span className="flex items-center justify-between text-[#333] rb-bold border-b pb-2">
                 <p>Taxes </p>
-                <p>200$</p>
+                <p>
+                  {Number(cart?.invoice_details?.[0]?.amount_tax).toFixed(2)} $
+                </p>
               </span>
               <span className="flex items-center justify-between text-[#333] rb-bold border-b pb-2">
                 <p>Shipping </p>
                 <p>0</p>
               </span>
               <span className="flex items-center justify-between text-[#333] rb-bold border-b pb-2">
-                <p>Total 1</p>
-                <p>1000$</p>
+                <p>Total</p>
+                <p>
+                  {Number(cart?.invoice_details?.[0]?.amount_total).toFixed(2)}{" "}
+                  $
+                </p>
               </span>
+
+              <div className=" mt-4 flex items-center gap-x-2">
+                <button
+                  onClick={onAccountHandler}
+                  className="flex-1 bg-primary py-2 text-white flex items-center justify-center "
+                >
+                  {paymentIsLoading ? <Spinner /> : "On Account"}
+                </button>
+
+                <button
+                  onClick={payNowHandler}
+                  className="flex-1 bg-primary py-2 text-white flex items-center justify-center "
+                >
+                  {paymentIsLoading ? <Spinner /> : " Pay Now"}
+                </button>
+              </div>
             </div>
           </div>
         </div>

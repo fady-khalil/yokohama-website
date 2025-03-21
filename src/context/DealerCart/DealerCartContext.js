@@ -24,11 +24,12 @@ export const DealerCartProvider = ({ children }) => {
   // detel item from car
   const [loadingItems, setLoadingItems] = useState({});
 
-  // useEffect(() => {
-  //   if (dealerIsSignIn) {
-  //     getCartData();
-  //   }
-  // }, [dealerIsSignIn]);
+  useEffect(() => {
+    if (dealerIsSignIn) {
+      console.log("Getting dealer cart - cart context");
+      getCartData();
+    }
+  }, [dealerIsSignIn]);
 
   const displayProductHandler = (product) => {
     setDisplayProduct(product);
@@ -38,6 +39,7 @@ export const DealerCartProvider = ({ children }) => {
     try {
       setcCatIsLoading(true);
       const cartData = await fetchData("yokohama/cart/mine", dealerToken);
+      console.log(cartData, "cart context");
       setCart(cartData?.data);
     } catch (error) {
       setIsError(true);
