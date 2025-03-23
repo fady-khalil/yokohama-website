@@ -70,7 +70,7 @@ const Filter = ({
         <X size={24} />
       </button>
 
-      {allData && allData?.size_name?.length > 0 && (
+      {allData && allData?.width?.length === 1 && allData.width[0] === 0.0 && (
         <BySizeName
           selectedSizeName={selectedSizeName}
           setSelectedSizeName={setSelectedSizeName}
@@ -81,21 +81,22 @@ const Filter = ({
       )}
 
       {/* tire size */}
-      {allData && allData?.size_name?.length === 0 && (
-        <ByTireSize
-          selectedWidth={selectedWidth}
-          setSelectedWidth={setSelectedWidth}
-          setSelectedAspectRation={setSelectedAspectRation}
-          selectedAspectRation={selectedAspectRation}
-          selectedDiameter={selectedDiameter}
-          setSelectedDiameter={setSelectedDiameter}
-          onCloseFiler={onHandleFilterVisible}
-          onHandleWidth={onHandleWidth}
-          onHandleAspectRatio={onHandleAspectRatio}
-          onHandleDiameter={onHandleDiameter}
-          data={allData}
-        />
-      )}
+      {allData &&
+        !(allData?.width?.length === 1 && allData.width[0] === 0.0) && (
+          <ByTireSize
+            selectedWidth={selectedWidth}
+            setSelectedWidth={setSelectedWidth}
+            setSelectedAspectRation={setSelectedAspectRation}
+            selectedAspectRation={selectedAspectRation}
+            selectedDiameter={selectedDiameter}
+            setSelectedDiameter={setSelectedDiameter}
+            onCloseFiler={onHandleFilterVisible}
+            onHandleWidth={onHandleWidth}
+            onHandleAspectRatio={onHandleAspectRatio}
+            onHandleDiameter={onHandleDiameter}
+            data={allData}
+          />
+        )}
       <SortBy onPriceHighToLow={onPriceHighToLow} />
 
       {/* offers */}
@@ -120,7 +121,7 @@ const Filter = ({
             selectedCategoryId={selectedCategoryId}
             setSelectedCategoryId={setSelectedCategoryId}
             onHanldeCategoryId={onHanldeCategoryId}
-            data={allData?.ctegories}
+            data={allData?.categories}
             onCloseFiler={onHandleFilterVisible}
           />
           <ByClassification

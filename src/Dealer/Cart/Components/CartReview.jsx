@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
 import Container from "Components/Container/Container";
-import brand1 from "assests/brand-cart.jpg";
 import { Trash } from "@phosphor-icons/react";
 import MainButton from "Components/Buttons/MainButton";
 import { DealerCartContext } from "context/DealerCart/DealerCartContext";
@@ -8,25 +7,16 @@ import EmptyCart from "Components/Screens/EmptyCart";
 import Spinner from "Components/RequestHandler/Spinner";
 import { Link } from "react-router-dom";
 import usePostToken from "Hooks/Fetching/usePostToken";
-import { DealerLoginContext } from "context/Auth/DealerContext";
 import { useNavigate } from "react-router-dom";
 const CartReview = ({ onSelectingTabs }) => {
-  const { dealerToken } = useContext(DealerLoginContext);
   const {
-    displayProductHandler,
-    displayProduct,
-
     cart,
     cartIsLoading,
-
-    AddToCart,
-    addToCartLoading,
 
     removeFromCart,
     loadingItems,
 
     updateCart,
-    clearCart,
   } = useContext(DealerCartContext);
 
   const handleQuantityChange = (productId, quantity) => {
@@ -41,26 +31,6 @@ const CartReview = ({ onSelectingTabs }) => {
       return total + item.price * item.quantity;
     }, 0);
   };
-
-  const { postData } = usePostToken();
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
-  // const confirmOrderHandler = async () => {
-  //   try {
-  //     setIsLoading(true);
-  //     const data = await postData(
-  //       `/yokohama/cart/confirm?&cart_id=${cart?.cart_id}`,
-  //       dealerToken
-  //     );
-  //     if (data?.is_success) {
-  //       clearCart();
-  //       navigate("/Success-Page");
-  //     }
-  //   } catch (error) {
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
 
   if (cartIsLoading)
     return (
@@ -86,43 +56,47 @@ const CartReview = ({ onSelectingTabs }) => {
                       className="flex flex-wrap gap-6 items-center justify-between w-full border-b pb-3"
                       key={index}
                     >
-                      <img className="w-24" src={image} alt="" />
-                      <div>
+                      <div className="lg:flex-1">
+                        <img className="w-32" src={image} alt="" />
+                      </div>
+                      <div className="flex-[3]">
                         <p className=" min-w-[fit-content] font-medium">
                           {name}
                         </p>
-                        <span className="mt-2 flex items-center gap-x-2">
+                        <span className="mt-2 flex items-center text-red-500">
                           <p>{price}</p>
                           <p>{currency}</p>
                         </span>
                       </div>
-                      <div className="border py-2 px-4 flex items-center justify-between gap-x-6">
+                      <div className="flex-1 gap-x-2 flex items-center justify-end lg:justify-start">
+                        <div className="border py-2 px-4 flex items-center justify-between gap-x-6">
+                          <button
+                            onClick={() =>
+                              handleQuantityChange(product_id, quantity + 1)
+                            }
+                          >
+                            +
+                          </button>
+                          <p>{quantity}</p>
+                          <button
+                            onClick={() =>
+                              handleQuantityChange(product_id, quantity - 1)
+                            }
+                          >
+                            -
+                          </button>
+                        </div>
                         <button
-                          onClick={() =>
-                            handleQuantityChange(product_id, quantity + 1)
-                          }
+                          onClick={() => removeFromCart(product_id)}
+                          className=" flex items-center justify-center"
                         >
-                          +
-                        </button>
-                        <p>{quantity}</p>
-                        <button
-                          onClick={() =>
-                            handleQuantityChange(product_id, quantity - 1)
-                          }
-                        >
-                          -
+                          {loadingItems[product_id] ? (
+                            <Spinner />
+                          ) : (
+                            <Trash weight="fill" size={26} />
+                          )}
                         </button>
                       </div>
-                      <button
-                        onClick={() => removeFromCart(product_id)}
-                        className=" flex items-center justify-center"
-                      >
-                        {loadingItems[product_id] ? (
-                          <Spinner />
-                        ) : (
-                          <Trash weight="fill" size={26} />
-                        )}
-                      </button>
                     </div>
                   )
                 )}
@@ -162,13 +136,11 @@ const CartReview = ({ onSelectingTabs }) => {
                       Total
                     </p>
                     <p className="text-white text-xl rb-bold mt-4 mb-2">
-                      {cart?.invoice_details[0]?.amount_total}{" "}
+                      {cart?.invoice_details[0]?.amount_total.toFixed(2)}{" "}
                       {cart?.invoice_details[0]?.currency}
                     </p>
                   </span>
-                  <p className="text-[#aaa] text-sm">
-                    By completing this order you will earn 520 pts
-                  </p>
+
                   <div className="mt-6 w-full flex-1 flex">
                     <MainButton
                       onClick={() => onSelectingTabs(3)}

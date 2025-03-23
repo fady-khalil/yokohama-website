@@ -79,15 +79,13 @@ const Shop = () => {
         `yokohama/categories/subcategs/all?category_id=${id}${
           classificationID ? `&classification_id=${classificationID}` : ""
         }${brandId ? `&brand_id=${brandId}` : ""}${
-          categoryId ? `&kind_id=[${categoryId}]` : ""
+          categoryId ? `&kind_id=${categoryId}` : ""
         }${width ? `&width=${width}` : ""}${
           aspectRatio ? `&aspect=${aspectRatio}` : ""
         }${diameter ? `&inch=${diameter}` : ""}${
           sizeName ? `&size=${sizeName}` : ""
         }&page=${page}`
       );
-
-      console.log(result);
 
       // try {
       //   const result = await fetchData(

@@ -4,6 +4,8 @@ import Spinner from "Components/RequestHandler/Spinner";
 import { UserLoginContext } from "context/Auth/UserLoginContext.js";
 import { UserCartContext } from "context/User/CartContext.js";
 import useGetDataToken from "Hooks/Fetching/useGetDataToken.jsx";
+import { useNavigate } from "react-router-dom";
+import usePostToken from "Hooks/Fetching/usePostToken.jsx";
 
 const DisplayReceipt = ({
   userData,
@@ -24,11 +26,14 @@ const DisplayReceipt = ({
   );
 
   const { fetchData } = useGetDataToken();
+  const { postData } = usePostToken();
   const { userToken } = useContext(UserLoginContext);
   const { setPaymentRef, setOrderId } = useContext(UserCartContext);
   const [isLoading, setIsLoading] = useState(false);
+  const [isCashOnDeliveryLoading, setIsCashOnDeliveryLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const confirmOrderHandler = async () => {
+  const confirmOnlinePaumentOrderHandler = async () => {
     try {
       setIsLoading(true);
       const data = await fetchData(
@@ -44,6 +49,23 @@ const DisplayReceipt = ({
     } catch (error) {
     } finally {
       setIsLoading(false);
+    }
+  };
+  const confirmCashOnDeliveryOrderHandler = async () => {
+    try {
+      setIsCashOnDeliveryLoading(true);
+      const data = await postData(
+        `yokohama/cart/confirm?cart_id=${cartData?.cart_id}`,
+        userToken
+      );
+
+      if (data?.is_success) {
+        navigate("/success");
+        clearCart();
+      }
+    } catch (error) {
+    } finally {
+      setIsCashOnDeliveryLoading(false);
     }
   };
 
@@ -153,12 +175,20 @@ const DisplayReceipt = ({
             </p>
           </span>
 
-          <button
-            onClick={confirmOrderHandler}
-            className="bg-primary py-2 text-white mt-4 flex items-center justify-center "
-          >
-            {isLoading ? <Spinner /> : " Pay"}
-          </button>
+          <div className="flex gap-x-4 mt-4">
+            <button
+              onClick={confirmOnlinePaumentOrderHandler}
+              className="flex-1 bg-primary py-2 text-white flex items-center justify-center "
+            >
+              {isLoading ? <Spinner /> : " Pay Now"}
+            </button>
+            <button
+              onClick={confirmCashOnDeliveryOrderHandler}
+              className="flex-1 bg-primary py-2 text-white  flex items-center justify-center "
+            >
+              {isCashOnDeliveryLoading ? <Spinner /> : " Cash on delivery"}
+            </button>
+          </div>
         </div>
       </div>
     </div>

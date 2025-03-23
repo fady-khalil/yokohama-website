@@ -54,7 +54,7 @@ const ByTireSize = ({
           className="outline-0"
         >
           <option value="">Width</option>
-          {data?.size_width?.map((name, index) => (
+          {data?.width?.map((name, index) => (
             <option key={index} value={name}>
               {name}
             </option>
@@ -68,14 +68,14 @@ const ByTireSize = ({
           onChange={handleAspectChange}
           value={selectedAspectRation || ""}
           className={`outline-0 ${
-            !selectedWidth || !data?.size_aspects?.length ? "text-gray-400" : ""
+            !selectedWidth || !data?.aspect?.length ? "text-gray-400" : ""
           }`}
         >
           <option value="" disabled>
             Aspect Ratio
           </option>
           {selectedWidth &&
-            data?.size_aspects?.map((aspect, index) => (
+            data?.aspect?.map((aspect, index) => (
               <option key={index} value={aspect}>
                 {aspect}
               </option>
@@ -89,18 +89,18 @@ const ByTireSize = ({
           onChange={handleDiamterChange}
           value={selectedDiameter || ""}
           className={`outline-0 ${
-            !selectedWidth || !selectedAspectRation || !data?.size_inch?.length
+            !selectedWidth || !selectedAspectRation || !data?.inch?.length
               ? "text-gray-400"
               : ""
           }`}
           disabled={
-            !selectedWidth || !selectedAspectRation || !data?.size_inch?.length
+            !selectedWidth || !selectedAspectRation || !data?.inch?.length
           }
         >
           <option value="">Diameter</option>
           {selectedWidth &&
             selectedAspectRation &&
-            data?.size_inch?.map((inch, index) => (
+            data?.inch?.map((inch, index) => (
               <option key={index} value={inch}>
                 {inch}
               </option>

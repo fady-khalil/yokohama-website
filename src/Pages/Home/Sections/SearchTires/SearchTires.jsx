@@ -38,7 +38,7 @@ const SearchTires = () => {
 
   return (
     <section
-      className="pt -secondary lg:pt -primary background"
+      className="pt-secondary lg:pt-primary background"
       style={{ backgroundImage: `url(${bg})` }}
     >
       <Container>

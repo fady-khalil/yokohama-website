@@ -44,8 +44,6 @@ export const DealerLoginProvider = ({ children }) => {
     setAllDealerData(data);
   };
 
-  console.log(dealerIsSignIn, " dealerIsSignIn dealer auth  ");
-
   const handleDealerUser = (data) => {
     setDealerData(data);
     setDealerToken(data.token);

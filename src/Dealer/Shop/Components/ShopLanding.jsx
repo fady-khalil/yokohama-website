@@ -24,6 +24,8 @@ const ShopLanding = ({ selectedId }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [loadingItems, setLoadingItems] = useState({});
   const [addToCartLoadingItems, setAddToCartLoadingItems] = useState({});
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupProduct, setPopupProduct] = useState(null);
   // context
   const { dealerToken } = useContext(DealerLoginContext);
   const { AddToCart, displayProductHandler, cart, updateCart, removeFromCart } =
@@ -65,6 +67,18 @@ const ShopLanding = ({ selectedId }) => {
       await AddToCart(id);
       if (quantities[id] > 1) {
         await updateCart(id, quantities[id]);
+      }
+
+      // Get product data for the popup
+      const product = data?.products?.find((product) => product.id === id);
+      if (product) {
+        setPopupProduct(product);
+        setShowPopup(true);
+
+        // Hide popup after 3 seconds
+        setTimeout(() => {
+          setShowPopup(false);
+        }, 3000);
       }
     } finally {
       setAddToCartLoadingItems((prev) => ({ ...prev, [id]: false }));
@@ -132,7 +146,7 @@ const ShopLanding = ({ selectedId }) => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center  mt-32 h-[100vh]">
+      <div className="flex items-center justify-center mt-32 ">
         <Spinner />
       </div>
     );
@@ -141,11 +155,6 @@ const ShopLanding = ({ selectedId }) => {
   if (isError) {
     return <IsError />;
   }
-
-  // const data = await postData(
-  //   `/yokohama/cart/confirm?&cart_id=${cart?.cart_id}`,
-  //   dealerToken
-  // );
   return (
     <div className="my-primary">
       <Container>
@@ -164,10 +173,44 @@ const ShopLanding = ({ selectedId }) => {
                 onSale,
                 price_pricelist_rule,
                 qty_available,
+                quantity,
               },
               dataIndex
             ) => (
-              <Link className="group block" key={dataIndex}>
+              <Link className="group block relative" key={dataIndex}>
+                {/* Popup that shows when an item is added to cart */}
+                {showPopup && popupProduct && popupProduct.id === id && (
+                  <span
+                    className={`absolute border border-primary shadow-2xl bg-white text-black flex flex-col w-3/4 mx-auto h-auto rounded-lg p-4 bottom-[50%] left-1/2 -translate-x-1/2 z-[100] ${
+                      showPopup ? "opacity-100 visible" : "opacity-0 invisible"
+                    } transition-all duration-300`}
+                  >
+                    <div className="border-b border-primary pb-2">
+                      <p>Item(s) added to your cart</p>
+                    </div>
+
+                    <div className="flex items-center gap-x-2 my-4">
+                      <span className="flex-1">
+                        <img src={image} alt="" />
+                      </span>
+                      <span className="flex-[2]">
+                        <p className="text-sm r">{name}</p>
+                      </span>
+                      <span className="flex-1 text-center block">
+                        <p>{price_pricelist_rule}$</p>
+                      </span>
+                    </div>
+
+                    <Link
+                      className="border rounded-2xl text-center min-w-[fit-content] flex-1 flex items-center justify-center gap-x-2 capitalize bg-primary text-white py-1"
+                      to={"/my-cart"}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      View Cart
+                    </Link>
+                  </span>
+                )}
+
                 <div className="flex flex-col-reverse md:flex-row relative">
                   {onSale && (
                     <div className="absolute -top-0 -left-0 z-10">
@@ -209,63 +252,81 @@ const ShopLanding = ({ selectedId }) => {
                         Sold Out
                       </div>
                     )}
+                    {quantity?.free_quantity === 0 &&
+                      quantity?.incoming_quantity > 0 && (
+                        <div className="absolute top-0 right-0 bg-yellow-500 text-white px-4 py-1 rb-bold">
+                          Coming Soon
+                        </div>
+                      )}
                   </div>
                 </div>
 
                 <div className="flex items-center gap-x-2 mt-6 w-3/4 mxs-auto">
-                  <div className="flex-1 flex items-center gap-x-2 rb-bold text-white bg-dark relative">
-                    <button className="flex items-center flex-1 justify-between px-10 gap-x-2 px-6 py-2">
-                      <p
-                        onClick={() =>
-                          handleQuantityChange(
-                            id,
-                            Math.max(1, (quantities[id] || 1) - 1)
-                          )
-                        }
-                      >
-                        -
-                      </p>
-                      {loadingItems[id] ? (
-                        <Spinner />
-                      ) : (
-                        <p>{quantities[id] || getCartItemQuantity(id) || 1}</p>
-                      )}
-                      <p
-                        onClick={() =>
-                          handleQuantityChange(id, (quantities[id] || 1) + 1)
-                        }
-                      >
-                        +
-                      </p>
-                    </button>
-                  </div>
-                  {!cart?.cart_items?.some(
-                    (item) => item.product_id === id
-                  ) && (
-                    <button
-                      onClick={() => addToCartHandler(id)}
-                      className="flex-1 bg-primary text-white rb-bold w-full text-center py-2 flex items-center justify-center gap-x-2"
-                    >
-                      {addToCartLoadingItems[id] ? <Spinner /> : "Add To Cart"}
-                    </button>
-                  )}
-                </div>
-                {/* <div
-                  className={`flex gap-x-2 mt-2 md:w-3/4 transform md:translate-y-[30%] md:opacity-0 md:select-none md:group-hover:select-auto md:group-hover:opacity-100 md:group-hover:translate-y-0 transition-transform duration-500`}
-                >
-                  <button className="bg-dark text-center uppercase rb-bold py-2 flex-1 text-white w-full">
-                    View Details
-                  </button>
+                  {/* Conditionally render different button configurations based on quantity */}
                   {quantity?.free_quantity === 0 ? (
-                    <button className="border bg-gray-500 text-white text-center uppercase rb-bold py-2 flex-1 w-full">
-                      Contact Us
+                    // Full width button for unavailable products
+                    <button
+                      className={`flex-1 ${
+                        quantity?.incoming_quantity > 0
+                          ? "bg-yellow-500"
+                          : "bg-gray-500"
+                      } text-white rb-bold w-full text-center py-2`}
+                    >
+                      {quantity?.incoming_quantity > 0
+                        ? "Contact us for availability date"
+                        : "Contact us to check alternatives"}
                     </button>
                   ) : (
-                    <button className="border bg-primary text-white text-center uppercase rb-bold py-2 flex-1 w-full">
-                      Shop Now
-                    </button>
+                    // For available products, show quantity selector and Add to Cart
+                    <>
+                      <div className="flex-1 flex items-center gap-x-2 rb-bold text-white bg-dark relative">
+                        <button className="flex items-center flex-1 justify-between px-10 gap-x-2 px-6 py-2">
+                          <p
+                            onClick={() =>
+                              handleQuantityChange(
+                                id,
+                                Math.max(1, (quantities[id] || 1) - 1)
+                              )
+                            }
+                          >
+                            -
+                          </p>
+                          {loadingItems[id] ? (
+                            <Spinner />
+                          ) : (
+                            <p>
+                              {quantities[id] || getCartItemQuantity(id) || 1}
+                            </p>
+                          )}
+                          <p
+                            onClick={() =>
+                              handleQuantityChange(
+                                id,
+                                (quantities[id] || 1) + 1
+                              )
+                            }
+                          >
+                            +
+                          </p>
+                        </button>
+                      </div>
+                      {!cart?.cart_items?.some(
+                        (item) => item.product_id === id
+                      ) && (
+                        <button
+                          onClick={() => addToCartHandler(id)}
+                          className="flex-1 bg-primary text-white rb-bold w-full text-center py-2 flex items-center justify-center gap-x-2"
+                        >
+                          {addToCartLoadingItems[id] ? (
+                            <Spinner />
+                          ) : (
+                            "Add To Cart"
+                          )}
+                        </button>
+                      )}
+                    </>
                   )}
-                </div> */}
+                </div>
               </Link>
             )
           )}

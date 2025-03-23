@@ -1,6 +1,5 @@
 import Container from "Components/Container/Container";
 import Logo from "assests/logo.png";
-import mapImage from "assests/about/map.jpeg";
 import { DealerCartContext } from "context/DealerCart/DealerCartContext";
 import { DealerLoginContext } from "context/Auth/DealerContext";
 import { useContext, useState } from "react";
@@ -10,7 +9,7 @@ import Spinner from "Components/RequestHandler/Spinner";
 import useGetDataToken from "Hooks/Fetching/useGetDataToken.jsx";
 import usePostToken from "Hooks/Fetching/usePostToken";
 const Reciept = () => {
-  const { cart } = useContext(DealerCartContext);
+  const { cart, clearCart } = useContext(DealerCartContext);
   const { fetchData } = useGetDataToken();
   const { postData } = usePostToken();
   const { dealerData, dealerToken } = useContext(DealerLoginContext);
@@ -20,6 +19,7 @@ const Reciept = () => {
   const formattedDate = now.toLocaleDateString("en-US");
   // payment
   const [paymentIsLoading, setPaymentIsLoading] = useState(false);
+  const [onAccountLoading, setOnAccountLoading] = useState(false);
   const payNowHandler = async () => {
     try {
       setPaymentIsLoading(true);
@@ -40,17 +40,18 @@ const Reciept = () => {
 
   const onAccountHandler = async () => {
     try {
-      setPaymentIsLoading(true);
+      setOnAccountLoading(true);
       const data = await postData(
         `yokohama/cart/confirm?&cart_id=${cart?.cart_id}`,
         dealerToken
       );
       if (data) {
         navigate("/success");
+        clearCart();
       }
     } catch (error) {
     } finally {
-      setPaymentIsLoading(false);
+      setOnAccountLoading(false);
     }
   };
   return (
@@ -143,7 +144,7 @@ const Reciept = () => {
                   onClick={onAccountHandler}
                   className="flex-1 bg-primary py-2 text-white flex items-center justify-center "
                 >
-                  {paymentIsLoading ? <Spinner /> : "On Account"}
+                  {onAccountLoading ? <Spinner /> : "On Account"}
                 </button>
 
                 <button

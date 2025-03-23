@@ -6,20 +6,19 @@ import useGetDataToken from "Hooks/Fetching/useGetDataToken.jsx";
 import { UserLoginContext } from "context/Auth/UserLoginContext.js";
 
 const SuccessPage = () => {
-  // const { paymentRef, orderId } = useContext(UserCartContext);
+  const { clearCart } = useContext(UserCartContext);
   const { fetchData } = useGetDataToken();
   const { userToken } = useContext(UserLoginContext);
 
   const submitPayment = async () => {
     const paymentRef = localStorage.getItem("payment_ref");
     const orderId = localStorage.getItem("order_id");
-    console.log("paymentRef", paymentRef);
-    console.log("orderId", orderId);
     const data = await fetchData(
       `yokohama/areeba/payment/paid/${paymentRef}/${orderId}`,
       userToken
     );
-    console.log(data);
+
+    clearCart();
   };
   useEffect(() => {
     submitPayment();

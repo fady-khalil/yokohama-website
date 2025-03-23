@@ -23,10 +23,10 @@ const SelectInput = (props) => {
         className="text-black px-2 py-3 rounded-sm bg-gray-200 placeholder:text-sm"
         onChange={onChange}
         name={name}
-        value={value}
+        value={value || ""}
         id={id}
       >
-        <option value="" disabled selected>
+        <option value="" disabled>
           {placeholder}
         </option>
         {options?.map((option, index) => (

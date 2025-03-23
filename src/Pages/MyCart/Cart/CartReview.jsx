@@ -59,7 +59,7 @@ const CartReview = ({ onSelectingTabs }) => {
                         className="lg:flex-1"
                         to={`/product-detailed/${product_id}`}
                       >
-                        <img className="w-32" src={imagee} alt="" />
+                        <img className="w-32" src={image} alt="" />
                       </Link>
                       {/* name and price */}
                       <div className="flex-[3]">
