@@ -21,7 +21,7 @@ import { GuestCartContext } from "context/Guest/GuestCartContext";
 import { UserCartContext } from "context/User/CartContext";
 import { UserWishlistContext } from "context/User/WishlistContext";
 import { Link } from "react-router-dom";
-
+import BASE_URL from "Utilities/BASE_URL";
 // Constants
 const POPUP_TIMEOUT = 5000;
 
@@ -32,7 +32,7 @@ const ProductInfo = ({ product }) => {
     updateCart: guestUpdateCart,
     removeFromCart: guestRemoveFromCart,
   } = useContext(GuestCartContext);
-  const { userIsSignIn } = useContext(UserLoginContext);
+  const { userIsSignIn, userData } = useContext(UserLoginContext);
   const {
     userAddToCart,
     addToCartLoading,
@@ -52,12 +52,16 @@ const ProductInfo = ({ product }) => {
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [showStockPopup, setShowStockPopup] = useState(false);
+  const [whatsappLink, setWhatsappLink] = useState("");
+  const [isLoadingWhatsapp, setIsLoadingWhatsapp] = useState(false);
 
   useEffect(() => {
     if (userIsSignIn && cart?.cart_items) {
       const foundItem = cart.cart_items.find(
         (item) => item.product_id === product.id
       );
+      console.log(cart?.cart_items);
+      console.log(product);
 
       if (foundItem) {
         setIsInCart(true);
@@ -160,6 +164,44 @@ const ProductInfo = ({ product }) => {
     return () => clearTimeout(timer);
   }, [showStockPopup]);
 
+  const handleWhatsappClick = async (stockStatus) => {
+    setIsLoadingWhatsapp(true);
+
+    let message = "I'm interested in this product:";
+
+    if (stockStatus === "outOfStock") {
+      message = `Hello, ${
+        userIsSignIn
+          ? `My Name is ${userData?.first_name} ${userData?.last_name}, `
+          : ""
+      } I'd like to check for alternatives for this product: ${product?.name}`;
+    } else if (stockStatus === "comingSoon") {
+      message = `Hello, ${
+        userIsSignIn
+          ? `My Name is ${userData?.first_name} ${userData?.last_name}, `
+          : ""
+      } I'd like to know when this product will be available: ${product?.name}`;
+    }
+
+    try {
+      // Instead of making a direct API call with fetch,
+      // create the WhatsApp URL manually to avoid CORS issues
+      const phoneNumber = "96171121461"; // Remove the + for WhatsApp URLs
+      const productName = encodeURIComponent(product?.name || "");
+      const encodedMessage = encodeURIComponent(`${message} `);
+
+      // Create the WhatsApp URL directly
+      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+      // Open the WhatsApp link in a new tab
+      window.open(whatsappUrl, "_blank");
+    } catch (error) {
+      console.error("Error handling WhatsApp click:", error);
+    } finally {
+      setIsLoadingWhatsapp(false);
+    }
+  };
+
   const renderStockStatus = () => {
     const { free_quantity, incoming_quantity } = product?.quantity || {};
 
@@ -170,11 +212,15 @@ const ProductInfo = ({ product }) => {
             This product is currently out of stock. Talk to an expert to explore
             alternative products. Don't worry, we always have options for you.
           </p>
-          <button className="flex items-center gap-x-2 mt-4">
+          <button
+            className="flex items-center gap-x-2 mt-4"
+            onClick={() => handleWhatsappClick("outOfStock")}
+            disabled={isLoadingWhatsapp}
+          >
             <span className="block text-6xl bg-[#25D366] rounded-xl">
               <WhatsappLogo color="white" />
             </span>
-            Talk to an Expert
+            {isLoadingWhatsapp ? "Loading..." : "Talk to an Expert"}
           </button>
         </>
       );
@@ -187,11 +233,15 @@ const ProductInfo = ({ product }) => {
             Coming soon! Contact us to find out the expected availability date
             and more details.
           </p>
-          <button className="flex items-center gap-x-2 mt-4">
+          <button
+            className="flex items-center gap-x-2 mt-4"
+            onClick={() => handleWhatsappClick("comingSoon")}
+            disabled={isLoadingWhatsapp}
+          >
             <span className="block text-6xl bg-[#25D366] rounded-xl">
               <WhatsappLogo color="white" />
             </span>
-            Contact Us
+            {isLoadingWhatsapp ? "Loading..." : "Contact Us"}
           </button>
         </>
       );
@@ -206,11 +256,15 @@ const ProductInfo = ({ product }) => {
           service.
         </p>
         <p className="text-lg">Thank you for choosing us!</p>
-        <button className="flex items-center gap-x-2 mt-4">
+        <button
+          className="flex items-center gap-x-2 mt-4"
+          onClick={() => handleWhatsappClick("inStock")}
+          disabled={isLoadingWhatsapp}
+        >
           <span className="block text-6xl bg-[#25D366] rounded-xl">
             <WhatsappLogo color="white" />
           </span>
-          Need Help?
+          {isLoadingWhatsapp ? "Loading..." : "Need Help?"}
         </button>
       </>
     );
@@ -322,9 +376,8 @@ const ProductInfo = ({ product }) => {
                   </div>
 
                   <Link
-                    className=" border rounded-2xl text-center min-w-[fit-content] flex-1 flex items-center justify-center gap-x-2 capitalize bg-primary text-white py-1"
+                    className="border rounded-2xl text-center min-w-[fit-content] flex-1 flex items-center justify-center gap-x-2 capitalize bg-primary text-white py-1"
                     to={"/my-cart"}
-                    isSmall={true}
                   >
                     View Cart
                   </Link>
@@ -335,7 +388,7 @@ const ProductInfo = ({ product }) => {
                 <div className="flex-1">
                   <button
                     onClick={() => addToCartHandler(product)}
-                    className="bg-primary text-white rb-bold w-full text-center py-3 flex items-center justify-center gap-x-2"
+                    className="bg-primary text-white rb-bold w-full text-center grid  py-3 flex items-center justify-center gap-x-2"
                   >
                     {addToCartLoading ? <Spinner /> : " Add To Cart"}
                   </button>

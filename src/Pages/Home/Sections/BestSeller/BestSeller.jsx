@@ -134,10 +134,10 @@ const BestSeller = () => {
           ))}
         </Swiper>
 
-        <div className="flex flex-col md:flex-row md:items-center gap-6 pt-secondary md:justify-center lg:w-1/2 mx-auto">
+        {/* <div className="flex flex-col md:flex-row md:items-center gap-6 pt-secondary md:justify-center lg:w-1/2 mx-auto">
           <MainButton to={"/shop"}>Shop All Products</MainButton>
           <WhiteButton>Find Your Perfect Tires</WhiteButton>
-        </div>
+        </div> */}
       </Container>
     </section>
   );

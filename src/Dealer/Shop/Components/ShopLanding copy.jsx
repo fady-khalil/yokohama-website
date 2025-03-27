@@ -1,14 +1,15 @@
 import { useState, useEffect, useContext } from "react";
 import Container from "Components/Container/Container";
-import { Info, DotsThreeVertical } from "@phosphor-icons/react";
+import { Info, DotsThreeVertical, WhatsappLogo } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
 import Spinner from "Components/RequestHandler/Spinner";
+import image from "assests/product-3-removebg-preview.png";
 
 // fetcing data
 import useGetDataToken from "Hooks/Fetching/useGetDataToken";
 import IsLoading from "Components/RequestHandler/IsLoading";
 import IsError from "Components/RequestHandler/IsError";
-
+import Search from "./Search";
 // context
 import { DealerLoginContext } from "context/Auth/DealerContext";
 import { DealerCartContext } from "context/DealerCart/DealerCartContext";
@@ -18,37 +19,40 @@ const ShopLanding = ({ selectedId }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isInCart, setIsInCart] = useState(false);
-  const [quantity, setQuantity] = useState(0);
+  const [quantities, setQuantities] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [loadingItems, setLoadingItems] = useState({});
+  const [addToCartLoadingItems, setAddToCartLoadingItems] = useState({});
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupProduct, setPopupProduct] = useState(null);
+  const [showStockPopup, setShowStockPopup] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedWidth, setSelectedWidth] = useState(null);
+  const [selectedAspectRation, setSelectedAspectRation] = useState(null);
+  const [selectedDiameter, setSelectedDiameter] = useState(null);
+  const [selectedSizeName, setSelectedSizeName] = useState(null);
   // context
   const { dealerToken } = useContext(DealerLoginContext);
-  const {
-    AddToCart,
-    addToCartLoading,
-    displayProductHandler,
-    cart,
-    updateCart,
-    removeFromCart,
-  } = useContext(DealerCartContext);
+  const { AddToCart, displayProductHandler, cart, updateCart, removeFromCart } =
+    useContext(DealerCartContext);
 
   const getData = async (page = 1) => {
     setIsLoading(true);
     setIsError(false);
 
-    console.log("is called for page:", page);
-
     try {
       const result = await fetchData(
-        `yokohama/dealer/subcategs?categ_id=${selectedId}&page=${page}`,
-        dealerToken
+        `yokohama/categories/subcategs/all?category_id=${selectedId}`
       );
-      console.log(result);
+      // const result = await fetchData(
+      //   `yokohama/dealer/subcategs?categ_id=${selectedId}&page=${page}`,
+      //   dealerToken
+      // );
       setData(result);
       if (result?.total_pages) {
         setTotalPages(result.total_pages);
       }
-      // setFilteredData(result?.data || []);
     } catch (error) {
       setIsError(true);
     } finally {
@@ -56,22 +60,73 @@ const ShopLanding = ({ selectedId }) => {
     }
   };
 
-  const handleQuantityChange = (productId, quantity) => {
-    if (quantity < 1) {
-      removeFromCart(productId);
-    } else {
-      updateCart(productId, quantity);
-    }
-  };
-
-  useEffect(() => {
-    setCurrentPage(1); // Reset to page 1 when selectedId changes
-    getData(1);
-  }, [selectedId]);
-
   useEffect(() => {
     getData(currentPage);
   }, [currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1); // Reset to page 1 when selectedId changes
+    getData();
+  }, [selectedId]);
+
+  // cart
+  const addToCartHandler = async (id) => {
+    setAddToCartLoadingItems((prev) => ({ ...prev, [id]: true }));
+    try {
+      await AddToCart(id);
+      if (quantities[id] > 1) {
+        await updateCart(id, quantities[id]);
+      }
+
+      // Get product data for the popup
+      const product = data?.products?.find((product) => product.id === id);
+      if (product) {
+        setPopupProduct(product);
+        setShowPopup(true);
+
+        // Hide popup after 3 seconds
+        setTimeout(() => {
+          setShowPopup(false);
+        }, 3000);
+      }
+    } finally {
+      setAddToCartLoadingItems((prev) => ({ ...prev, [id]: false }));
+    }
+  };
+
+  const handleQuantityChange = async (productId, newQuantity) => {
+    if (newQuantity < 1) {
+      return;
+    }
+
+    // Find the product
+    const product = data?.data?.find((p) => p.id === productId);
+
+    // Check if new quantity exceeds available stock
+    if (product && newQuantity > product.quantity?.free_quantity) {
+      setSelectedProduct(product);
+      setShowStockPopup(true);
+
+      // Hide popup after 3 seconds
+      setTimeout(() => {
+        setShowStockPopup(false);
+      }, 2000);
+
+      return;
+    }
+
+    setQuantities((prev) => ({ ...prev, [productId]: newQuantity }));
+
+    // Only update cart if the product is already in cart
+    if (cart?.cart_items?.some((item) => item.product_id === productId)) {
+      setLoadingItems((prev) => ({ ...prev, [productId]: true }));
+      try {
+        await updateCart(productId, newQuantity);
+      } finally {
+        setLoadingItems((prev) => ({ ...prev, [productId]: false }));
+      }
+    }
+  };
 
   const [foundProducts, setFoundProducts] = useState();
 
@@ -84,6 +139,13 @@ const ShopLanding = ({ selectedId }) => {
           )
         )
       );
+
+      // Initialize quantities from cart items
+      const cartQuantities = {};
+      cart.cart_items.forEach((item) => {
+        cartQuantities[item.product_id] = item.quantity;
+      });
+      setQuantities(cartQuantities);
 
       // Do something with the foundItems, such as setting state
       if (foundItems?.length > 0) {
@@ -108,185 +170,337 @@ const ShopLanding = ({ selectedId }) => {
     window.scrollTo(0, 0);
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center mt-32 ">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return <IsError />;
+  }
+
   return (
     <div className="mb-primary">
       <Container>
-        <div className="flex items-center justify-end gap-x-6 my-8">
-          <span className="flex items-center gap-x-3 ">
-            <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-
-            <p>available</p>
-          </span>
-          <span className="flex items-center gap-x-3">
-            <span className="w-3 h-3 bg-primary rounded-full"></span>
-            <p>Not available</p>
-          </span>
-        </div>
-        <div className="overflow-scroll xl:overflow-hidden">
-          {isLoading ? (
-            <div className="flex w-max justify-center mx-auto  flex-col items-center">
-              <Spinner />
-              <p className="mt-3">Loading data...</p>
+        <Search />
+        {/* Filter UI with dropdowns */}
+        <div className="mb-6 p-4 bg-white rounded-lg shadow">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
+            {/* Brands Filter */}
+            <div className="border rounded-lg p-3">
+              <h3 className="font-semibold mb-2">Brands</h3>
+              <select
+                className="w-full p-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Select Brand
+                </option>
+                {data?.brands?.map((brand) => (
+                  <option key={brand.id} value={brand.id}>
+                    {brand.name}
+                  </option>
+                ))}
+              </select>
             </div>
-          ) : (
-            <table className="w-full ">
-              <thead>
-                <tr className="bg-primary text-white">
-                  <th className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 uppercase rb-bold text-sm">
-                    <span className="flex items-center justify-center ">
-                      <DotsThreeVertical size={32} />
-                      <p>Tire Size</p>
-                    </span>
-                  </th>
-                  <th className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 uppercase rb-bold text-sm">
-                    <span className="flex items-center justify-center ">
-                      <DotsThreeVertical size={32} />
-                      <p>Brand</p>
-                    </span>
-                  </th>
-                  <th className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 uppercase rb-bold text-sm">
-                    <span className="flex items-center justify-center ">
-                      <DotsThreeVertical size={32} />
-                      <p>Pattern</p>
-                    </span>
-                  </th>
-                  <th className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 uppercase rb-bold text-sm">
-                    <span className="flex items-center justify-center ">
-                      <DotsThreeVertical size={32} />
-                      <p>Price</p>
-                    </span>
-                  </th>
-                  <th className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 uppercase rb-bold text-sm">
-                    <span className="flex items-center justify-center ">
-                      <DotsThreeVertical size={32} />
-                      <p>Discount</p>
-                    </span>
-                  </th>
-                  <th className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 uppercase rb-bold text-sm">
-                    <span className="flex items-center justify-center ">
-                      <DotsThreeVertical size={32} />
-                      <p>available QTY</p>
-                    </span>
-                  </th>
-                  <th className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 uppercase rb-bold text-sm">
-                    <span className="flex items-center justify-center ">
-                      <DotsThreeVertical size={32} />
-                      <p>QTY</p>
-                    </span>
-                  </th>
-                  <th className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 uppercase rb-bold text-sm">
-                    Subtotal
-                  </th>
-                  <th className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 uppercase rb-bold text-sm"></th>
-                  <th className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 uppercase rb-bold text-sm"></th>
-                </tr>
-              </thead>
 
-              <tbody className="">
-                {data?.products?.map(
-                  (
-                    {
-                      id,
-                      name,
-                      price,
-                      brand,
-                      pattern,
-                      discount,
-                      qty_available,
-                    },
-                    index
-                  ) => {
-                    const isProductInCart = foundProducts?.some(
-                      (product) => product.id === id
-                    );
-                    const cartQuantity = getCartItemQuantity(id);
+            {/* Categories Filter */}
+            <div className="border rounded-lg p-3">
+              <h3 className="font-semibold mb-2">Categories</h3>
+              <select
+                className="w-full p-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Select Category
+                </option>
+                {data?.categories?.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-                    return (
-                      <tr key={id}>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b rb-bold text-sm">
-                          <Link to={`/product-detailed/${id}`}>{name}</Link>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b rb-bold text-sm">
-                          <Link to={`/product-detailed/${id}`}>{brand}</Link>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b rb-bold text-sm">
-                          <Link to={`/product-detailed/${id}`}>{pattern}</Link>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b rb-bold text-sm">
-                          <Link to={`/product-detailed/${id}`}>
-                            {price} USD
-                          </Link>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b rb-bold text-sm">
-                          <p>{discount}</p>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b rb-bold text-sm">
-                          <div className="flex items-center gap-x-2 justify-center">
-                            <span
-                              className={`w-3 h-3 ${
-                                qty_available > 0
-                                  ? "bg-green-500"
-                                  : "bg-primary"
-                              } rounded-full block`}
-                            ></span>
-                            {qty_available}
-                          </div>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b rb-bold text-sm">
-                          <span className="w-[80%] mx-auto flex items-center gap-x-4 justify-between px-2 py-1 border">
-                            <button
-                              disabled={!isProductInCart}
-                              onClick={() =>
-                                handleQuantityChange(id, cartQuantity + 1)
-                              }
-                            >
-                              +
-                            </button>
-                            <p>{cartQuantity}</p>
-                            <button
-                              disabled={!isProductInCart}
-                              onClick={() =>
-                                handleQuantityChange(id, cartQuantity - 1)
-                              }
-                            >
-                              -
-                            </button>
-                          </span>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b rb-bold text-sm">
-                          <p>Sub Total</p>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b rb-bold text-sm">
-                          <button
-                            onClick={() => AddToCart(id)}
-                            className={`px-4 py-1.5 rb-bold text-sm text-white uppercase ${
-                              isProductInCart ? "bg-primary" : "bg-black"
-                            }`}
-                          >
-                            {addToCartLoading[id] ? (
-                              <Spinner isSmall={true} />
-                            ) : isProductInCart ? (
-                              "In your cart"
-                            ) : (
-                              "Add to cart"
-                            )}
-                          </button>
-                        </td>
-                        <td className="min-w-[150px] xl:min-w-[fit-content] text-center py-4 border-b rb-bold text-sm">
-                          <button className="text-white bg-primary p-1 rounded-full">
-                            <Info weight="fill" />
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  }
-                )}
-              </tbody>
-            </table>
-          )}
+            {/* Conditional Size Filters */}
+            {data?.width?.length === 1 && data.width[0] === 0.0 ? (
+              // By Size Name Filter
+              <div className="border rounded-lg p-3">
+                <h3 className="font-semibold mb-2">By Size</h3>
+                <select
+                  className="w-full p-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  value={selectedSizeName || ""}
+                  onChange={(e) => {
+                    setSelectedSizeName(e.target.value);
+                    // Add your onHandleSizeName logic here
+                  }}
+                >
+                  <option value="">Select Size</option>
+                  {data?.size_name?.map((name, index) => (
+                    <option key={index} value={name}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              // Tire Size Filters
+              <div className="border rounded-lg p-3">
+                <h3 className="font-semibold mb-2">Tire Size</h3>
+                <div className="grid grid-cols-3 gap-2">
+                  {/* Width */}
+                  <select
+                    className="w-full p-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    value={selectedWidth || ""}
+                    onChange={(e) => {
+                      const newWidth = e.target.value
+                        ? parseFloat(e.target.value)
+                        : null;
+                      setSelectedWidth(newWidth);
+                      setSelectedAspectRation(null);
+                      setSelectedDiameter(null);
+                      // Add your onHandleWidth logic here
+                    }}
+                  >
+                    <option value="">Width</option>
+                    {data?.width?.map((width, index) => (
+                      <option key={index} value={width}>
+                        {width}
+                      </option>
+                    ))}
+                  </select>
+
+                  {/* Aspect Ratio */}
+                  <select
+                    className={`w-full p-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
+                      !selectedWidth ? "opacity-50" : ""
+                    }`}
+                    value={selectedAspectRation || ""}
+                    onChange={(e) => {
+                      const newAspect = e.target.value
+                        ? parseFloat(e.target.value)
+                        : null;
+                      setSelectedAspectRation(newAspect);
+                      setSelectedDiameter(null);
+                      // Add your onHandleAspectRatio logic here
+                    }}
+                    disabled={!selectedWidth}
+                  >
+                    <option value="">Aspect</option>
+                    {selectedWidth &&
+                      data?.aspect?.map((aspect, index) => (
+                        <option key={index} value={aspect}>
+                          {aspect}
+                        </option>
+                      ))}
+                  </select>
+
+                  {/* Diameter */}
+                  <select
+                    className={`w-full p-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
+                      !selectedWidth || !selectedAspectRation
+                        ? "opacity-50"
+                        : ""
+                    }`}
+                    value={selectedDiameter || ""}
+                    onChange={(e) => {
+                      const newDiameter = e.target.value
+                        ? parseFloat(e.target.value)
+                        : null;
+                      setSelectedDiameter(newDiameter);
+                      // Add your onHandleDiameter logic here
+                    }}
+                    disabled={!selectedWidth || !selectedAspectRation}
+                  >
+                    <option value="">Diameter</option>
+                    {selectedWidth &&
+                      selectedAspectRation &&
+                      data?.inch?.map((inch, index) => (
+                        <option key={index} value={inch}>
+                          {inch}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              </div>
+            )}
+
+            {/* Classifications Filter */}
+            <div className="border rounded-lg p-3">
+              <h3 className="font-semibold mb-2">Classifications</h3>
+              <select
+                className="w-full p-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Select Classification
+                </option>
+                {data?.classification?.map((classification) => (
+                  <option key={classification.id} value={classification.id}>
+                    {classification.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+        <div className="overflow-x-auto">
+          {/* Table Header */}
+          <div className="flex w-full bg-gray-100 p-4 rounded-t-lg">
+            <div className="flex-[2] font-semibold">Tire Size</div>
+            <div className="flex-1 font-semibold">Pattern</div>
+            <div className="flex-1 font-semibold ">Original Price</div>
+            <div className="flex-1 font-semibold ">Price List</div>
+            <div className="flex-1 font-semibold ">Availability</div>
+            <div className="w-32"></div> {/* Spacer for quantity column */}
+            <div className="w-32"></div> {/* Spacer for add to cart column */}
+          </div>
+
+          {/* Table Body */}
+          {data?.data?.map((product) => (
+            <div
+              key={product.id}
+              className="flex w-full border-b p-4 items-center"
+            >
+              <div className="flex-[2]">{product.name}</div>
+              <div className="flex-1">{product.pattern}</div>
+              <div className="flex-1 ">
+                ${product.original_price?.toFixed(2)}
+              </div>
+              <div className="flex-1 ">${product.price?.toFixed(2)}</div>
+              <div
+                className={`flex-1 ${
+                  product.quantity?.free_quantity > 0
+                    ? "text-green-500"
+                    : product.quantity?.free_quantity === 0 &&
+                      product.quantity?.incoming_quantity > 0
+                    ? "text-yellow-500"
+                    : "text-red-500"
+                }`}
+              >
+                {product.quantity?.free_quantity > 0
+                  ? "In Stock"
+                  : product.quantity?.free_quantity === 0 &&
+                    product.quantity?.incoming_quantity > 0
+                  ? "Coming Soon"
+                  : "Out of Stock"}
+              </div>
+              <div className="flex-1 relative">
+                {/* Add the stock popup */}
+                {showStockPopup &&
+                  selectedProduct &&
+                  selectedProduct.id === product.id && (
+                    <div className="absolute -bottom-[200%] left0 bg-white border border-primary w-full h-auto shadow-lg rounded-lg p-4 z-[100]">
+                      <div className="border-b border-primary pb-2">
+                        <p className="text-amber-600 font-medium">
+                          Limited Stock Notice
+                        </p>
+                      </div>
+                      <div className="my-4">
+                        <p>
+                          Sorry, we have only{" "}
+                          {selectedProduct?.quantity?.free_quantity} unit
+                          {selectedProduct?.quantity?.free_quantity !== 1
+                            ? "s"
+                            : ""}{" "}
+                          available in stock.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                <div className="flex justify-center items-center space-x-4">
+                  {product.quantity?.free_quantity > 0 ? (
+                    <>
+                      <button
+                        className="px-2 py-1 bg-gray-200 rounded"
+                        onClick={() =>
+                          handleQuantityChange(
+                            product.id,
+                            (quantities[product.id] || 1) - 1
+                          )
+                        }
+                        disabled={loadingItems[product.id]}
+                      >
+                        -
+                      </button>
+                      <span>{quantities[product.id] || 1}</span>
+                      <button
+                        className="px-2 py-1 bg-gray-200 rounded"
+                        onClick={() =>
+                          handleQuantityChange(
+                            product.id,
+                            (quantities[product.id] || 1) + 1
+                          )
+                        }
+                        disabled={loadingItems[product.id]}
+                      >
+                        +
+                      </button>
+                    </>
+                  ) : product.quantity?.free_quantity === 0 &&
+                    product.quantity?.incoming_quantity > 0 ? (
+                    <span className="flex text-xs">
+                      Contact us for availability date
+                    </span>
+                  ) : (
+                    <span className="text-xs flex">
+                      Contact us to check alternatives
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="w-32">
+                <div className="flex justify-center">
+                  {product.quantity?.free_quantity > 0 ? (
+                    <label className="inline-flex items-center">
+                      <input
+                        type="checkbox"
+                        className={`form-checkbox h-5 w-5 border-red-500 border text-red-500 accent-red-500 ${
+                          cart?.cart_items?.some(
+                            (item) => item.product_id === product.id
+                          )
+                            ? "checked:bg-red-500 checked:border-red-500"
+                            : ""
+                        }`}
+                        checked={cart?.cart_items?.some(
+                          (item) => item.product_id === product.id
+                        )}
+                        onChange={() => {
+                          if (
+                            cart?.cart_items?.some(
+                              (item) => item.product_id === product.id
+                            )
+                          ) {
+                            removeFromCart(product.id);
+                          } else {
+                            addToCartHandler(product.id);
+                          }
+                        }}
+                        disabled={addToCartLoadingItems[product.id]}
+                      />
+                      {addToCartLoadingItems[product.id] && (
+                        <span className="ml-2">
+                          <Spinner small />
+                        </span>
+                      )}
+                    </label>
+                  ) : (
+                    <button className="text-xs text-gray-500">
+                      <WhatsappLogo size={24} color="#25D366" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
-        {totalPages > 1 && !isLoading && (
+        {/* Show popup when item is added to cart */}
+
+        {totalPages > 1 && (
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

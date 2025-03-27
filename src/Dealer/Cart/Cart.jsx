@@ -35,11 +35,7 @@ const MyCart = ({ onSelectingTabs, activeTabs }) => {
   }, [selectedTabs]);
   return (
     <section className="">
-      <CartTabs
-        activeTabs={selectedTabs}
-        onSelectingTabs={selectedTabsHandler}
-      />
-      {selectedComponent}
+      <Reciept />
     </section>
   );
 };

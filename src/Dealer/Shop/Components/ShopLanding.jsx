@@ -1,15 +1,12 @@
 import { useState, useEffect, useContext } from "react";
 import Container from "Components/Container/Container";
-import { Info, DotsThreeVertical } from "@phosphor-icons/react";
-import { Link } from "react-router-dom";
+import { WhatsappLogo } from "@phosphor-icons/react";
 import Spinner from "Components/RequestHandler/Spinner";
-import image from "assests/product-3-removebg-preview.png";
 
 // fetcing data
 import useGetDataToken from "Hooks/Fetching/useGetDataToken";
-import IsLoading from "Components/RequestHandler/IsLoading";
 import IsError from "Components/RequestHandler/IsError";
-
+import Search from "./Search";
 // context
 import { DealerLoginContext } from "context/Auth/DealerContext";
 import { DealerCartContext } from "context/DealerCart/DealerCartContext";
@@ -26,9 +23,15 @@ const ShopLanding = ({ selectedId }) => {
   const [addToCartLoadingItems, setAddToCartLoadingItems] = useState({});
   const [showPopup, setShowPopup] = useState(false);
   const [popupProduct, setPopupProduct] = useState(null);
+  const [showStockPopup, setShowStockPopup] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedWidth, setSelectedWidth] = useState(null);
+  const [selectedAspectRation, setSelectedAspectRation] = useState(null);
+  const [selectedDiameter, setSelectedDiameter] = useState(null);
+  const [selectedSizeName, setSelectedSizeName] = useState(null);
   // context
   const { dealerToken } = useContext(DealerLoginContext);
-  const { AddToCart, displayProductHandler, cart, updateCart, removeFromCart } =
+  const { AddToCart, cart, updateCart, removeFromCart, updateCartLoading } =
     useContext(DealerCartContext);
 
   const getData = async (page = 1) => {
@@ -37,9 +40,12 @@ const ShopLanding = ({ selectedId }) => {
 
     try {
       const result = await fetchData(
-        `yokohama/dealer/subcategs?categ_id=${selectedId}&page=${page}`,
-        dealerToken
+        `yokohama/categories/subcategs/all?category_id=${selectedId}`
       );
+      // const result = await fetchData(
+      //   `yokohama/dealer/subcategs?categ_id=${selectedId}&page=${page}`,
+      //   dealerToken
+      // );
       setData(result);
       if (result?.total_pages) {
         setTotalPages(result.total_pages);
@@ -89,6 +95,23 @@ const ShopLanding = ({ selectedId }) => {
     if (newQuantity < 1) {
       return;
     }
+
+    // Find the product
+    const product = data?.data?.find((p) => p.id === productId);
+
+    // Check if new quantity exceeds available stock
+    if (product && newQuantity > product.quantity?.free_quantity) {
+      setSelectedProduct(product);
+      setShowStockPopup(true);
+
+      // Hide popup after 3 seconds
+      setTimeout(() => {
+        setShowStockPopup(false);
+      }, 2000);
+
+      return;
+    }
+
     setQuantities((prev) => ({ ...prev, [productId]: newQuantity }));
 
     // Only update cart if the product is already in cart
@@ -155,182 +178,451 @@ const ShopLanding = ({ selectedId }) => {
   if (isError) {
     return <IsError />;
   }
+
   return (
-    <div className="my-primary">
+    <div className="mb-primary">
       <Container>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-44">
-          {data?.products?.map(
-            (
-              {
-                id,
-                name,
-                avg_review,
-                price,
-                classification,
-                currency,
-                images,
-                brand,
-                onSale,
-                price_pricelist_rule,
-                qty_available,
-                quantity,
-              },
-              dataIndex
-            ) => (
-              <Link className="group block relative" key={dataIndex}>
-                {/* Popup that shows when an item is added to cart */}
-                {showPopup && popupProduct && popupProduct.id === id && (
-                  <span
-                    className={`absolute border border-primary shadow-2xl bg-white text-black flex flex-col w-3/4 mx-auto h-auto rounded-lg p-4 bottom-[50%] left-1/2 -translate-x-1/2 z-[100] ${
-                      showPopup ? "opacity-100 visible" : "opacity-0 invisible"
-                    } transition-all duration-300`}
+        <Search />
+        {/* Filter UI with dropdowns */}
+        <div className="mb-6 p-4 bg-white rounded-lg shadow">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
+            {/* Brands Filter */}
+            <div className="border rounded-lg p-3">
+              <h3 className="font-semibold mb-2">Brands</h3>
+              <select
+                className="w-full p-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Select Brand
+                </option>
+                {data?.brands?.map((brand) => (
+                  <option key={brand.id} value={brand.id}>
+                    {brand.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Categories Filter */}
+            <div className="border rounded-lg p-3">
+              <h3 className="font-semibold mb-2">Categories</h3>
+              <select
+                className="w-full p-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Select Category
+                </option>
+                {data?.categories?.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Conditional Size Filters */}
+            {data?.width?.length === 1 && data.width[0] === 0.0 ? (
+              // By Size Name Filter
+              <div className="border rounded-lg p-3">
+                <h3 className="font-semibold mb-2">By Size</h3>
+                <select
+                  className="w-full p-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  value={selectedSizeName || ""}
+                  onChange={(e) => {
+                    setSelectedSizeName(e.target.value);
+                    // Add your onHandleSizeName logic here
+                  }}
+                >
+                  <option value="">Select Size</option>
+                  {data?.size_name?.map((name, index) => (
+                    <option key={index} value={name}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              // Tire Size Filters
+              <div className="border rounded-lg p-3">
+                <h3 className="font-semibold mb-2">Tire Size</h3>
+                <div className="grid grid-cols-3 gap-2">
+                  {/* Width */}
+                  <select
+                    className="w-full p-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    value={selectedWidth || ""}
+                    onChange={(e) => {
+                      const newWidth = e.target.value
+                        ? parseFloat(e.target.value)
+                        : null;
+                      setSelectedWidth(newWidth);
+                      setSelectedAspectRation(null);
+                      setSelectedDiameter(null);
+                      // Add your onHandleWidth logic here
+                    }}
                   >
-                    <div className="border-b border-primary pb-2">
-                      <p>Item(s) added to your cart</p>
-                    </div>
+                    <option value="">Width</option>
+                    {data?.width?.map((width, index) => (
+                      <option key={index} value={width}>
+                        {width}
+                      </option>
+                    ))}
+                  </select>
 
-                    <div className="flex items-center gap-x-2 my-4">
-                      <span className="flex-1">
-                        <img src={image} alt="" />
-                      </span>
-                      <span className="flex-[2]">
-                        <p className="text-sm r">{name}</p>
-                      </span>
-                      <span className="flex-1 text-center block">
-                        <p>{price_pricelist_rule}$</p>
-                      </span>
-                    </div>
+                  {/* Aspect Ratio */}
+                  <select
+                    className={`w-full p-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
+                      !selectedWidth ? "opacity-50" : ""
+                    }`}
+                    value={selectedAspectRation || ""}
+                    onChange={(e) => {
+                      const newAspect = e.target.value
+                        ? parseFloat(e.target.value)
+                        : null;
+                      setSelectedAspectRation(newAspect);
+                      setSelectedDiameter(null);
+                      // Add your onHandleAspectRatio logic here
+                    }}
+                    disabled={!selectedWidth}
+                  >
+                    <option value="">Aspect</option>
+                    {selectedWidth &&
+                      data?.aspect?.map((aspect, index) => (
+                        <option key={index} value={aspect}>
+                          {aspect}
+                        </option>
+                      ))}
+                  </select>
 
-                    <Link
-                      className="border rounded-2xl text-center min-w-[fit-content] flex-1 flex items-center justify-center gap-x-2 capitalize bg-primary text-white py-1"
-                      to={"/my-cart"}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      View Cart
-                    </Link>
-                  </span>
-                )}
+                  {/* Diameter */}
+                  <select
+                    className={`w-full p-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
+                      !selectedWidth || !selectedAspectRation
+                        ? "opacity-50"
+                        : ""
+                    }`}
+                    value={selectedDiameter || ""}
+                    onChange={(e) => {
+                      const newDiameter = e.target.value
+                        ? parseFloat(e.target.value)
+                        : null;
+                      setSelectedDiameter(newDiameter);
+                      // Add your onHandleDiameter logic here
+                    }}
+                    disabled={!selectedWidth || !selectedAspectRation}
+                  >
+                    <option value="">Diameter</option>
+                    {selectedWidth &&
+                      selectedAspectRation &&
+                      data?.inch?.map((inch, index) => (
+                        <option key={index} value={inch}>
+                          {inch}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              </div>
+            )}
 
-                <div className="flex flex-col-reverse md:flex-row relative">
-                  {onSale && (
-                    <div className="absolute -top-0 -left-0 z-10">
-                      <div
-                        className="bg-[#CD4C4F] text-white font-bold py-1 px-8 text-sm uppercase tracking-wider"
-                        style={{
-                          clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
-                          transform:
-                            "rotate(-45deg) translateX(-20%) translateY(-50%)",
-                        }}
-                      >
-                        Sale
-                      </div>
-                    </div>
-                  )}
-                  <div className="flex-[1] flex flex-col border-b-4">
-                    <p className="text-primary rb-bold text-sm">
-                      {classification}
-                    </p>
-                    <p className="rb-bold">{name}</p>
-                    <p className="rb-medium text-sm mt-3">Brand:{brand}</p>
-                    <div className="flex items-center gap-x-2 my-3 font-medium">
-                      <p>{price_pricelist_rule}$</p>
-                      <p>
-                        {currency}
-                        <span className="text-primary">*</span>
-                      </p>
-                    </div>
-                  </div>
+            {/* Classifications Filter */}
+            <div className="border rounded-lg p-3">
+              <h3 className="font-semibold mb-2">Classifications</h3>
+              <select
+                className="w-full p-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Select Classification
+                </option>
+                {data?.classification?.map((classification) => (
+                  <option key={classification.id} value={classification.id}>
+                    {classification.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+        <div className="overflow-x-auto">
+          {/* Table Header */}
+          <div className="hidden lg:flex w-full bg-gray-100 p-4 rounded-t-lg">
+            <div className="flex-[2] font-semibold">Tire Size</div>
+            <div className="flex-1 font-semibold">Pattern</div>
+            <div className="flex-1 font-semibold">Original Price</div>
+            <div className="flex-1 font-semibold">Price List</div>
+            <div className="flex-1 font-semibold">Availability</div>
+            <div className="w-32"></div>
+            <div className="w-32"></div>
+          </div>
 
-                  <div className="flex-[1] relative">
-                    <img
-                      className="w-3/4 h-3/4 mx-auto md:w-full md:h-full"
-                      src={image}
-                      alt=""
-                    />
-                    {qty_available === 0 && (
-                      <div className="absolute top-0 right-0 bg-red-500 text-white px-4 py-1 rb-bold">
-                        Sold Out
+          {/* Table Body */}
+          {data?.data?.map((product) => (
+            <div key={product.id} className="border-b">
+              {/* Desktop View (lg screens) */}
+              <div className="hidden lg:flex w-full p-4 items-center">
+                <div className="flex-[2]">{product.name}</div>
+                <div className="flex-1">{product.pattern}</div>
+                <div className="flex-1">
+                  ${product.original_price?.toFixed(2)}
+                </div>
+                <div className="flex-1">${product.price?.toFixed(2)}</div>
+                <div
+                  className={`flex-1 ${
+                    product.quantity?.free_quantity > 0
+                      ? "text-green-500"
+                      : product.quantity?.free_quantity === 0 &&
+                        product.quantity?.incoming_quantity > 0
+                      ? "text-yellow-500"
+                      : "text-red-500"
+                  }`}
+                >
+                  {product.quantity?.free_quantity > 0
+                    ? "In Stock"
+                    : product.quantity?.free_quantity === 0 &&
+                      product.quantity?.incoming_quantity > 0
+                    ? "Coming Soon"
+                    : "Out of Stock"}
+                </div>
+                <div className="flex-1 relative">
+                  {/* Add the stock popup */}
+                  {showStockPopup &&
+                    selectedProduct &&
+                    selectedProduct.id === product.id && (
+                      <div className="absolute -bottom-[200%] left-0 bg-white border border-primary w-full h-auto shadow-lg rounded-lg p-4 z-[100]">
+                        <div className="border-b border-primary pb-2">
+                          <p className="text-amber-600 font-medium">
+                            Limited Stock Notice
+                          </p>
+                        </div>
+                        <div className="my-4">
+                          <p>
+                            Sorry, we have only{" "}
+                            {selectedProduct?.quantity?.free_quantity} unit
+                            {selectedProduct?.quantity?.free_quantity !== 1
+                              ? "s"
+                              : ""}{" "}
+                            available in stock.
+                          </p>
+                        </div>
                       </div>
                     )}
-                    {quantity?.free_quantity === 0 &&
-                      quantity?.incoming_quantity > 0 && (
-                        <div className="absolute top-0 right-0 bg-yellow-500 text-white px-4 py-1 rb-bold">
-                          Coming Soon
-                        </div>
-                      )}
+                  <div className="flex justify-center items-center space-x-4">
+                    {product.quantity?.free_quantity > 0 ? (
+                      <>
+                        <button
+                          className="px-2 py-1 bg-gray-200 rounded"
+                          onClick={() =>
+                            handleQuantityChange(
+                              product.id,
+                              (quantities[product.id] || 1) - 1
+                            )
+                          }
+                          disabled={loadingItems[product.id]}
+                        >
+                          -
+                        </button>
+                        <span>
+                          {updateCartLoading[product.id] ? (
+                            <Spinner isSmall={true} />
+                          ) : (
+                            quantities[product.id] || 1
+                          )}
+                        </span>
+                        <button
+                          className="px-2 py-1 bg-gray-200 rounded"
+                          onClick={() =>
+                            handleQuantityChange(
+                              product.id,
+                              (quantities[product.id] || 1) + 1
+                            )
+                          }
+                          disabled={loadingItems[product.id]}
+                        >
+                          +
+                        </button>
+                      </>
+                    ) : product.quantity?.free_quantity === 0 &&
+                      product.quantity?.incoming_quantity > 0 ? (
+                      <span className="flex text-xs">
+                        Contact us for availability date
+                      </span>
+                    ) : (
+                      <span className="text-xs flex">
+                        Contact us to check alternatives
+                      </span>
+                    )}
                   </div>
                 </div>
-
-                <div className="flex items-center gap-x-2 mt-6 w-3/4 mxs-auto">
-                  {/* Conditionally render different button configurations based on quantity */}
-                  {quantity?.free_quantity === 0 ? (
-                    // Full width button for unavailable products
-                    <button
-                      className={`flex-1 ${
-                        quantity?.incoming_quantity > 0
-                          ? "bg-yellow-500"
-                          : "bg-gray-500"
-                      } text-white rb-bold w-full text-center py-2`}
-                    >
-                      {quantity?.incoming_quantity > 0
-                        ? "Contact us for availability date"
-                        : "Contact us to check alternatives"}
-                    </button>
-                  ) : (
-                    // For available products, show quantity selector and Add to Cart
-                    <>
-                      <div className="flex-1 flex items-center gap-x-2 rb-bold text-white bg-dark relative">
-                        <button className="flex items-center flex-1 justify-between px-10 gap-x-2 px-6 py-2">
-                          <p
-                            onClick={() =>
-                              handleQuantityChange(
-                                id,
-                                Math.max(1, (quantities[id] || 1) - 1)
-                              )
-                            }
-                          >
-                            -
-                          </p>
-                          {loadingItems[id] ? (
-                            <Spinner />
-                          ) : (
-                            <p>
-                              {quantities[id] || getCartItemQuantity(id) || 1}
-                            </p>
+                <div className="w-32">
+                  <div className="flex justify-center">
+                    {product.quantity?.free_quantity > 0 ? (
+                      <label className="inline-flex items-center">
+                        <input
+                          type="checkbox"
+                          className={`form-checkbox h-5 w-5 border-red-500 border text-red-500 accent-red-500 ${
+                            cart?.cart_items?.some(
+                              (item) => item.product_id === product.id
+                            )
+                              ? "checked:bg-red-500 checked:border-red-500"
+                              : ""
+                          }`}
+                          checked={cart?.cart_items?.some(
+                            (item) => item.product_id === product.id
                           )}
-                          <p
-                            onClick={() =>
-                              handleQuantityChange(
-                                id,
-                                (quantities[id] || 1) + 1
+                          onChange={() => {
+                            if (
+                              cart?.cart_items?.some(
+                                (item) => item.product_id === product.id
                               )
+                            ) {
+                              removeFromCart(product.id);
+                            } else {
+                              addToCartHandler(product.id);
                             }
-                          >
-                            +
-                          </p>
+                          }}
+                          disabled={addToCartLoadingItems[product.id]}
+                        />
+                        {addToCartLoadingItems[product.id] && (
+                          <span className="ml-2">
+                            <Spinner small />
+                          </span>
+                        )}
+                      </label>
+                    ) : (
+                      <button className="text-xs text-gray-500">
+                        <WhatsappLogo size={24} color="#25D366" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Mobile and Tablet View */}
+              <div className="lg:hidden p-4 space-y-4">
+                <div className="flex flex-col space-y-3">
+                  {/* Tire Size */}
+
+                  <div>
+                    <div className="font-semibold  text-lg">{product.name}</div>
+
+                    {/* Pattern */}
+                    <div className="">{product.pattern}</div>
+                  </div>
+
+                  {/* Prices */}
+                  <div className="flex justify-x items-x space-x-4">
+                    {/* <span className="line-through text-gray-500">
+                      ${product.original_price?.toFixed(2)}
+                    </span> */}
+                    <span className="font-semibold text-primary">
+                      ${product.price?.toFixed(2)}
+                    </span>
+                  </div>
+
+                  {/* Availability with contact message */}
+                  <div className="flex  items-center justify-between">
+                    <div
+                      className={`${
+                        product.quantity?.free_quantity > 0
+                          ? "text-green-500"
+                          : product.quantity?.free_quantity === 0 &&
+                            product.quantity?.incoming_quantity > 0
+                          ? "text-yellow-500"
+                          : "text-red-500"
+                      }`}
+                    >
+                      {product.quantity?.free_quantity > 0
+                        ? "In Stock"
+                        : product.quantity?.free_quantity === 0 &&
+                          product.quantity?.incoming_quantity > 0
+                        ? "Coming Soon"
+                        : "Out of Stock"}
+                    </div>
+                    {product.quantity?.free_quantity === 0 &&
+                    product.quantity?.incoming_quantity > 0 ? (
+                      <div className="text-xs text-center mt-1">
+                        Contact us for availability date
+                      </div>
+                    ) : product.quantity?.free_quantity === 0 ? (
+                      <div className="text-xs text-center mt-1">
+                        Contact us to check alternatives
+                      </div>
+                    ) : null}
+                  </div>
+
+                  {/* Quantity and Add to Cart */}
+                  {product.quantity?.free_quantity > 0 && (
+                    <div className="flex  items-center space-x-4 pt-2 ">
+                      <div className="flex items-center space-x-3">
+                        <button
+                          className="w-8 h-8 bg-gray-200 rounded flex items-center justify-center"
+                          onClick={() =>
+                            handleQuantityChange(
+                              product.id,
+                              (quantities[product.id] || 1) - 1
+                            )
+                          }
+                          disabled={loadingItems[product.id]}
+                        >
+                          -
+                        </button>
+                        <span>{quantities[product.id] || 1}</span>
+                        <button
+                          className="w-8 h-8 bg-gray-200 rounded flex items-center justify-center"
+                          onClick={() =>
+                            handleQuantityChange(
+                              product.id,
+                              (quantities[product.id] || 1) + 1
+                            )
+                          }
+                          disabled={loadingItems[product.id]}
+                        >
+                          +
                         </button>
                       </div>
-                      {!cart?.cart_items?.some(
-                        (item) => item.product_id === id
-                      ) && (
-                        <button
-                          onClick={() => addToCartHandler(id)}
-                          className="flex-1 bg-primary text-white rb-bold w-full text-center py-2 flex items-center justify-center gap-x-2"
-                        >
-                          {addToCartLoadingItems[id] ? (
-                            <Spinner />
-                          ) : (
-                            "Add To Cart"
+                      <label className="inline-flex items-center">
+                        <input
+                          type="checkbox"
+                          className={`form-checkbox h-5 w-5 border-red-500 border text-red-500 accent-red-500 ${
+                            cart?.cart_items?.some(
+                              (item) => item.product_id === product.id
+                            )
+                              ? "checked:bg-red-500 checked:border-red-500"
+                              : ""
+                          }`}
+                          checked={cart?.cart_items?.some(
+                            (item) => item.product_id === product.id
                           )}
-                        </button>
-                      )}
-                    </>
+                          onChange={() => {
+                            if (
+                              cart?.cart_items?.some(
+                                (item) => item.product_id === product.id
+                              )
+                            ) {
+                              removeFromCart(product.id);
+                            } else {
+                              addToCartHandler(product.id);
+                            }
+                          }}
+                          disabled={addToCartLoadingItems[product.id]}
+                        />
+                        {addToCartLoadingItems[product.id] && (
+                          <span className="ml-2">
+                            <Spinner small />
+                          </span>
+                        )}
+                      </label>
+                    </div>
                   )}
                 </div>
-              </Link>
-            )
-          )}
+              </div>
+            </div>
+          ))}
         </div>
+
+        {/* Show popup when item is added to cart */}
+
         {totalPages > 1 && (
           <Pagination
             currentPage={currentPage}

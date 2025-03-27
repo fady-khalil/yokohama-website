@@ -14,8 +14,6 @@ const ByCategory = ({
     onHanldeCategoryId(newSelectedCategoryId);
   };
 
-  console.log(selectedCategoryId);
-
   return (
     <div className="flex flex-col gap-y-3 border-b-[1.5px] border-black pb-2">
       <select

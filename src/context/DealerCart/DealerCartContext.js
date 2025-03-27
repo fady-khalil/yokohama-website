@@ -23,6 +23,8 @@ export const DealerCartProvider = ({ children }) => {
 
   // detel item from car
   const [loadingItems, setLoadingItems] = useState({});
+  // update cart
+  const [updateCartLoading, setUpdateCartLoading] = useState({});
 
   useEffect(() => {
     if (dealerIsSignIn) {
@@ -68,6 +70,7 @@ export const DealerCartProvider = ({ children }) => {
 
   const updateCart = async (productId, quantity) => {
     try {
+      setUpdateCartLoading((prev) => ({ ...prev, [productId]: true }));
       const dataUpdatedData = await fetchData(
         `/yokohama/cart/update/${productId}?quantity=${quantity}`,
         dealerToken
@@ -75,6 +78,8 @@ export const DealerCartProvider = ({ children }) => {
       setCart(dataUpdatedData?.data);
     } catch (error) {
       console.error("Error updating cart:", error);
+    } finally {
+      setUpdateCartLoading((prev) => ({ ...prev, [productId]: false }));
     }
   };
 
@@ -116,6 +121,7 @@ export const DealerCartProvider = ({ children }) => {
 
         // update products
         updateCart,
+        updateCartLoading,
         clearCart,
         // billing
       }}

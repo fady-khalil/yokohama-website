@@ -4,7 +4,7 @@ import { DealerLoginContext } from "context/Auth/DealerContext";
 import Modal from "Components/Modal/Modal";
 import useInput from "form/Hooks/user-input";
 import Input from "form/Inputs/Input";
-
+import { useNavigate } from "react-router-dom";
 import PasswordInput from "form/Inputs/PasswordInput";
 import { X } from "@phosphor-icons/react";
 import MainButton from "Components/Buttons/MainButton";
@@ -16,6 +16,7 @@ const DealerSiginModal = () => {
   const { loading, error, postData } = usePostData();
   const [notValid, setNotValid] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const navigate = useNavigate();
 
   const clearErrors = () => {
     setNotValid(false);
@@ -66,6 +67,7 @@ const DealerSiginModal = () => {
         handleUerData(result?.data);
         closeDealerModalHandeler();
         setDealerHasGetAccess(true);
+        navigate("/");
       } else {
         setErrorMessage(result?.message);
       }

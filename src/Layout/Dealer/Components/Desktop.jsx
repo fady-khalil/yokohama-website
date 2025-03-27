@@ -13,7 +13,10 @@ const Desktop = ({ onclose }) => {
             <Dot />
           </span>
         </li>
-        <Link onClick={onclose} to={"/loyality"} className="flex items-center">
+        <Link onClick={onclose} to={"/my-orders"}>
+          My Balacne
+        </Link>
+        {/* <Link onClick={onclose} to={"/loyality"} className="flex items-center">
           Loyality
           <p className="text-xs ml-1 text-[#bbb]">(100 points)</p>
           <span className="flex text-5xl items-center justify-center text-primary">
@@ -24,7 +27,7 @@ const Desktop = ({ onclose }) => {
           <Link onClick={onclose} to={"/gift"}>
             Gift shop
           </Link>
-        </li>
+        </li> */}
       </ul>
     </div>
   );

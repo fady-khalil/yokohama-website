@@ -9,7 +9,7 @@ const Hero = () => {
 
   return (
     <section
-      className="bg-cover bg-center h-[90vh] relative z-[10] overflow-hidden"
+      className="bg-cover bg-center h-[100vh] relative z-[10] overflow-hidden"
       style={{ backgroundImage: `url(${heroImage})` }}
     >
       <div className="absolute top-0 left-0 w-full h-full bg-[#00000044] z-[-1]"></div>
@@ -19,16 +19,12 @@ const Hero = () => {
             <h1 className="rb-bold text-white text-4xl lg:text-5xl text-center mb-2">
               Hello {dealerData?.username}
             </h1>
-            <p className="rb-bold text-white text-2xl lg:text-3xl text-center">
-              You have {dealerData?.points}{" "}
-              {dealerData?.points > 1 ? "points" : "point"} in your account
-            </p>
           </div>
           <div className="flex flex-col lg:flex-row items-center gap-6">
-            <WhiteButton to={"/shop"}>Shop Your Products</WhiteButton>
+            <MainButton to={"/shop"}>Shop Your Products</MainButton>
             <WhiteButton to={"/my-orders"}>Check your Balance </WhiteButton>
-            {/* <MainButton to={"/shop"}>Shop Your Products</MainButton> */}
-            <WhiteButton to={"/gift"}>Redeem your Points</WhiteButton>
+            {/* <MainButton to={"/shop"}>Shop Your Products</MainButton>
+            <WhiteButton to={"/gift"}>Redeem your Points</WhiteButton> */}
           </div>
         </div>
       </Container>

@@ -5,11 +5,18 @@ import { DealerLoginContext } from "context/Auth/DealerContext";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Spinner from "Components/RequestHandler/Spinner";
-
+import { Trash } from "@phosphor-icons/react";
 import useGetDataToken from "Hooks/Fetching/useGetDataToken.jsx";
 import usePostToken from "Hooks/Fetching/usePostToken";
 const Reciept = () => {
-  const { cart, clearCart } = useContext(DealerCartContext);
+  const {
+    cart,
+    clearCart,
+    removeFromCart,
+    loadingItems,
+    updateCart,
+    updateCartLoading,
+  } = useContext(DealerCartContext);
   const { fetchData } = useGetDataToken();
   const { postData } = usePostToken();
   const { dealerData, dealerToken } = useContext(DealerLoginContext);
@@ -20,6 +27,7 @@ const Reciept = () => {
   // payment
   const [paymentIsLoading, setPaymentIsLoading] = useState(false);
   const [onAccountLoading, setOnAccountLoading] = useState(false);
+
   const payNowHandler = async () => {
     try {
       setPaymentIsLoading(true);
@@ -90,6 +98,7 @@ const Reciept = () => {
                   <th className="py-4 uppercase rb-bold w-1/4">Price</th>
                   <th className="py-4 uppercase rb-bold w-1/4">QTY</th>
                   <th className="py-4 uppercase rb-bold w-1/4">Subtotal</th>
+                  <th className="py-4 uppercase rb-bold w-1/4"></th>
                 </tr>
               </thead>
               <tbody>
@@ -100,11 +109,32 @@ const Reciept = () => {
                       {Number(order.retail_price).toFixed(2)}$
                     </td>
                     <td className="py-6 rb-bold text-center">
-                      {order.quantity}
+                      <div className="flex items-center justify-center gap-x-2">
+                        <p>
+                          {/* {updateCartLoading[order.product_id] ? (
+                            <Spinner isSmall={true} />
+                          ) : (
+                          )} */}
+                          {order.quantity}
+                        </p>
+                      </div>
                     </td>
                     <td className="py-4 rb-bold text-center">
                       {(Number(order.retail_price) * order.quantity).toFixed(2)}
                       $
+                    </td>
+
+                    <td className="py-4 rb-bold text-center">
+                      <button
+                        onClick={() => removeFromCart(order.product_id)}
+                        className="text-red-500"
+                      >
+                        {loadingItems[order.product_id] ? (
+                          <Spinner isSmall={true} />
+                        ) : (
+                          <Trash size={20} />
+                        )}
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -116,7 +146,7 @@ const Reciept = () => {
                 <p>Subtotal</p>
                 <p>
                   {Number(
-                    cart?.invoice_details?.[0].untaxed_amount_total
+                    cart?.invoice_details?.[0]?.untaxed_amount_total
                   ).toFixed(2)}{" "}
                   $
                 </p>
@@ -131,6 +161,10 @@ const Reciept = () => {
                 <p>Shipping </p>
                 <p>0</p>
               </span>
+              {/* <span className="flex items-center justify-between text-[#333] rb-bold border-b pb-2">
+                <p>Mounting Charge</p>
+                <p>0</p>
+              </span> */}
               <span className="flex items-center justify-between text-[#333] rb-bold border-b pb-2">
                 <p>Total</p>
                 <p>

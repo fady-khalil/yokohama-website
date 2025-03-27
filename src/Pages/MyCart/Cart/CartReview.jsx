@@ -1,11 +1,9 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import Container from "Components/Container/Container";
 import { Trash } from "@phosphor-icons/react";
 import Spinner from "Components/RequestHandler/Spinner";
-import MainButton from "Components/Buttons/MainButton";
 import EmptyCart from "Components/Screens/EmptyCart";
 import { Link } from "react-router-dom";
-import imagee from "assests/product-3-removebg-preview.png";
 // context
 import { UserCartContext } from "context/User/CartContext";
 
