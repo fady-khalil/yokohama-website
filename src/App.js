@@ -9,8 +9,6 @@ import DealerRouting from "Routing/DealerRouting";
 const App = () => {
   const { dealerHasGetAccess } = useContext(DealerLoginContext);
 
-  console.log(dealerHasGetAccess);
-
   return (
     <div className="App">
       <a

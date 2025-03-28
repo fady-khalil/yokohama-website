@@ -36,10 +36,17 @@ const Channels = () => {
     return (
       <section className="my-secondary">
         <Container>
-          <h5 className="text-4xl lg:text-5xl my-20 text-primary rb-bold text-center">
-            Distribution channels
-          </h5>
-
+          <div className="my-10 lg:mb-20 lg:mt-10 flex flex-col gap-y-4 items-center justify-center lg:w-1/2 mx-auto">
+            <h5 className="text-2xl lg:text-4xl xxl:text-5xl rb-bold lg:text-center">
+              Connecting You Everywhere
+            </h5>
+            <p className="lg:text-center">
+              At HMG Holding, we’ve built a wide-reaching network to ensure our
+              products are easily accessible, no matter where you are or how you
+              prefer to shop. Our diverse distribution channels ensure seamless
+              delivery and availability across a range of sectors:
+            </p>
+          </div>
           <div
             className="py-24 mt-12  gap-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-between"
             style={{ backgroundImage: `url(${channelBg})` }}

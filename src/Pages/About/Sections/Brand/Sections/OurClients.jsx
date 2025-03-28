@@ -10,7 +10,15 @@ const OurClients = ({ data }) => {
     <section className="py-primary">
       <Container>
         <div className="mb-14">
-          <h2 className="text-3xl rb-bold text-center">Our Client</h2>
+          <h2 className="text-2xl lg:text-4xl xxl:text-5xl rb-bold text-center">
+            Clients that Rely on Us
+          </h2>
+
+          <p className="text-center lg:w-1/2 mx-auto mt-4">
+            We proudly serve over 100 fleet companies, including local,
+            international industry leaders Government sectors, Schools, and
+            International NGOs.
+          </p>
         </div>
         <Swiper
           className="brand-slider"

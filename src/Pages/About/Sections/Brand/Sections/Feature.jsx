@@ -8,10 +8,17 @@ const Feature = ({ data }) => {
       style={{ backgroundImage: `url(${channelBg})` }}
     >
       <Container>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-y-16 items-center justify-between">
+        <h2 className="text-2xl lg:text-4xl xxl:text-5xl rb-bold text-center text-white mb-6">
+          Our Impact in Numbers
+        </h2>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-y-16 items-center justify-between justify-items-center">
           {data?.map(({ title, logo, num }, index) => (
             <div
-              className="flex-1  flex flex-col items-center justify-center"
+              className={`flex-1 flex flex-col items-center justify-center ${
+                data.length % 3 === 1 && index === data.length - 1
+                  ? "lg:col-start-2"
+                  : ""
+              }`}
               key={index}
             >
               <div className="flex-1 mb-3">

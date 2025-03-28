@@ -34,9 +34,20 @@ const WhyUs = () => {
   if (data) {
     return (
       <section className="my-secondary ">
-        <h5 className="text-5xl my-20 text-primary rb-bold text-center">
-          Why us
-        </h5>
+        <Container>
+          <div className="my-10 lg:mb-20 lg:mt-10 flex flex-col gap-y-4 items-center justify-center lg:w-1/2 mx-auto">
+            <h5 className="text-2xl lg:text-4xl xxl:text-5xl rb-bold lg:text-center">
+              Choosing Us is the Best for You
+            </h5>
+            <p className="lg:text-center">
+              When consumers decide to make a purchase, it’s essential they get
+              exactly what they expect for the value they’re paying—and this is
+              where we make the difference. At HMG Holding, we don’t just meet
+              expectations—we exceed them. Here’s why we stand out as the
+              partner of choice:
+            </p>
+          </div>
+        </Container>
         <Container>
           {data?.map(({ image, title, text }, index) => (
             <div

@@ -35,8 +35,8 @@ const MissionAndVission = () => {
   if (data) {
     return (
       <section className="my-secondary">
-        <h5 className="text-4xl lg:text-5xl my-20 text-primary rb-bold text-center">
-          Mission and Vision
+        <h5 className="text-2xl lg:text-4xl xxl:text-5xl rb-bold text-center mb-10">
+          Our Commitment to a Better Tomorrow
         </h5>
         <Container>
           {data?.map(({ image, title, text }, index) => (

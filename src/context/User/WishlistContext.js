@@ -28,7 +28,6 @@ export const UserWishlistProvider = ({ children }) => {
       setWishlistsLoading(true);
       const cartData = await fetchData("wishlist/mine", userToken);
       setwishlist(cartData?.data);
-      console.log(cartData);
     } catch (error) {
       setIsError(true);
     } finally {

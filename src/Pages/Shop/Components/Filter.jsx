@@ -70,33 +70,32 @@ const Filter = ({
         <X size={24} />
       </button>
 
-      {allData && allData?.width?.length === 1 && allData.width[0] === 0.0 && (
+      {allData?.sizes && (
         <BySizeName
           selectedSizeName={selectedSizeName}
           setSelectedSizeName={setSelectedSizeName}
-          data={allData?.size_name}
+          data={allData?.sizes}
           onHandleSizeName={onHandleSizeName}
           onCloseFiler={onHandleFilterVisible}
         />
       )}
 
       {/* tire size */}
-      {allData &&
-        !(allData?.width?.length === 1 && allData.width[0] === 0.0) && (
-          <ByTireSize
-            selectedWidth={selectedWidth}
-            setSelectedWidth={setSelectedWidth}
-            setSelectedAspectRation={setSelectedAspectRation}
-            selectedAspectRation={selectedAspectRation}
-            selectedDiameter={selectedDiameter}
-            setSelectedDiameter={setSelectedDiameter}
-            onCloseFiler={onHandleFilterVisible}
-            onHandleWidth={onHandleWidth}
-            onHandleAspectRatio={onHandleAspectRatio}
-            onHandleDiameter={onHandleDiameter}
-            data={allData}
-          />
-        )}
+      {!allData.sizes && (
+        <ByTireSize
+          selectedWidth={selectedWidth}
+          setSelectedWidth={setSelectedWidth}
+          setSelectedAspectRation={setSelectedAspectRation}
+          selectedAspectRation={selectedAspectRation}
+          selectedDiameter={selectedDiameter}
+          setSelectedDiameter={setSelectedDiameter}
+          onCloseFiler={onHandleFilterVisible}
+          onHandleWidth={onHandleWidth}
+          onHandleAspectRatio={onHandleAspectRatio}
+          onHandleDiameter={onHandleDiameter}
+          data={allData}
+        />
+      )}
       <SortBy onPriceHighToLow={onPriceHighToLow} />
 
       {/* offers */}

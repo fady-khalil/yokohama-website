@@ -47,6 +47,9 @@ const Celebrating = ({ data }) => {
       className="background py-mega"
     >
       <Container>
+        <h2 className="text-2xl lg:text-4xl xxl:text-5xl rb-bold text-center text-white mb-10">
+          Our Milestones Through the Years
+        </h2>
         <Swiper
           ref={swiperRef}
           className="brand-slider equal-height-slides"

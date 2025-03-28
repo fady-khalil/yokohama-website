@@ -60,9 +60,6 @@ const ProductInfo = ({ product }) => {
       const foundItem = cart.cart_items.find(
         (item) => item.product_id === product.id
       );
-      console.log(cart?.cart_items);
-      console.log(product);
-
       if (foundItem) {
         setIsInCart(true);
         setQuantity(foundItem.quantity);
@@ -186,7 +183,7 @@ const ProductInfo = ({ product }) => {
     try {
       // Instead of making a direct API call with fetch,
       // create the WhatsApp URL manually to avoid CORS issues
-      const phoneNumber = "96171121461"; // Remove the + for WhatsApp URLs
+      const phoneNumber = "96103010958"; // Remove the + for WhatsApp URLs
       const productName = encodeURIComponent(product?.name || "");
       const encodedMessage = encodeURIComponent(`${message} `);
 
