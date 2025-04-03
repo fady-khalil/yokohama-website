@@ -54,12 +54,12 @@ const OrderHistory = () => {
                   <th className="min-w-[150px] lg:min-w-auto text-center py-4 uppercase rb-bold">
                     Status
                   </th>
-                  <th className="min-w-[150px] lg:min-w-auto text-center py-4 uppercase rb-bold">
+                  {/* <th className="min-w-[150px] lg:min-w-auto text-center py-4 uppercase rb-bold">
                     Track
                   </th>
                   <th className="min-w-[150px] lg:min-w-auto text-center py-4 uppercase rb-bold">
                     Receipt
-                  </th>
+                  </th> */}
                 </tr>
               </thead>
               <tbody className="">
@@ -80,7 +80,7 @@ const OrderHistory = () => {
                     <td className="min-w-[150px] lg:min-w-auto text-center py-4 border-b  rb-bold">
                       {order.status}
                     </td>
-                    <td className="min-w-[150px] lg:min-w-auto text-center py-4 border-b  rb-bold">
+                    {/* <td className="min-w-[150px] lg:min-w-auto text-center py-4 border-b  rb-bold">
                       <span className="flex items-center justify-center text-2xl text-primary">
                         <AirplaneTilt weight="fill" />
                       </span>
@@ -89,7 +89,7 @@ const OrderHistory = () => {
                       <span className="flex items-center justify-center text-2xl text-primary">
                         <Article weight="fill" />
                       </span>
-                    </td>
+                    </td> */}
                   </tr>
                 ))}
               </tbody>
