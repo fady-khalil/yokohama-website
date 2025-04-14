@@ -18,6 +18,10 @@ const SuccessPage = () => {
       userToken
     );
 
+    console.log("payment ref", paymentRef);
+    console.log("order id", orderId);
+    console.log("payment data", data);
+
     clearCart();
   };
   useEffect(() => {

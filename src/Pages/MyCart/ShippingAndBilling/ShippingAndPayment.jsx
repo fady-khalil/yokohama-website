@@ -14,9 +14,9 @@ import AddressForm from "form/AddressForm";
 import DisplayAddress from "./Components/DisplayAddress";
 
 const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
-  const { cart } = useContext(UserCartContext);
+  const { cart, isLocalCartMode } = useContext(UserCartContext);
   // context
-  const { userToken } = useContext(UserLoginContext);
+  const { userToken, userIsSignIn } = useContext(UserLoginContext);
   // handling fetching and posting data
   const { fetchData } = useGetDataToken();
   const [billingIsValid, setBillingIsValid] = useState(false);
@@ -27,7 +27,8 @@ const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
   const [addShippingIdToCartLoading, setAddShippingIdToCartLoading] =
     useState(false);
   const [isError, setIsError] = useState(false);
-  // intial call billing addrees to check if the user have valid billing, if yes we display the addrss, if no we open a form to add a bolling address
+
+  // initial call to check if the user has valid billing
   const getBillingAddress = async () => {
     try {
       setIsLoading(true);
@@ -40,16 +41,34 @@ const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
         setBillingIsValid(billingData?.data?.billing_addresses[0]?.is_valid);
       }
     } catch (error) {
+      console.error("Error fetching billing address:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Only fetch billing address if user is signed in
   useEffect(() => {
-    getBillingAddress();
-  }, []);
+    if (userIsSignIn) {
+      getBillingAddress();
+    }
+  }, [userIsSignIn]);
 
-  // state and useEffect to update the view after the user add billing address and display the addrss, we do this process when the user don't have a valid billing address,
+  // Check if we should redirect back to cart review
+  useEffect(() => {
+    // If we're in local cart mode, redirect back to cart review
+    // This ensures users can't directly access shipping without going through cart review
+    if (isLocalCartMode && !userIsSignIn) {
+      onSelectingTabs(1);
+    }
+
+    // If cart is empty, redirect back to cart review
+    if (!cart?.cart_items?.length) {
+      onSelectingTabs(1);
+    }
+  }, [isLocalCartMode, userIsSignIn, cart, onSelectingTabs]);
+
+  // Update the view after the user adds a billing address
   const [isSuccess, setIsSucces] = useState(false);
   const handleSuccess = () => {
     setIsSucces(true);
@@ -97,7 +116,9 @@ const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
             <p className="mt-2">Loading data...</p>
           </div>
         )}
-        {cart?.length === 0 && <EmptyCart />}
+
+        {!cart?.cart_items?.length && !isLoading && <EmptyCart />}
+
         {cart?.cart_items?.length > 0 && !isLoading && (
           <div className="flex flex-col lg:flex-row gap-16">
             {!billingIsValid && (
@@ -110,10 +131,7 @@ const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
               />
             )}
             {billingIsValid && (
-              <DisplayAddress
-                getShippingAddressId={setShippingId}
-                // confirmSwitchHandler={confirmSwitchHandler}
-              />
+              <DisplayAddress getShippingAddressId={setShippingId} />
             )}
             {billingIsValid && (
               <CartSummuryDetails

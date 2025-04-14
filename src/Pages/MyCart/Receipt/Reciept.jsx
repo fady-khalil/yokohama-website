@@ -1,7 +1,7 @@
 import Container from "Components/Container/Container";
 import { UserCartContext } from "context/User/CartContext";
 import { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useGetDataToken from "Hooks/Fetching/useGetDataToken";
 import { UserLoginContext } from "context/Auth/UserLoginContext";
 import Spinner from "Components/RequestHandler/Spinner";
@@ -9,12 +9,15 @@ import DisplayReceipt from "./DisplayReceipt/DisplayReceipt";
 import EmptyCart from "Components/Screens/EmptyCart";
 
 const Reciept = ({ shippingId, onSelectingTabs }) => {
-  const { cart, clearCart } = useContext(UserCartContext);
+  const { cart, clearCart, paymentRef, setPaymentRef, orderId, setOrderId } =
+    useContext(UserCartContext);
   const { userToken, userData } = useContext(UserLoginContext);
+  const navigate = useNavigate();
 
   const { fetchData } = useGetDataToken();
   const [billingData, setBillingData] = useState();
   const [shippingData, setShippingData] = useState();
+  const [paymentComplete, setPaymentComplete] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -35,15 +38,24 @@ const Reciept = ({ shippingId, onSelectingTabs }) => {
       );
       setShippingData(shippingAddress);
     } catch (error) {
+      console.error("Error fetching shipping/billing data:", error);
     } finally {
       setIsLoading(false);
     }
   };
+
   useEffect(() => {
     if (shippingId) {
       getShippingAndBillingData();
     }
   }, [shippingId]);
+
+  // Redirect if no shipping ID is provided
+  useEffect(() => {
+    if (!shippingId && !isLoading) {
+      onSelectingTabs(2);
+    }
+  }, [shippingId, isLoading, onSelectingTabs]);
 
   return (
     <div className="hidden lg:block my-secondary">
@@ -51,41 +63,30 @@ const Reciept = ({ shippingId, onSelectingTabs }) => {
         {shippingId && isLoading && (
           <div className="h-[30vh] flex flex-col items-center">
             <Spinner />
-            <p>Generating your receipt...</p>
+            <p>Processing your payment...</p>
           </div>
         )}
-        {shippingData && !isLoading && cart?.cart_items?.length > 0 && (
-          <DisplayReceipt
-            clearCart={clearCart}
-            billingData={billingData}
-            shippingData={shippingData}
-            cartData={cart}
-            shippingId={shippingId}
-            userData={userData}
-            token={userToken}
-          />
-        )}
-        {!shippingId && (
-          <div className="h-[30vh]">
-            <p className="text-xl text-center">
-              To access the receipt, you need to select a shipping address
-              first.
-            </p>
 
-            <div className="flex items-center justify-center gap-x-8 mt-14">
-              <button
-                onClick={() => onSelectingTabs(2)}
-                className="border border-primary px-8 text-lg py-2.5"
-              >
-                Select Address
-              </button>
-              <Link to={"/"} className="underline">
-                Go Home
-              </Link>
+        {shippingData &&
+          !isLoading &&
+          !paymentComplete &&
+          cart?.cart_items?.length > 0 && (
+            <div>
+              <DisplayReceipt
+                clearCart={clearCart}
+                billingData={billingData}
+                shippingData={shippingData}
+                cartData={cart}
+                shippingId={shippingId}
+                userData={userData}
+                token={userToken}
+              />
             </div>
-          </div>
-        )}
-        {cart?.length === 0 && <EmptyCart />}
+          )}
+
+        {(!shippingId || !cart?.cart_items?.length) &&
+          !isLoading &&
+          !paymentComplete && <EmptyCart />}
       </Container>
     </div>
   );

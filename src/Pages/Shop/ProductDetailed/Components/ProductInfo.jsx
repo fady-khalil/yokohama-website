@@ -26,6 +26,7 @@ import BASE_URL from "Utilities/BASE_URL";
 const POPUP_TIMEOUT = 5000;
 
 const ProductInfo = ({ product }) => {
+  console.log(product);
   const {
     addToCart,
     cart: guestCart,
@@ -42,6 +43,9 @@ const ProductInfo = ({ product }) => {
     updateCartIsLoading,
     removeFromCart,
     loadingItems,
+    hasExistingOdooCart,
+    addToLocalCart,
+    isLocalCartMode,
   } = useContext(UserCartContext);
 
   const { getWishlistData, userAddToWihlist, addTowishlistLoading, wishlist } =
@@ -67,8 +71,10 @@ const ProductInfo = ({ product }) => {
         setIsInCart(false);
         setQuantity(1);
       }
-    } else if (!userIsSignIn && guestCart) {
-      const foundItem = guestCart.find((item) => item.id === product.id);
+    } else if (!userIsSignIn && cart?.cart_items) {
+      const foundItem = cart.cart_items.find(
+        (item) => item.product_id === product.id || item.id === product.id
+      );
       if (foundItem) {
         setIsInCart(true);
         setQuantity(foundItem.quantity);
@@ -84,7 +90,7 @@ const ProductInfo = ({ product }) => {
       );
       setIsInWishlist(!!foundWishlistItem);
     }
-  }, [cart, product.id, guestCart, userIsSignIn, wishlist]);
+  }, [cart, product.id, userIsSignIn, wishlist]);
 
   const handleQuantityChange = (productId, newQuantity) => {
     const freeQuantity = product?.quantity?.free_quantity;
@@ -94,11 +100,7 @@ const ProductInfo = ({ product }) => {
       setShowStockPopup(true);
 
       if (isInCart) {
-        if (userIsSignIn) {
-          updateCart(productId, freeQuantity);
-        } else {
-          guestUpdateCart(productId, freeQuantity);
-        }
+        updateCart(productId, freeQuantity);
       }
       return;
     }
@@ -110,24 +112,24 @@ const ProductInfo = ({ product }) => {
     setQuantity(newQuantity);
 
     if (isInCart) {
-      if (userIsSignIn) {
-        updateCart(productId, newQuantity);
-      } else {
-        guestUpdateCart(productId, newQuantity);
-      }
+      updateCart(productId, newQuantity);
     }
   };
 
   const addToCartHandler = async (product) => {
     displayProductHandler(product);
-    if (userIsSignIn) {
+
+    // If we're not in local cart mode (user is signed in or has existing Odoo cart)
+    if (!isLocalCartMode) {
       await userAddToCart(product?.id);
       if (quantity > 1) {
         await updateCart(product?.id, quantity);
       }
     } else {
-      addToCart({ ...product, quantity });
+      // Add to local cart with the selected quantity
+      addToLocalCart({ ...product, quantity });
     }
+
     setTimeout(() => {
       setShowPopup(true);
     }, 800);
@@ -413,11 +415,7 @@ const ProductInfo = ({ product }) => {
               {isInCart && (
                 <button
                   onClick={() => {
-                    if (userIsSignIn) {
-                      removeFromCart(product?.id);
-                    } else {
-                      guestRemoveFromCart(product?.id);
-                    }
+                    removeFromCart(product?.id);
                   }}
                   title="Remove from cart"
                   className={`min-w-[75px] flex-1 flex items-center justify-center py-2 w-max  ${

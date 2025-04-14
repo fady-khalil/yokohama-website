@@ -182,12 +182,12 @@ const DisplayReceipt = ({
             >
               {isLoading ? <Spinner /> : " Pay Now"}
             </button>
-            <button
+            {/* <button
               onClick={confirmCashOnDeliveryOrderHandler}
               className="flex-1 bg-primary py-2 text-white  flex items-center justify-center "
             >
               {isCashOnDeliveryLoading ? <Spinner /> : " Cash on delivery"}
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

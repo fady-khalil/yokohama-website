@@ -1,0 +1,41 @@
+.original-slider .swiper-pagination {
+  position: relative;
+  margin-top: 3.2rem;
+}
+
+.original-slider .swiper-pagination-bullet {
+  background-color: #717477;
+  width: 32px;
+  height: 6px;
+  border-radius: 9px;
+}
+
+.original-slider .swiper-pagination-bullet-active {
+  background-color: #dc0c15 !important;
+}
+
+.original-slider .swiper-button-next,
+.original-slider .swiper-button-prev {
+  position: absolute;
+  background-color: #00000030;
+  color: #dc0c15;
+  z-index: 1000;
+  border-radius: 12px;
+  height: 72px;
+  transform: translateY(-50%);
+  transition: all ease-in 300ms;
+}
+
+.swiper-button-prev::after {
+  font-size: 26px;
+}
+.swiper-button-next::after {
+  font-size: 26px;
+}
+
+.swiper-button-next:hover {
+  background-color: #000000a1;
+}
+.swiper-button-prev:hover {
+  background-color: #000000a1;
+}

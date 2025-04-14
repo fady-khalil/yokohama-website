@@ -1,0 +1,175 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+.rb-light {
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+.rb-regular {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+.rb-medium {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+.rb-bold {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+.rb-black {
+  font-family: "Roboto", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.test {
+  background: rgb(229 231 235) !important;
+  padding-block: 0.7rem !important;
+  padding-inline: 0.5rem !important;
+  height: auto !important;
+  padding-left: 64px !important;
+  flex: 1;
+  min-width: 100%;
+}
+.test-2 {
+  padding-inline: 0.4rem !important;
+  /* width: 100%; */
+}
+/* reusable */
+.shop-bg {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+.geo-bg {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: left;
+}
+
+.roadmap-bg {
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* background-position: center top; */
+}
+
+.brand-bg {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: right;
+}
+
+.about-bg {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.product-container {
+  display: grid;
+  align-items: stretch;
+  grid-template-columns: 1fr 1fr; /* Two equal columns */
+}
+
+.product-container img {
+  width: 100%; /* Fills its grid cell */
+  object-fit: cover; /* Scales image to fit */
+}
+
+.sticky-tabs {
+  position: -webkit-sticky; /* For Safari */
+  position: sticky;
+  height: auto;
+  top: 0px;
+  z-index: 1000; /* Adjust as needed to ensure it stays above other elements */
+  background-color: #efefef; /* Same background color as the tabs */
+}
+
+/* filter scroll bar */
+.filter-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.filter-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #dc0c15; /* Customize the color */
+  border-radius: 10px; /* Make it rounded */
+}
+
+.filter-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Color when hovered */
+}
+
+.filter-scrollbar::-webkit-scrollbar-track {
+  background-color: #f1f1f1; /* Track background */
+}
+
+.filter-scrollbar {
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #b8b8b8 #f1f1f1; /* For Firefox */
+}
+
+/*  */
+.img-cut-diagonal {
+  position: relative;
+  overflow: hidden;
+}
+
+.img-cut-diagonal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+}
+
+.menu-link-group span {
+  opacity: 0;
+}
+.menu-link-group:hover span {
+  opacity: 1;
+}
+
+.img-cut-diagonal {
+  clip-path: polygon(0 0, 120% 0%, 100% 0%, 0 160%);
+}
+.box-cut-diagonal {
+  clip-path: polygon(20% 20%, 20% 100%, 20% 0%, 20% 0%);
+}
+
+.background {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: right;
+}
+
+.why-us-content p {
+  margin-bottom: 1rem;
+}
+
+.why-us-content ol,
+.why-us-content ul {
+  list-style-type: decimal;
+  list-style-position: inside;
+}
+
+.why-us-content li {
+  margin-bottom: 0.5rem;
+}
+
+.slider-arrow:disabled {
+  filter: grayscale(100%);
+  opacity: 0.5;
+}
