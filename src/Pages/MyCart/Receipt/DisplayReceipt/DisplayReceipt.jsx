@@ -28,7 +28,6 @@ const DisplayReceipt = ({
   const { fetchData } = useGetDataToken();
   const { postData } = usePostToken();
   const { userToken } = useContext(UserLoginContext);
-  const { setPaymentRef, setOrderId } = useContext(UserCartContext);
   const [isLoading, setIsLoading] = useState(false);
   const [isCashOnDeliveryLoading, setIsCashOnDeliveryLoading] = useState(false);
   const navigate = useNavigate();
@@ -42,9 +41,9 @@ const DisplayReceipt = ({
       );
 
       if (data) {
-        setPaymentRef(data?.payment_ref);
-        setOrderId(data?.order_id);
         window.location.href = data?.url_payment;
+        localStorage.setItem("payment_ref", data?.payment_ref);
+        localStorage.setItem("order_id", data?.order_id);
       }
     } catch (error) {
     } finally {
