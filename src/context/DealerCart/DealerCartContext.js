@@ -94,7 +94,10 @@ export const DealerCartProvider = ({ children }) => {
       console.log(cartData, "cart context");
 
       // Check if there's an existing Odoo cart with items
-      if (cartData?.data?.cart_items?.length > 0) {
+      if (
+        cartData?.data?.cart_items?.length > 0 ||
+        cartData?.data?.length > 0
+      ) {
         setHasExistingOdooCart(true);
         setIsLocalCartMode(false);
         setCart(cartData?.data);

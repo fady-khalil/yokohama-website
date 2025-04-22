@@ -91,7 +91,10 @@ export const UserCartProvider = ({ children }) => {
       setCartIsLoading(true);
       const cartData = await fetchData("yokohama/cart/mine", userToken);
 
-      if (cartData?.data?.cart_items?.length > 0) {
+      if (
+        cartData?.data?.cart_items?.length > 0 ||
+        cartData?.data?.length > 0
+      ) {
         // Existing Odoo cart found
         setHasExistingOdooCart(true);
         setIsLocalCartMode(false);

@@ -2,10 +2,10 @@ import Container from "Components/Container/Container";
 import Logo from "assests/logo.png";
 import { DealerCartContext } from "context/DealerCart/DealerCartContext";
 import { DealerLoginContext } from "context/Auth/DealerContext";
-import { useContext, useState, useMemo } from "react";
+import { useContext, useState, useMemo, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Spinner from "Components/RequestHandler/Spinner";
-import { Trash } from "@phosphor-icons/react";
+import { Trash, X } from "@phosphor-icons/react";
 import useGetDataToken from "Hooks/Fetching/useGetDataToken.jsx";
 import usePostToken from "Hooks/Fetching/usePostToken";
 
@@ -35,6 +35,26 @@ const Reciept = () => {
   const [paymentIsLoading, setPaymentIsLoading] = useState(false);
   const [onAccountLoading, setOnAccountLoading] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  const modalRef = useRef(null);
+
+  // Close modal when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setShowConfirmModal(false);
+      }
+    };
+
+    if (showConfirmModal) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showConfirmModal]);
 
   // Calculate subtotal for local cart
   const subtotal = useMemo(() => {
@@ -63,6 +83,7 @@ const Reciept = () => {
   const payNowHandler = async () => {
     try {
       setPaymentIsLoading(true);
+      setShowConfirmModal(false);
 
       // If in local mode, first transfer items to Odoo cart
       if (isLocalCartMode && localCart?.length > 0) {
@@ -101,6 +122,7 @@ const Reciept = () => {
   const onAccountHandler = async () => {
     try {
       setOnAccountLoading(true);
+      setShowConfirmModal(false);
 
       // If in local mode, first transfer items to Odoo cart
       if (isLocalCartMode && localCart?.length > 0) {
@@ -278,40 +300,94 @@ const Reciept = () => {
 
               <div className=" mt-4 flex items-center gap-x-2">
                 <button
-                  onClick={onAccountHandler}
-                  disabled={
-                    cartItems.length === 0 ||
-                    onAccountLoading ||
-                    paymentIsLoading
-                  }
+                  onClick={() => setShowConfirmModal(true)}
+                  disabled={cartItems.length === 0}
                   className={`flex-1 bg-primary py-2 text-white flex items-center justify-center ${
                     cartItems.length === 0
                       ? "opacity-50 cursor-not-allowed"
                       : ""
                   }`}
                 >
-                  {onAccountLoading ? <Spinner /> : "On Account"}
-                </button>
-
-                <button
-                  onClick={payNowHandler}
-                  disabled={
-                    cartItems.length === 0 ||
-                    onAccountLoading ||
-                    paymentIsLoading
-                  }
-                  className={`flex-1 bg-primary py-2 text-white flex items-center justify-center ${
-                    cartItems.length === 0
-                      ? "opacity-50 cursor-not-allowed"
-                      : ""
-                  }`}
-                >
-                  {paymentIsLoading ? <Spinner /> : " Pay Now"}
+                  Confirm Your Order
                 </button>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Confirmation Modal with Overlay */}
+        {showConfirmModal && (
+          <>
+            {/* Black overlay */}
+            <div className="fixed inset-0 bg-black/80 z-40"></div>
+
+            {/* Modal */}
+            <div
+              ref={modalRef}
+              className="fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white shadow-xl rounded-lg p-8 w-[450px] max-w-[90vw]"
+            >
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl rb-bold text-primary">Confirm Order</h3>
+                <button
+                  onClick={() => setShowConfirmModal(false)}
+                  className="text-gray-500 hover:text-gray-800 transition-colors"
+                >
+                  <X size={22} weight="bold" />
+                </button>
+              </div>
+
+              <div className="mb-6">
+                <p className="text-gray-700 mb-2">
+                  You're about to place an order for:
+                </p>
+                <p className="text-lg rb-bold">
+                  {total} ${" "}
+                  {isLocalCartMode && (
+                    <span className="text-xs font-normal">(excl. tax)</span>
+                  )}
+                </p>
+                <p className="text-sm text-gray-600 mt-4">
+                  Please select how you would like to proceed with this order:
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={onAccountHandler}
+                  disabled={onAccountLoading}
+                  className="w-full bg-primary py-3 text-white rounded-md rb-bold hover:bg-primary/90 transition-colors flex items-center justify-center"
+                >
+                  {onAccountLoading ? <Spinner /> : "Yes, Confirm Order"}
+                </button>
+
+                <button
+                  onClick={() => setShowConfirmModal(false)}
+                  className="w-full bg-gray-200 py-3 text-gray-800 rounded-md rb-bold hover:bg-gray-300 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+
+              <div className="mt-16">
+                <h4 className="text-lg rb-bold text-[#2563EB] mb-3">
+                  Payment Options
+                </h4>
+                <p className="text-gray-700 mb-4">
+                  Would you like to complete your purchase with an immediate
+                  payment? Our secure payment gateway ensures your transaction
+                  is safe and efficient.
+                </p>
+                <button
+                  onClick={payNowHandler}
+                  disabled={paymentIsLoading}
+                  className="w-full bg-[#2563EB] py-3 text-white rounded-md rb-bold hover:bg-[#2563EB]/90 transition-colors flex items-center justify-center"
+                >
+                  {paymentIsLoading ? <Spinner /> : "Pay Now"}
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </Container>
     </div>
   );
