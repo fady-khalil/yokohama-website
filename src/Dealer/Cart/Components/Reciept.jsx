@@ -123,7 +123,7 @@ const Reciept = () => {
     try {
       setOnAccountLoading(true);
       setShowConfirmModal(false);
-
+      console.log(isLocalCartMode && localCart?.length > 0);
       // If in local mode, first transfer items to Odoo cart
       if (isLocalCartMode && localCart?.length > 0) {
         console.log(
