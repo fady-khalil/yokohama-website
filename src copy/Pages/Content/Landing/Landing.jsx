@@ -3,7 +3,8 @@ import Container from "Components/Container/Container";
 import "./style.css";
 const Landing = ({ text, title }) => {
   // The base URL to prepend to image sources
-  const baseURL = "https://erpxcloud-yokohamav3-dowgroup-14622520.dev.odoo.com";
+  const baseURL =
+    "https://erpxcloud-yokohamav3-18-06-2025-21603556.dev.odoo.com";
 
   // Function to update image src attributes in the HTML string
   const updateImageSrc = (htmlContent) => {
