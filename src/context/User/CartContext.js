@@ -6,7 +6,11 @@ import usePostToken from "Hooks/Fetching/usePostToken";
 
 export const UserCartContext = createContext();
 
-// Local storage utility functions with expiry
+// Constants
+const CART_STORAGE_KEY = "yokohama_cart";
+const CART_EXPIRY_HOURS = 24; // 24 hours expiry
+
+// Utility functions for localStorage with expiry
 const setWithExpiry = (key, value, ttl) => {
   const now = new Date();
   const item = {
@@ -20,309 +24,572 @@ const getWithExpiry = (key) => {
   const itemStr = localStorage.getItem(key);
   if (!itemStr) return null;
 
-  const item = JSON.parse(itemStr);
-  const now = new Date();
+  try {
+    const item = JSON.parse(itemStr);
+    const now = new Date();
 
-  if (now.getTime() > item.expiry) {
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key);
+      return null;
+    }
+    return item.value;
+  } catch (error) {
+    console.error("Error parsing cart from localStorage:", error);
     localStorage.removeItem(key);
     return null;
   }
-  return item.value;
+};
+
+// Cart modes
+const CART_MODES = {
+  LOCALSTORAGE: "localStorage", // Default mode - all items in localStorage
+  ODOO_ACTIVE: "odoo_active", // After Cash on Delivery - new items go to Odoo
 };
 
 export const UserCartProvider = ({ children }) => {
-  const { userToken, userIsSignIn } = useContext(UserLoginContext);
-  const [displayProduct, setDisplayProduct] = useState("");
-  // fetcing
+  const { userToken, userIsSignIn, handleUserLogout } =
+    useContext(UserLoginContext);
   const { fetchData } = useGetDataToken();
   const { postData } = usePostToken();
 
-  // payment states
+  // Core cart state
+  const [cart, setCart] = useState([]);
+  const [cartMode, setCartMode] = useState(CART_MODES.LOCALSTORAGE);
+
+  // UI states
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [loadingItems, setLoadingItems] = useState({});
+
+  // Payment states
   const [paymentRef, setPaymentRef] = useState(null);
   const [orderId, setOrderId] = useState(null);
 
-  // get cart
-  const [cart, setCart] = useState([]);
-  const [cartIsLoading, setCartIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
+  // Product display state
+  const [displayProduct, setDisplayProduct] = useState("");
 
-  // Local cart state
-  const [localCart, setLocalCart] = useState([]);
-  const [hasExistingOdooCart, setHasExistingOdooCart] = useState(false);
-  const [isLocalCartMode, setIsLocalCartMode] = useState(true);
-
-  // add to cart
-  const [addToCartLoading, setAddToCartLoading] = useState(false);
-  // update cart
-  const [updateCartIsLoading, setUpdateCartIsLoading] = useState(false);
-
-  // delete item from cart
-  const [loadingItems, setLoadingItems] = useState({});
-
-  // Check for existing cart on app init
+  // Load cart on mount and when user signs in
   useEffect(() => {
-    if (userIsSignIn) {
-      // Check for existing cart in Odoo when user is signed in
-      getCartData();
-    } else {
-      // If not signed in, first check if there's an active Odoo cart
-      checkForExistingOdooCart();
-    }
+    const loadCartData = async () => {
+      try {
+        if (userIsSignIn) {
+          // Always check Odoo first when user is signed in
+          await checkAndSyncOdooCart();
+        } else {
+          // Load from localStorage for non-signed-in users
+          loadCartFromStorage();
+        }
+      } catch (error) {
+        console.error("Error loading cart:", error);
+        setCart([]);
+      }
+    };
+
+    loadCartData();
   }, [userIsSignIn]);
 
-  // Load from local storage when in local cart mode
+  // Handle cart mode changes
   useEffect(() => {
-    if (isLocalCartMode && !userIsSignIn) {
-      // Load from local storage
-      const storedCart = getWithExpiry("userCart");
-      if (storedCart) {
-        setLocalCart(storedCart);
-        setCart({ cart_items: storedCart }); // Format to match Odoo cart structure
-      } else {
-        setLocalCart([]);
-        setCart({ cart_items: [] });
+    const handleModeChange = async () => {
+      if (cartMode === CART_MODES.ODOO_ACTIVE && userIsSignIn) {
+        // Refresh Odoo cart when switching to ODOO_ACTIVE mode
+        const odooCartData = await fetchOdooCart();
+        setCart(odooCartData);
       }
-    }
-  }, [isLocalCartMode, userIsSignIn]);
+    };
 
-  // Check if there's an existing Odoo cart for non-logged in users
-  const checkForExistingOdooCart = async () => {
+    handleModeChange();
+  }, [cartMode]);
+
+  // Load cart from localStorage
+  const loadCartFromStorage = () => {
     try {
-      setCartIsLoading(true);
-      const cartData = await fetchData("yokohama/cart/mine", userToken);
-
-      if (
-        cartData?.data?.cart_items?.length > 0 ||
-        cartData?.data?.length > 0
-      ) {
-        // Existing Odoo cart found
-        setHasExistingOdooCart(true);
-        setIsLocalCartMode(false);
-        setCart(cartData?.data);
-        console.log("Existing Odoo cart detected, using Odoo cart mode");
+      const storedCart = getWithExpiry(CART_STORAGE_KEY);
+      if (storedCart && Array.isArray(storedCart)) {
+        setCart(storedCart);
+        console.log(`Loaded ${storedCart.length} items from localStorage`);
       } else {
-        // No existing Odoo cart
-        setHasExistingOdooCart(false);
-        setIsLocalCartMode(true);
-        console.log("No existing Odoo cart, using local cart mode");
+        setCart([]);
       }
     } catch (error) {
-      console.error("Error checking for existing Odoo cart:", error);
-      setIsLocalCartMode(true); // Default to local mode on error
-    } finally {
-      setCartIsLoading(false);
+      console.error("Error loading cart from storage:", error);
+      setCart([]);
     }
   };
 
-  const displayProductHandler = (product) => {
-    setDisplayProduct(product);
+  // Save cart to localStorage
+  const saveCartToStorage = (cartItems) => {
+    try {
+      const ttl = CART_EXPIRY_HOURS * 60 * 60 * 1000; // Convert hours to milliseconds
+      setWithExpiry(CART_STORAGE_KEY, cartItems, ttl);
+      console.log(`Saved ${cartItems.length} items to localStorage`);
+    } catch (error) {
+      console.error("Error saving cart to storage:", error);
+    }
   };
 
-  const getCartData = async () => {
+  // Fetch cart from Odoo
+  const fetchOdooCart = async () => {
     try {
-      setCartIsLoading(true);
-      const cartData = await fetchData("yokohama/cart/mine", userToken);
-      setCart(cartData?.data);
+      if (!userIsSignIn || !userToken) {
+        console.log("User not signed in, cannot fetch Odoo cart");
+        return [];
+      }
 
-      // Check if there's an existing Odoo cart with items
-      if (cartData?.data?.cart_items?.length > 0) {
-        setHasExistingOdooCart(true);
-        setIsLocalCartMode(false);
+      setIsLoading(true);
+      console.log("Fetching cart from Odoo...");
+
+      const response = await fetchData("yokohama/cart/mine", userToken);
+      console.log("Odoo cart response:", response);
+
+      // Check for invalid token
+      if (response?.message === "Invalid token") {
+        console.warn("Token invalid, logging out user");
+        handleUserLogout();
+        return [];
+      }
+
+      // Check if response has cart data
+      if (response?.is_success && response?.data?.cart_items) {
+        const odooCartItems = response.data.cart_items.map((item) => ({
+          id: item.product_id || item.id,
+          product_id: item.product_id || item.id,
+          name: item.name || item.product_name,
+          price: item.price || item.unit_price,
+          retail_price: item.retail_price || item.unit_price,
+          currency: item.currency || "$",
+          image: item.image || item.product_image,
+          quantity: item.quantity || 1,
+          description: item.description,
+          category: item.category,
+          brand: item.brand,
+        }));
+
+        // Return the complete cart object structure
+        const cartObject = {
+          cart_items: odooCartItems,
+          cart_id: response.data.cart_id || response.data.id,
+          invoice_details: response.data.invoice_details || [],
+        };
+
+        console.log(`✅ Fetched ${odooCartItems.length} items from Odoo cart`);
+        return cartObject;
       } else {
-        setHasExistingOdooCart(false);
-        // Only set to local mode if not signed in
-        if (!userIsSignIn) {
-          setIsLocalCartMode(true);
+        console.log("No cart items found in Odoo");
+        return [];
+      }
+    } catch (error) {
+      console.error("Error fetching Odoo cart:", error);
+      return [];
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Check if user has active Odoo cart and switch mode if needed
+  const checkAndSyncOdooCart = async () => {
+    try {
+      if (!userIsSignIn || !userToken) {
+        console.log("User not signed in, cannot check Odoo cart");
+        return;
+      }
+
+      console.log("Checking for active Odoo cart...");
+      const odooCartData = await fetchOdooCart();
+      console.log("Odoo cart data:", odooCartData);
+
+      // Handle both array (empty) and object (with items) responses
+      const hasItems = Array.isArray(odooCartData)
+        ? odooCartData.length > 0
+        : odooCartData?.cart_items?.length > 0;
+
+      if (hasItems) {
+        const itemCount = Array.isArray(odooCartData)
+          ? odooCartData.length
+          : odooCartData.cart_items.length;
+
+        console.log(
+          `Found ${itemCount} items in Odoo cart - switching to ODOO_ACTIVE mode`
+        );
+        setCartMode(CART_MODES.ODOO_ACTIVE);
+        setCart(odooCartData);
+
+        // Clear localStorage cart since we're now using Odoo
+        localStorage.removeItem(CART_STORAGE_KEY);
+      } else {
+        console.log("No active Odoo cart found - using localStorage mode");
+        // Only load localStorage if no Odoo cart exists
+        if (cartMode !== CART_MODES.ODOO_ACTIVE) {
+          loadCartFromStorage();
         }
       }
     } catch (error) {
-      setIsError(true);
-      console.error("Error fetching cart data:", error);
-    } finally {
-      setCartIsLoading(false);
+      console.error("Error checking Odoo cart:", error);
     }
   };
 
-  // Add to Odoo cart - only used when user is signed in or has existing Odoo cart
-  const userAddToCart = async (productId, quantity = 1) => {
+  // Universal add to cart function
+  const addToCart = async (product, quantity = 1) => {
     try {
-      setAddToCartLoading(true);
-      const addToCartData = await postData(
-        `yokohama/cart/${productId}`,
-        userToken
+      setIsAddingToCart(true);
+
+      // In ODOO_ACTIVE mode, add directly to Odoo
+      if (cartMode === CART_MODES.ODOO_ACTIVE && userIsSignIn) {
+        const success = await addToOdooCart(product.id, quantity);
+        if (success) {
+          // Refresh cart display after adding to Odoo
+          const updatedCart = await fetchOdooCart();
+          setCart(updatedCart);
+        }
+        return success;
+      }
+
+      // Default: Add to localStorage (works for both signed-in and non-signed-in users)
+      const cartItems = Array.isArray(cart) ? cart : cart?.cart_items || [];
+      const existingItemIndex = cartItems.findIndex(
+        (item) => item.id === product.id || item.product_id === product.id
       );
 
-      if (addToCartData?.is_success) {
-        getCartData();
+      let updatedCartItems;
+
+      if (existingItemIndex >= 0) {
+        // Update existing item quantity
+        updatedCartItems = [...cartItems];
+        updatedCartItems[existingItemIndex] = {
+          ...updatedCartItems[existingItemIndex],
+          quantity:
+            (updatedCartItems[existingItemIndex].quantity || 0) + quantity,
+        };
+      } else {
+        // Add new item - be careful not to override our quantity with product.quantity object
+        const cartItem = {
+          id: product.id,
+          product_id: product.id,
+          name: product.name,
+          price: product.retail_price || product.price,
+          retail_price: product.retail_price || product.price,
+          currency: product.currency || "$",
+          image: product.image,
+          // Store the simple quantity number, not the complex product.quantity object
+          quantity: quantity,
+          // Include other useful product properties, but exclude complex quantity object
+          description: product.description,
+          category: product.category,
+          brand: product.brand,
+          // Store original quantity info separately if needed for stock validation
+          stock_info: product.quantity,
+        };
+        updatedCartItems = [...cartItems, cartItem];
       }
-      return addToCartData?.is_success;
+
+      // Update cart based on current format
+      if (Array.isArray(cart)) {
+        setCart(updatedCartItems);
+        saveCartToStorage(updatedCartItems);
+      } else {
+        setCart({ ...cart, cart_items: updatedCartItems });
+      }
+
+      console.log(`✅ Added ${product.name} to cart (localStorage)`);
+      return true;
     } catch (error) {
       console.error("Error adding to cart:", error);
       return false;
     } finally {
-      setAddToCartLoading(false);
+      setIsAddingToCart(false);
     }
   };
 
-  // Add multiple products to Odoo cart
-  const addProductsToOdooCart = async (products) => {
+  // Add to Odoo cart (used for checkout flows and ODOO_ACTIVE mode)
+  const addToOdooCart = async (productId, quantity = 1) => {
     try {
-      setAddToCartLoading(true);
-      let success = true;
-
-      for (const product of products) {
-        const productId = product.id || product.product_id;
-        const quantity = product.quantity || 1;
-
-        const result = await userAddToCart(productId, quantity);
-        if (!result) {
-          success = false;
-        }
+      if (!userIsSignIn || !userToken) {
+        console.error("User not signed in, cannot add to Odoo cart");
+        return false;
       }
 
-      return success;
+      const response = await postData(`yokohama/cart/${productId}`, userToken);
+      console.log("Odoo cart response:", response);
+
+      // Check for invalid token
+      if (response?.message === "Invalid token") {
+        console.warn("Token invalid, logging out user");
+        handleUserLogout();
+        return false;
+      }
+
+      const isSuccess = response?.is_success === true;
+
+      if (isSuccess) {
+        console.log(`✅ Added product ${productId} to Odoo cart`);
+      } else {
+        console.warn("Failed to add to Odoo cart:", response);
+      }
+
+      return isSuccess;
     } catch (error) {
-      console.error("Error adding products to Odoo cart:", error);
+      console.error("Error adding to Odoo cart:", error);
       return false;
-    } finally {
-      setAddToCartLoading(false);
     }
   };
 
-  const updateCart = async (productId, quantity) => {
-    // If NOT in local cart mode (user is signed in OR we have an existing Odoo cart)
-    if (!isLocalCartMode) {
-      try {
-        setUpdateCartIsLoading(true);
-        const dataUpdatedData = await fetchData(
-          `/yokohama/cart/update/${productId}?quantity=${quantity}`,
-          userToken
-        );
-        setCart(dataUpdatedData?.data);
-      } catch (error) {
-        console.error("Error updating cart:", error);
-      } finally {
-        setUpdateCartIsLoading(false);
+  // Transfer all localStorage items to Odoo
+  const transferCartToOdoo = async () => {
+    try {
+      if (!userIsSignIn || !userToken) {
+        throw new Error("User not signed in");
       }
-    } else {
-      // Update local cart
-      const updatedCart = localCart.map((item) =>
-        item.id === productId || item.product_id === productId
-          ? { ...item, quantity }
-          : item
-      );
-      setLocalCart(updatedCart);
-      setCart({ cart_items: updatedCart }); // Format to match Odoo cart structure
-      setWithExpiry("userCart", updatedCart, 12 * 60 * 60 * 1000); // 12 hours
-    }
-  };
 
-  const addToLocalCart = (product) => {
-    // Don't use local cart if we're not in local cart mode
-    if (!isLocalCartMode) {
-      console.warn("Attempted to add to local cart while in Odoo cart mode");
-      userAddToCart(product.id, product.quantity || 1);
-      return;
-    }
+      const cartItems = Array.isArray(cart) ? cart : cart?.cart_items || [];
 
-    // Check if product already exists in cart
-    const existingItemIndex = localCart.findIndex(
-      (item) => item.id === product.id || item.product_id === product.id
-    );
+      if (cartItems.length === 0) {
+        console.log("No items to transfer to Odoo");
+        return { success: true, transferredCount: 0 };
+      }
 
-    if (existingItemIndex >= 0) {
-      // Update quantity if product exists
-      const updatedCart = [...localCart];
-      const newQuantity =
-        (product.quantity || 1) +
-        (updatedCart[existingItemIndex].quantity || 0);
+      console.log(`Starting transfer of ${cartItems.length} items to Odoo`);
 
-      updatedCart[existingItemIndex] = {
-        ...updatedCart[existingItemIndex],
-        quantity: newQuantity,
-      };
-      setLocalCart(updatedCart);
-      setCart({ cart_items: updatedCart }); // Format to match Odoo cart structure
-      setWithExpiry("userCart", updatedCart, 12 * 60 * 60 * 1000);
-    } else {
-      // Add new product
-      const cartItem = {
-        ...product,
-        product_id: product.id,
-        quantity: product.quantity || 1,
-      };
-      const updatedCart = [...localCart, cartItem];
-      setLocalCart(updatedCart);
-      setCart({ cart_items: updatedCart }); // Format to match Odoo cart structure
-      setWithExpiry("userCart", updatedCart, 12 * 60 * 60 * 1000);
-    }
-  };
+      let successCount = 0;
+      let failedProducts = [];
 
-  const removeFromCart = async (productId) => {
-    // If NOT in local cart mode (user is signed in OR we have an existing Odoo cart)
-    if (!isLocalCartMode) {
-      try {
-        setLoadingItems((prev) => ({ ...prev, [productId]: true }));
-        const deletItemData = await fetchData(
-          `yokohama/cart/delete/${productId}`,
-          userToken
+      for (const item of cartItems) {
+        const productId = item.id || item.product_id;
+        const quantity = item.quantity || 1;
+
+        console.log(
+          `Transferring product ${productId} (${item.name}) with quantity ${quantity}`
         );
-        if (deletItemData?.is_success) {
-          setCart(deletItemData?.data);
+
+        const success = await addToOdooCart(productId, quantity);
+
+        if (success) {
+          successCount++;
+        } else {
+          failedProducts.push({
+            id: productId,
+            name: item.name || "Unknown product",
+          });
         }
-      } catch (error) {
-        console.error("Error removing from cart:", error);
-      } finally {
-        setLoadingItems((prev) => ({ ...prev, [productId]: false }));
       }
-    } else {
-      // Remove from local cart
-      const updatedCart = localCart.filter(
-        (item) => item.id !== productId && item.product_id !== productId
+
+      console.log(
+        `Transfer completed: ${successCount}/${cartItems.length} items successful`
       );
-      setLocalCart(updatedCart);
-      setCart({ cart_items: updatedCart }); // Format to match Odoo cart structure
-      setWithExpiry("userCart", updatedCart, 12 * 60 * 60 * 1000);
+
+      if (failedProducts.length > 0) {
+        console.warn("Failed to transfer:", failedProducts);
+      }
+
+      return {
+        success: successCount > 0,
+        transferredCount: successCount,
+        failedProducts: failedProducts,
+      };
+    } catch (error) {
+      console.error("Error transferring cart to Odoo:", error);
+      return { success: false, transferredCount: 0, failedProducts: [] };
     }
   };
 
+  // Update item quantity
+  const updateQuantity = (productId, quantity) => {
+    try {
+      if (quantity < 1) {
+        removeFromCart(productId);
+        return;
+      }
+
+      if (Array.isArray(cart)) {
+        // Handle localStorage array format
+        const updatedCart = cart.map((item) =>
+          item.id === productId || item.product_id === productId
+            ? { ...item, quantity }
+            : item
+        );
+
+        setCart(updatedCart);
+        saveCartToStorage(updatedCart);
+      } else {
+        // Handle Odoo object format
+        const updatedCartItems = cart.cart_items.map((item) =>
+          item.id === productId || item.product_id === productId
+            ? { ...item, quantity }
+            : item
+        );
+
+        setCart({ ...cart, cart_items: updatedCartItems });
+      }
+
+      console.log(`Updated product ${productId} quantity to ${quantity}`);
+    } catch (error) {
+      console.error("Error updating quantity:", error);
+    }
+  };
+
+  // Remove item from cart
+  const removeFromCart = (productId) => {
+    try {
+      setLoadingItems((prev) => ({ ...prev, [productId]: true }));
+
+      if (Array.isArray(cart)) {
+        // Handle localStorage array format
+        const updatedCart = cart.filter(
+          (item) => item.id !== productId && item.product_id !== productId
+        );
+
+        setCart(updatedCart);
+        saveCartToStorage(updatedCart);
+      } else {
+        // Handle Odoo object format
+        const updatedCartItems = cart.cart_items.filter(
+          (item) => item.id !== productId && item.product_id !== productId
+        );
+
+        setCart({ ...cart, cart_items: updatedCartItems });
+      }
+
+      console.log(`Removed product ${productId} from cart`);
+    } catch (error) {
+      console.error("Error removing from cart:", error);
+    } finally {
+      setLoadingItems((prev) => ({ ...prev, [productId]: false }));
+    }
+  };
+
+  // Clear cart
   const clearCart = () => {
     setCart([]);
-    setLocalCart([]);
-    localStorage.removeItem("userCart");
+    localStorage.removeItem(CART_STORAGE_KEY);
+    console.log("Cart cleared");
+  };
+
+  // Get cart summary
+  const getCartSummary = () => {
+    // Handle both localStorage array format and Odoo object format
+    const cartItems = Array.isArray(cart) ? cart : cart?.cart_items || [];
+
+    if (cartItems.length === 0) {
+      return { itemCount: 0, subtotal: 0 };
+    }
+
+    const itemCount = cartItems.reduce((total, item) => {
+      // Handle both simple numbers and complex quantity objects
+      const quantity =
+        typeof item.quantity === "object"
+          ? item.quantity?.free_quantity || 0
+          : item.quantity || 0;
+      return total + quantity;
+    }, 0);
+
+    const subtotal = cartItems.reduce((total, item) => {
+      const price = Number(item.retail_price || item.price || 0);
+      // Handle both simple numbers and complex quantity objects
+      const quantity =
+        typeof item.quantity === "object"
+          ? item.quantity?.free_quantity || 0
+          : item.quantity || 0;
+      return total + price * quantity;
+    }, 0);
+
+    return {
+      itemCount,
+      subtotal: subtotal.toFixed(2),
+      // VAT will be calculated on server side after transfer
+    };
+  };
+
+  // Get cart data in the format expected by components
+  const getCartData = () => {
+    // If we're in ODOO_ACTIVE mode and cart is already an object, return cart_items array
+    if (
+      cartMode === CART_MODES.ODOO_ACTIVE &&
+      cart &&
+      typeof cart === "object" &&
+      !Array.isArray(cart)
+    ) {
+      // Return the cart_items array but add the additional properties as non-enumerable
+      const cartItems = cart.cart_items || [];
+
+      // Add cart metadata as non-enumerable properties
+      Object.defineProperty(cartItems, "cart_id", {
+        value: cart.cart_id,
+        writable: false,
+        enumerable: false,
+        configurable: true,
+      });
+
+      Object.defineProperty(cartItems, "invoice_details", {
+        value: cart.invoice_details,
+        writable: false,
+        enumerable: false,
+        configurable: true,
+      });
+
+      return cartItems;
+    }
+
+    // Otherwise, return cart as array (localStorage mode)
+    return Array.isArray(cart) ? cart : [];
+  };
+
+  // Set cart mode (used after Cash on Delivery)
+  const setCartModeToOdoo = () => {
+    setCartMode(CART_MODES.ODOO_ACTIVE);
+    console.log(
+      "Cart mode set to ODOO_ACTIVE - new items will go directly to Odoo"
+    );
+  };
+
+  // Reset cart mode to localStorage (used for new sessions)
+  const resetCartMode = () => {
+    setCartMode(CART_MODES.LOCALSTORAGE);
+    console.log("Cart mode reset to localStorage");
+  };
+
+  // Display product handler
+  const displayProductHandler = (product) => {
+    setDisplayProduct(product);
+  };
+
+  // Context value
+  const contextValue = {
+    // Cart data
+    cart: getCartData(),
+    setCart,
+    cartMode,
+    isLoading,
+    isAddingToCart,
+    loadingItems,
+
+    // Cart operations
+    addToCart,
+    updateQuantity,
+    removeFromCart,
+    clearCart,
+    transferCartToOdoo,
+    fetchOdooCart,
+    checkAndSyncOdooCart,
+
+    // Cart info
+    getCartSummary,
+
+    // Cart modes
+    setCartModeToOdoo,
+    resetCartMode,
+
+    // Payment states
+    paymentRef,
+    setPaymentRef,
+    orderId,
+    setOrderId,
+
+    // Product display
+    displayProduct,
+    displayProductHandler,
   };
 
   return (
-    <UserCartContext.Provider
-      value={{
-        // payment states
-        paymentRef,
-        setPaymentRef,
-        orderId,
-        setOrderId,
-        // display product
-        displayProductHandler,
-        displayProduct,
-        // cart state
-        cart,
-        cartIsLoading,
-        // local cart
-        localCart,
-        addToLocalCart,
-        isLocalCartMode,
-        hasExistingOdooCart,
-        // odoo cart operations
-        userAddToCart,
-        addProductsToOdooCart,
-        addToCartLoading,
-        // cart operations
-        removeFromCart,
-        loadingItems,
-        updateCart,
-        clearCart,
-        updateCartIsLoading,
-      }}
-    >
+    <UserCartContext.Provider value={contextValue}>
       {children}
     </UserCartContext.Provider>
   );

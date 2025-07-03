@@ -17,7 +17,7 @@ import icon from "assests/Auth/y1/y1.png";
 import image from "assests/product-3-removebg-preview.png";
 // context
 import { UserLoginContext } from "context/Auth/UserLoginContext";
-import { GuestCartContext } from "context/Guest/GuestCartContext";
+
 import { UserCartContext } from "context/User/CartContext";
 import { UserWishlistContext } from "context/User/WishlistContext";
 import { Link } from "react-router-dom";
@@ -27,25 +27,16 @@ const POPUP_TIMEOUT = 5000;
 
 const ProductInfo = ({ product }) => {
   console.log(product);
-  const {
-    addToCart,
-    cart: guestCart,
-    updateCart: guestUpdateCart,
-    removeFromCart: guestRemoveFromCart,
-  } = useContext(GuestCartContext);
   const { userIsSignIn, userData } = useContext(UserLoginContext);
   const {
-    userAddToCart,
-    addToCartLoading,
-    displayProductHandler,
+    addToCart,
     cart,
-    updateCart,
-    updateCartIsLoading,
+    updateQuantity,
     removeFromCart,
+    isAddingToCart,
     loadingItems,
-    hasExistingOdooCart,
-    addToLocalCart,
-    isLocalCartMode,
+    displayProductHandler,
+    getCartSummary,
   } = useContext(UserCartContext);
 
   const { getWishlistData, userAddToWihlist, addTowishlistLoading, wishlist } =
@@ -60,20 +51,10 @@ const ProductInfo = ({ product }) => {
   const [isLoadingWhatsapp, setIsLoadingWhatsapp] = useState(false);
 
   useEffect(() => {
-    if (userIsSignIn && cart?.cart_items) {
-      const foundItem = cart.cart_items.find(
-        (item) => item.product_id === product.id
-      );
-      if (foundItem) {
-        setIsInCart(true);
-        setQuantity(foundItem.quantity);
-      } else {
-        setIsInCart(false);
-        setQuantity(1);
-      }
-    } else if (!userIsSignIn && cart?.cart_items) {
-      const foundItem = cart.cart_items.find(
-        (item) => item.product_id === product.id || item.id === product.id
+    // Check if product is in cart (simplified cart structure)
+    if (cart && Array.isArray(cart)) {
+      const foundItem = cart.find(
+        (item) => item.id === product.id || item.product_id === product.id
       );
       if (foundItem) {
         setIsInCart(true);
@@ -84,13 +65,14 @@ const ProductInfo = ({ product }) => {
       }
     }
 
+    // Check if product is in wishlist
     if (wishlist) {
       const foundWishlistItem = wishlist?.wishlist?.find(
         (item) => item.id === product.id
       );
       setIsInWishlist(!!foundWishlistItem);
     }
-  }, [cart, product.id, userIsSignIn, wishlist]);
+  }, [cart, product.id, wishlist]);
 
   const handleQuantityChange = (productId, newQuantity) => {
     const freeQuantity = product?.quantity?.free_quantity;
@@ -100,7 +82,7 @@ const ProductInfo = ({ product }) => {
       setShowStockPopup(true);
 
       if (isInCart) {
-        updateCart(productId, freeQuantity);
+        updateQuantity(productId, freeQuantity);
       }
       return;
     }
@@ -112,23 +94,15 @@ const ProductInfo = ({ product }) => {
     setQuantity(newQuantity);
 
     if (isInCart) {
-      updateCart(productId, newQuantity);
+      updateQuantity(productId, newQuantity);
     }
   };
 
   const addToCartHandler = async (product) => {
     displayProductHandler(product);
 
-    // If we're not in local cart mode (user is signed in or has existing Odoo cart)
-    if (!isLocalCartMode) {
-      await userAddToCart(product?.id);
-      if (quantity > 1) {
-        await updateCart(product?.id, quantity);
-      }
-    } else {
-      // Add to local cart with the selected quantity
-      addToLocalCart({ ...product, quantity });
-    }
+    // Use the universal addToCart function
+    await addToCart(product, quantity);
 
     setTimeout(() => {
       setShowPopup(true);
@@ -273,7 +247,11 @@ const ProductInfo = ({ product }) => {
     <Container>
       <div className="flex flex-col flex-col lg:flex-row items-center gap-y-6 gap-x-32 py-secondary lg:py-primary">
         <div className="flex-1 flex flex-col items-center justify-center p-12">
-          <img className="lg:w-3/4 lg:h-3/4 mx-auto" src={image} alt="" />
+          <img
+            className="lg:w-3/4 lg:h-3/4 mx-auto"
+            src={product?.images}
+            alt=""
+          />
         </div>
         <div className="flex-1">
           {/* cat */}
@@ -324,7 +302,7 @@ const ProductInfo = ({ product }) => {
                   >
                     -
                   </p>
-                  {updateCartIsLoading ? <Spinner /> : <p>{quantity}</p>}
+                  {loadingItems[product.id] ? <Spinner /> : <p>{quantity}</p>}
                   <p
                     onClick={() =>
                       handleQuantityChange(product?.id, quantity + 1)
@@ -389,7 +367,7 @@ const ProductInfo = ({ product }) => {
                     onClick={() => addToCartHandler(product)}
                     className="bg-primary text-white rb-bold w-full text-center grid  py-3 flex items-center justify-center gap-x-2"
                   >
-                    {addToCartLoading ? <Spinner /> : " Add To Cart"}
+                    {isAddingToCart ? <Spinner /> : " Add To Cart"}
                   </button>
                 </div>
               )}

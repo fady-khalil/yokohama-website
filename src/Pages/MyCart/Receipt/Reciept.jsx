@@ -70,7 +70,8 @@ const Reciept = ({ shippingId, onSelectingTabs }) => {
         {shippingData &&
           !isLoading &&
           !paymentComplete &&
-          cart?.cart_items?.length > 0 && (
+          cart &&
+          cart.length > 0 && (
             <div>
               <DisplayReceipt
                 clearCart={clearCart}
@@ -84,7 +85,7 @@ const Reciept = ({ shippingId, onSelectingTabs }) => {
             </div>
           )}
 
-        {(!shippingId || !cart?.cart_items?.length) &&
+        {(!shippingId || !cart || cart.length === 0) &&
           !isLoading &&
           !paymentComplete && <EmptyCart />}
       </Container>

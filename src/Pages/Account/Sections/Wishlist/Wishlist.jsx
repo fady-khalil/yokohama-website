@@ -19,20 +19,20 @@ const Wishlist = () => {
     loadingItems,
   } = useContext(UserWishlistContext);
 
-  const { userAddToCart, addToCartLoading } = useContext(UserCartContext);
+  const { addToCart, isAddingToCart } = useContext(UserCartContext);
 
   // Track loading state for individual products
   const [loadingProduct, setLoadingProduct] = useState({});
 
-  const handleAddToCart = async (id) => {
-    setLoadingProduct((prev) => ({ ...prev, [id]: true }));
+  const handleAddToCart = async (product) => {
+    setLoadingProduct((prev) => ({ ...prev, [product.id]: true }));
     try {
-      await userAddToCart(id); // Add product to the cart
-      removeFromWishlist(id); // Remove product from the wishlist
+      await addToCart(product); // Add product to the cart
+      removeFromWishlist(product.id); // Remove product from the wishlist
     } catch (error) {
       console.error("Failed to add item to cart", error);
     } finally {
-      setLoadingProduct((prev) => ({ ...prev, [id]: false }));
+      setLoadingProduct((prev) => ({ ...prev, [product.id]: false }));
     }
   };
 
@@ -47,41 +47,45 @@ const Wishlist = () => {
         ) : wishlist?.wishlist?.length > 0 ? (
           <div className="flex flex-col lg:flex-row gap-16">
             <div className="flex-[2] flex flex-col gap-y-3">
-              {wishlist?.wishlist?.map(
-                ({ name, image, price, currency, quantity, id }, index) => (
-                  <div
-                    className="flex flex-wrap gap-6 items-center justify-between w-full border-b pb-3"
-                    key={index}
+              {wishlist?.wishlist?.map((product, index) => (
+                <div
+                  className="flex flex-wrap gap-6 items-center justify-between w-full border-b pb-3"
+                  key={index}
+                >
+                  <img className="w-28" src={product.image} alt="" />
+                  <Link to={`/product-detailed/${product.id}`}>
+                    <p className="min-w-[fit-content] font-medium">
+                      {product.name}
+                    </p>
+                    <span className="mt-2 flex items-center gap-x-2">
+                      <p>{product.price}</p>
+                      <p>{product.currency}</p>
+                    </span>
+                  </Link>
+
+                  <button
+                    onClick={() => removeFromWishlist(product.id)}
+                    className="flex items-center justify-center"
                   >
-                    <img className="w-28" src={image} alt="" />
-                    <Link to={`/product-detailed/${id}`}>
-                      <p className="min-w-[fit-content] font-medium">{name}</p>
-                      <span className="mt-2 flex items-center gap-x-2">
-                        <p>{price}</p>
-                        <p>{currency}</p>
-                      </span>
-                    </Link>
+                    {loadingItems[product.id] ? (
+                      <Spinner />
+                    ) : (
+                      <Trash weight="fill" size={26} />
+                    )}
+                  </button>
 
-                    <button
-                      onClick={() => removeFromWishlist(id)}
-                      className="flex items-center justify-center"
-                    >
-                      {loadingItems[id] ? (
-                        <Spinner />
-                      ) : (
-                        <Trash weight="fill" size={26} />
-                      )}
-                    </button>
-
-                    <button
-                      onClick={() => handleAddToCart(id)}
-                      className="border border-primary py-2 px-6"
-                    >
-                      {loadingProduct[id] ? <Spinner /> : "Add Item To Cart"}
-                    </button>
-                  </div>
-                )
-              )}
+                  <button
+                    onClick={() => handleAddToCart(product)}
+                    className="border border-primary py-2 px-6"
+                  >
+                    {loadingProduct[product.id] ? (
+                      <Spinner />
+                    ) : (
+                      "Add Item To Cart"
+                    )}
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         ) : (

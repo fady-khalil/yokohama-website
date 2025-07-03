@@ -14,7 +14,7 @@ import AddressForm from "form/AddressForm";
 import DisplayAddress from "./Components/DisplayAddress";
 
 const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
-  const { cart, isLocalCartMode } = useContext(UserCartContext);
+  const { cart } = useContext(UserCartContext);
   // context
   const { userToken, userIsSignIn } = useContext(UserLoginContext);
   // handling fetching and posting data
@@ -56,17 +56,17 @@ const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
 
   // Check if we should redirect back to cart review
   useEffect(() => {
-    // If we're in local cart mode, redirect back to cart review
-    // This ensures users can't directly access shipping without going through cart review
-    if (isLocalCartMode && !userIsSignIn) {
+    // If user is not signed in, redirect back to cart review
+    // This ensures users can't directly access shipping without being signed in
+    if (!userIsSignIn) {
       onSelectingTabs(1);
     }
 
     // If cart is empty, redirect back to cart review
-    if (!cart?.cart_items?.length) {
+    if (!cart || cart.length === 0) {
       onSelectingTabs(1);
     }
-  }, [isLocalCartMode, userIsSignIn, cart, onSelectingTabs]);
+  }, [userIsSignIn, cart, onSelectingTabs]);
 
   // Update the view after the user adds a billing address
   const [isSuccess, setIsSucces] = useState(false);
@@ -81,9 +81,28 @@ const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
 
   const addShippingIdToCart = async () => {
     try {
+      // Validate that we have a shipping ID before proceeding
+      if (!shippingId) {
+        setIsError(true);
+        setTimeout(() => {
+          setIsError(false);
+        }, 2000);
+        return;
+      }
+
+      // Validate that we have a cart ID
+      if (!cart?.cart_id) {
+        setIsError(true);
+        setTimeout(() => {
+          setIsError(false);
+        }, 2000);
+        return;
+      }
+
       setAddShippingIdToCartLoading(true);
+
       const addShippingIdToCartData = await postData(
-        `yokohama/shipping/confirm?shipping_id=${shippingId}&order_id=${cart?.cart_id}`,
+        `yokohama/shipping/confirm?shipping_id=${shippingId}&order_id=${cart.cart_id}`,
         userToken
       );
 
@@ -97,7 +116,6 @@ const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
         }, 2000);
       }
     } catch (error) {
-      console.log(error);
       setIsError(true);
       setTimeout(() => {
         setIsError(false);
@@ -117,9 +135,9 @@ const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
           </div>
         )}
 
-        {!cart?.cart_items?.length && !isLoading && <EmptyCart />}
+        {(!cart || cart.length === 0) && !isLoading && <EmptyCart />}
 
-        {cart?.cart_items?.length > 0 && !isLoading && (
+        {cart && cart.length > 0 && !isLoading && (
           <div className="flex flex-col lg:flex-row gap-16">
             {!billingIsValid && (
               <AddressForm
@@ -138,6 +156,7 @@ const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
                 addShippingIdToCartIsError={isError}
                 addShippingIdToCartLoading={addShippingIdToCartLoading}
                 addShippingIdToCart={addShippingIdToCart}
+                shippingId={shippingId}
               />
             )}
           </div>

@@ -8,7 +8,6 @@ import { UserLoginContext } from "context/Auth/UserLoginContext";
 
 const MyCart = () => {
   const [selectedTabs, setSelectedTabs] = useState(1);
-  const { hasExistingOdooCart } = useContext(UserCartContext);
   const { userIsSignIn } = useContext(UserLoginContext);
 
   const selectedTabsHandler = (id) => {
@@ -23,7 +22,7 @@ const MyCart = () => {
   };
 
   // Determine if user should be able to navigate to specific tabs
-  const canAccessShipping = userIsSignIn || hasExistingOdooCart;
+  const canAccessShipping = userIsSignIn;
   const canAccessReceipt = canAccessShipping && shippingId;
 
   const handleTabChange = (tabId) => {

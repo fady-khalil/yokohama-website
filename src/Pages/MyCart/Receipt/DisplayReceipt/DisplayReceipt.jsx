@@ -20,8 +20,8 @@ const DisplayReceipt = ({
   const now = new Date();
   const formattedDate = now.toLocaleDateString("en-US");
 
-  const totalSubtotal = cartData?.cart_items?.reduce(
-    (total, order) => total + order.subtotal,
+  const totalSubtotal = cartData?.reduce(
+    (total, order) => total + (order.subtotal || 0),
     0
   );
 
@@ -131,7 +131,7 @@ const DisplayReceipt = ({
             </tr>
           </thead>
           <tbody>
-            {cartData?.cart_items?.map((order, index) => (
+            {cartData?.map((order, index) => (
               <tr className="border-b" key={index}>
                 <td className="py-6 rb-bold text-center">{order.name}</td>
                 <td className="py-6 rb-bold text-center">
@@ -151,7 +151,7 @@ const DisplayReceipt = ({
             <p>Subtotal</p>
             <p>
               {Number(
-                cartData?.invoice_details?.[0].untaxed_amount_total
+                cartData?.invoice_details?.[0]?.untaxed_amount_total || 0
               ).toFixed(2)}{" "}
               $
             </p>
@@ -159,7 +159,10 @@ const DisplayReceipt = ({
           <span className="flex items-center justify-between text-[#333] rb-bold border-b pb-2">
             <p>Taxes </p>
             <p>
-              {Number(cartData?.invoice_details?.[0]?.amount_tax).toFixed(2)} $
+              {Number(cartData?.invoice_details?.[0]?.amount_tax || 0).toFixed(
+                2
+              )}{" "}
+              $
             </p>
           </span>
           <span className="flex items-center justify-between text-[#333] rb-bold border-b pb-2">
@@ -169,7 +172,9 @@ const DisplayReceipt = ({
           <span className="flex items-center justify-between text-[#333] rb-bold border-b pb-2">
             <p>Total</p>
             <p>
-              {Number(cartData?.invoice_details?.[0]?.amount_total).toFixed(2)}{" "}
+              {Number(
+                cartData?.invoice_details?.[0]?.amount_total || 0
+              ).toFixed(2)}{" "}
               $
             </p>
           </span>
