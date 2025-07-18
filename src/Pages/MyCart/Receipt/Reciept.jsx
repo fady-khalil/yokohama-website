@@ -1,7 +1,6 @@
 import Container from "Components/Container/Container";
 import { UserCartContext } from "context/User/CartContext";
 import { useState, useEffect, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import useGetDataToken from "Hooks/Fetching/useGetDataToken";
 import { UserLoginContext } from "context/Auth/UserLoginContext";
 import Spinner from "Components/RequestHandler/Spinner";
@@ -9,10 +8,9 @@ import DisplayReceipt from "./DisplayReceipt/DisplayReceipt";
 import EmptyCart from "Components/Screens/EmptyCart";
 
 const Reciept = ({ shippingId, onSelectingTabs }) => {
-  const { cart, clearCart, paymentRef, setPaymentRef, orderId, setOrderId } =
+  const { cart, clearCart, intialCart, cartSummary } =
     useContext(UserCartContext);
   const { userToken, userData } = useContext(UserLoginContext);
-  const navigate = useNavigate();
 
   const { fetchData } = useGetDataToken();
   const [billingData, setBillingData] = useState();
@@ -80,7 +78,9 @@ const Reciept = ({ shippingId, onSelectingTabs }) => {
                 cartData={cart}
                 shippingId={shippingId}
                 userData={userData}
+                cartSummary={cartSummary}
                 token={userToken}
+                intialCart={intialCart}
               />
             </div>
           )}

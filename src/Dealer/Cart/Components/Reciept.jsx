@@ -27,6 +27,8 @@ const Reciept = () => {
   const { dealerData, dealerToken } = useContext(DealerLoginContext);
   const navigate = useNavigate();
 
+  console.log("Cart data:", cart);
+
   // date
   const now = new Date();
   const formattedDate = now.toLocaleDateString("en-US");
@@ -87,17 +89,17 @@ const Reciept = () => {
 
       // If in local mode, first transfer items to Odoo cart
       if (isLocalCartMode && localCart?.length > 0) {
-        console.log("Transferring items from local cart to Odoo for payment");
         const success = await addProductsToOdooCart(localCart);
-
         if (!success) {
           console.error("Failed to transfer items to Odoo cart");
           setPaymentIsLoading(false);
           return;
+        } else if (success) {
+          console.log("Items transferred successfully to Odoo cart");
+          localStorage.removeItem("dealerCart"); // Clear local cart from local storage
         }
 
         // Clear local storage (but Odoo cart should still be available)
-        localStorage.removeItem("dealerCart");
       }
 
       // Now proceed with payment
@@ -135,6 +137,9 @@ const Reciept = () => {
           console.error("Failed to transfer items to Odoo cart");
           setOnAccountLoading(false);
           return;
+        } else {
+          console.log("Items transferred successfully to Odoo cart");
+          localStorage.removeItem("dealerCart"); // Clear local cart from local storage
         }
       }
 

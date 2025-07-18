@@ -73,8 +73,8 @@ const ShopLanding = ({ selectedId }) => {
         dealerToken
       );
       setData(result);
-      if (result?.total_pages) {
-        setTotalPages(result.total_pages);
+      if (result?.totalpages) {
+        setTotalPages(result.totalpages);
       }
     } catch (error) {
       setIsError(true);
@@ -82,6 +82,8 @@ const ShopLanding = ({ selectedId }) => {
       setIsLoading(false);
     }
   };
+
+  console.log(data);
 
   useEffect(() => {
     getData(currentPage);

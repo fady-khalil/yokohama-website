@@ -45,9 +45,9 @@ const OrderHistory = () => {
                   <th className="min-w-[150px] lg:min-w-auto text-center py-4 uppercase rb-bold">
                     Date
                   </th>
-                  <th className="min-w-[150px] lg:min-w-auto text-center py-4 uppercase rb-bold">
+                  {/* <th className="min-w-[150px] lg:min-w-auto text-center py-4 uppercase rb-bold">
                     OdeMeter
-                  </th>
+                  </th> */}
                   <th className="min-w-[150px] lg:min-w-auto text-center py-4 uppercase rb-bold">
                     Amount
                   </th>
@@ -71,9 +71,9 @@ const OrderHistory = () => {
                     <td className="min-w-[150px] lg:min-w-auto text-center py-4 border-b  rb-bold">
                       {order.date}
                     </td>
-                    <td className="min-w-[150px] lg:min-w-auto text-center py-4 border-b  rb-bold">
+                    {/* <td className="min-w-[150px] lg:min-w-auto text-center py-4 border-b  rb-bold">
                       {order.id}
-                    </td>
+                    </td> */}
                     <td className="min-w-[150px] lg:min-w-auto text-center py-4 border-b  rb-bold">
                       {order.amount_total} {order?.currency}
                     </td>

@@ -209,8 +209,6 @@ export const DealerCartProvider = ({ children }) => {
         image: product.image || null,
       };
 
-      console.log("Adding new product to cart:", cartItem);
-
       const updatedCart = [...localCart, cartItem];
       setLocalCart(updatedCart);
       setCart({ cart_items: updatedCart }); // Format to match Odoo cart structure
@@ -219,6 +217,7 @@ export const DealerCartProvider = ({ children }) => {
   };
 
   // Add multiple products to Odoo cart
+  // HERE WE NEED TO FIX IT BY USING MULTIPLE LIKE THE USER CART
   const addProductsToOdooCart = async (products) => {
     try {
       let success = true;

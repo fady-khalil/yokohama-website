@@ -200,7 +200,7 @@ const EditProfileForm = () => {
       </div>
       <Input
         type="date"
-        label={`Birthday`}
+        label={`Birthday / ${profileData?.birth_day}`}
         placeholder={"hello"}
         id="register-birthday"
         value={birthdayInput}

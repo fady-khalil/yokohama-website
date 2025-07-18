@@ -1,136 +1,119 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 import Container from "Components/Container/Container";
-import { Trash } from "@phosphor-icons/react";
-import Spinner from "Components/RequestHandler/Spinner";
-import EmptyCart from "Components/Screens/EmptyCart";
-import { Link } from "react-router-dom";
-// context
 import { UserCartContext } from "context/User/CartContext";
+import { UserLoginContext } from "context/Auth/UserLoginContext";
+import CartItem from "../Components/CartItem"; // <-- Make sure this path is correct
+import Spinner from "Components/RequestHandler/Spinner";
 
-// ui
-import CartSummury from "./Summry/CartSummury";
+const CartReview = ({
+  onSelectingTabs,
+  onCashOnDelivery,
+  onPayNow,
+  showCashOption = true,
+}) => {
+  const { userIsSignIn } = useContext(UserLoginContext);
+  const { cart, cartSummary, isLoading } = useContext(UserCartContext);
 
-const CartReview = ({ onSelectingTabs }) => {
-  const { cart, isLoading, removeFromCart, loadingItems, updateQuantity } =
-    useContext(UserCartContext);
+  const cartItems = Array.isArray(cart) ? cart : [];
 
-  const handleQuantityChange = (productId, quantity) => {
-    if (quantity < 1) {
-      removeFromCart(productId);
-    } else {
-      updateQuantity(productId, quantity);
-    }
-  };
+  // Empty cart state
+  if (!isLoading && cartItems.length === 0) {
+    return (
+      <Container className="py-primary">
+        <div className="text-center py-24">
+          <h2 className="text-2xl font-medium mb-4">Your cart is empty</h2>
+          <p className="text-gray-500">
+            Browse our products and discover our best deals!
+          </p>
+        </div>
+      </Container>
+    );
+  }
 
+  // Loading state
   if (isLoading) {
     return (
-      <div className="flex items-center flex-col mt-14 h-[40vh]">
-        <Spinner />
-        <p className="mt-6">Loading cart data...</p>
-      </div>
+      <Container className="py-primary ">
+        <div className="text-center py-24  flex flex-col utem justify-center items-center">
+          <Spinner size="large" />
+          <p>Loading your cart...</p>
+        </div>
+      </Container>
     );
   }
 
   return (
-    <div className="py-secondary">
-      <Container>
-        {cart && cart.length > 0 ? (
-          <div className="flex flex-col lg:flex-row gap-16">
-            <div className="flex-[2] flex flex-col gap-y-3">
-              {cart.map((item, index) => (
-                <div
-                  className="flex flex-wrap gap-6 items-center justify-between w-full border-b pb-3"
-                  key={item.id || index}
-                >
-                  {/* image */}
-                  <Link
-                    className="lg:flex-1"
-                    to={`/product-detailed/${item.id || item.product_id}`}
-                  >
-                    <img className="w-32" src={item.image} alt={item.name} />
-                  </Link>
-
-                  {/* name and price */}
-                  <div className="flex-[3]">
-                    <Link
-                      to={`/product-detailed/${item.id || item.product_id}`}
-                      className="f min-w-[fit-content] font-medium"
-                    >
-                      {item.name}
-                    </Link>
-                    <div className="flex items-center gap-x-8">
-                      {item.price && (
-                        <span className="mt-2 flex items-center line-through text-red-500">
-                          <p>{item.price}</p>
-                          <p>{item.currency}</p>
-                        </span>
-                      )}
-                      <span className="mt-2 flex items-center gap-x-1">
-                        <p>{item.retail_price || item.price}</p>
-                        <p>{item.currency}</p>
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* quantity and delete from cart */}
-                  <div className="flex-1 gap-x-2 flex items-center justify-end lg:justify-start">
-                    <div className="border py-2 px-4 flex items-center justify-between gap-x-6">
-                      <button
-                        onClick={() => {
-                          const currentQty =
-                            typeof item.quantity === "object"
-                              ? item.quantity?.free_quantity || 1
-                              : item.quantity;
-                          handleQuantityChange(
-                            item.id || item.product_id,
-                            currentQty + 1
-                          );
-                        }}
-                      >
-                        +
-                      </button>
-                      <p>
-                        {typeof item.quantity === "object"
-                          ? item.quantity?.free_quantity || 1
-                          : item.quantity}
-                      </p>
-                      <button
-                        onClick={() => {
-                          const currentQty =
-                            typeof item.quantity === "object"
-                              ? item.quantity?.free_quantity || 1
-                              : item.quantity;
-                          handleQuantityChange(
-                            item.id || item.product_id,
-                            currentQty - 1
-                          );
-                        }}
-                      >
-                        -
-                      </button>
-                    </div>
-                    <button
-                      title="remove from cart"
-                      onClick={() => removeFromCart(item.id || item.product_id)}
-                      className=" flex items-center justify-center"
-                    >
-                      {loadingItems[item.id || item.product_id] ? (
-                        <Spinner />
-                      ) : (
-                        <Trash weight="fill" size={26} />
-                      )}
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <CartSummury onSelectingTabs={onSelectingTabs} />
+    <Container className="py-primary">
+      <div className="flex flex-col lg:flex-row gap-8">
+        {/* Cart Items */}
+        <div className="flex-[3] mb-24">
+          <h2 className="text-2xl font-medium mb-2">Shopping Cart</h2>
+          <p className="text-red-600">
+            Your order is now being processed. You can still add or modify your
+            products. Our team will contact you shortly to move forward.{" "}
+          </p>
+          <div className="space-y-4">
+            {cartItems.map((item) => (
+              <CartItem key={item.id || item.product_id} product={item} />
+            ))}
           </div>
-        ) : (
-          <EmptyCart />
-        )}
-      </Container>
-    </div>
+        </div>
+
+        {/* Order Summary */}
+        <div className="flex-[1]">
+          <div className="border rounded-lg p-6">
+            <h3 className="text-xl font-medium mb-4">Order Summary</h3>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span>Subtotal:</span>
+                <span>
+                  {cartSummary?.[0]?.untaxed_amount_total}{" "}
+                  {cartSummary?.[0]?.currency || "USD"}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span>Tax:</span>
+                <span>
+                  {cartSummary?.[0]?.amount_tax || 0}{" "}
+                  {cartSummary?.[0]?.currency || "USD"}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span>Shipping:</span>
+                <span>0 {cartSummary?.[0]?.currency || "USD"}</span>
+              </div>
+              <div className="border-t pt-2 mt-2 flex justify-between font-bold">
+                <span>Total:</span>
+                <span>
+                  {cartSummary?.[0]?.amount_total}{" "}
+                  {cartSummary?.[0]?.currency || "USD"}
+                </span>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="mt-6 space-y-3">
+              <button
+                onClick={onPayNow}
+                className="w-full py-3 bg-primary text-white rounded font-medium"
+              >
+                {userIsSignIn ? "Pay Now" : "Sign In to Continue"}
+              </button>
+
+              {/* Only show Cash on Delivery if applicable */}
+              {showCashOption && (
+                <button
+                  onClick={onCashOnDelivery}
+                  className="w-full py-3 border border-gray-300 rounded font-medium"
+                >
+                  Cash on Delivery
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </Container>
   );
 };
 

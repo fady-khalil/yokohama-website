@@ -15,6 +15,8 @@ const DisplayReceipt = ({
   shippingId,
   token,
   clearCart,
+  intialCart,
+  cartSummary,
 }) => {
   // date
   const now = new Date();
@@ -36,14 +38,14 @@ const DisplayReceipt = ({
     try {
       setIsLoading(true);
       const data = await fetchData(
-        `yokohama/areeba/pay/${cartData?.cart_id}`,
+        `yokohama/areeba/pay/${intialCart?.cart_id}`,
         userToken
       );
 
       if (data) {
         window.location.href = data?.url_payment;
         localStorage.setItem("payment_ref", data?.payment_ref);
-        localStorage.setItem("order_id", data?.order_id);
+        localStorage.setItem("order_id", intialCart?.order_id);
       }
     } catch (error) {
     } finally {
@@ -81,7 +83,7 @@ const DisplayReceipt = ({
             {formattedDate}
           </p>
           <p className="rb-bold uppercase  text-[#333]">
-            order #{cartData?.cart_id}
+            order #{intialCart?.cart_id}
           </p>
         </div>
       </div>
@@ -150,20 +152,12 @@ const DisplayReceipt = ({
           <span className="flex items-center justify-between text-[#333] rb-bold border-b pb-2">
             <p>Subtotal</p>
             <p>
-              {Number(
-                cartData?.invoice_details?.[0]?.untaxed_amount_total || 0
-              ).toFixed(2)}{" "}
-              $
+              {Number(cartSummary?.[0]?.untaxed_amount_total || 0).toFixed(2)} $
             </p>
           </span>
           <span className="flex items-center justify-between text-[#333] rb-bold border-b pb-2">
             <p>Taxes </p>
-            <p>
-              {Number(cartData?.invoice_details?.[0]?.amount_tax || 0).toFixed(
-                2
-              )}{" "}
-              $
-            </p>
+            <p>{Number(cartSummary?.[0]?.amount_tax || 0).toFixed(2)} $</p>
           </span>
           <span className="flex items-center justify-between text-[#333] rb-bold border-b pb-2">
             <p>Shipping </p>
@@ -171,12 +165,7 @@ const DisplayReceipt = ({
           </span>
           <span className="flex items-center justify-between text-[#333] rb-bold border-b pb-2">
             <p>Total</p>
-            <p>
-              {Number(
-                cartData?.invoice_details?.[0]?.amount_total || 0
-              ).toFixed(2)}{" "}
-              $
-            </p>
+            <p>{Number(cartSummary?.[0]?.amount_total || 0).toFixed(2)} $</p>
           </span>
 
           <div className="flex gap-x-4 mt-4">

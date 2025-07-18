@@ -1,43 +1,31 @@
-import { useState, useEffect } from "react";
-
-import CartTabs from "./Components/CartTabs";
-import CartReview from "./Components/CartReview";
-import ShippingAndPayment from "./Components/ShippingAndPayment";
+import { useState, useEffect, useContext } from "react";
 import Reciept from "./Components/Reciept";
-const MyCart = ({ onSelectingTabs, activeTabs }) => {
-  const [selectedTabs, setSelectedTabs] = useState(1);
+import { DealerCartContext } from "context/DealerCart/DealerCartContext";
+import EmptyCart from "Components/Screens/EmptyCart";
+import Spinner from "Components/RequestHandler/Spinner";
 
-  const selectedTabsHandler = (id) => {
-    setSelectedTabs(id);
+const Cart = () => {
+  const { cart, cartIsLoading, localCart, isLocalCartMode } =
+    useContext(DealerCartContext);
+
+  // Determine if cart is empty
+  const isCartEmpty = () => {
+    if (isLocalCartMode) {
+      return !localCart || localCart.length === 0;
+    }
+    return !cart?.cart_items || cart.cart_items.length === 0;
   };
 
-  const [selectedComponent, setSelectedComponent] = useState(<CartReview />);
+  if (cartIsLoading) {
+    return (
+      <div className="flex items-center flex-col mt-14 h-[40vh]">
+        <Spinner />
+        <p className="mt-6">Loading cart data...</p>
+      </div>
+    );
+  }
 
-  const components = [
-    {
-      id: 1,
-      component: <CartReview onSelectingTabs={selectedTabsHandler} />,
-    },
-    // {
-    //   id: 2,
-    //   component: <ShippingAndPayment />,
-    // },
-    {
-      id: 3,
-      component: <Reciept />,
-    },
-  ];
-
-  useEffect(() => {
-    const activeComponent = components.find((comp) => comp.id === selectedTabs);
-
-    setSelectedComponent(activeComponent ? activeComponent.component : null);
-  }, [selectedTabs]);
-  return (
-    <section className="">
-      <Reciept />
-    </section>
-  );
+  return <section>{isCartEmpty() ? <EmptyCart /> : <Reciept />}</section>;
 };
 
-export default MyCart;
+export default Cart;

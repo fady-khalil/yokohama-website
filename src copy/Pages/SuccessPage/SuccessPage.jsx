@@ -1,14 +1,15 @@
 import { useContext, useEffect } from "react";
 import "./style.css";
 import MainButton from "Components/Buttons/MainButton";
-import { UserCartContext } from "context/User/CartContext";
 import useGetDataToken from "Hooks/Fetching/useGetDataToken.jsx";
+import { UserCartContext } from "context/User/CartContext";
 import { UserLoginContext } from "context/Auth/UserLoginContext.js";
-
+import { DealerCartContext } from "context/DealerCart/DealerCartContext";
 const SuccessPage = () => {
   const { clearCart } = useContext(UserCartContext);
   const { fetchData } = useGetDataToken();
   const { userToken } = useContext(UserLoginContext);
+  const { clearCart: clearDealerCart } = useContext(DealerCartContext);
 
   const submitPayment = async () => {
     const paymentRef = localStorage.getItem("payment_ref");
@@ -19,6 +20,7 @@ const SuccessPage = () => {
     );
 
     clearCart();
+    clearDealerCart();
   };
   useEffect(() => {
     submitPayment();

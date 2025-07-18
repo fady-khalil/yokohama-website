@@ -49,7 +49,7 @@ const Channels = () => {
           </div>
           <div
             className="py-24 mt-12  gap-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-between"
-            style={{ backgroundImage: `url(${channelBg})` }}
+            // style={{ backgroundImage: `url(${channelBg})` }}
           >
             {data?.map(({ logo, title }, index) => (
               <div

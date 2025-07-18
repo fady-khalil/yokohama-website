@@ -1,7 +1,7 @@
 import { useState } from "react";
 import BASE_URL from "Utilities/BASE_URL";
 
-const usePostDataTokenJson = () => {
+const usePostDataTokenForm = () => {
   const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -9,17 +9,22 @@ const usePostDataTokenJson = () => {
   const postData = async (url, data, token) => {
     setLoading(true);
     setError(null);
-    console.log("Posting data to:", `${BASE_URL}/${url}`);
-    console.log("Data being sent:", data);
-    console.log("Using token:", token);
     try {
+      // Convert data object to FormData
+      const formData = new FormData();
+      for (const key in data) {
+        if (data.hasOwnProperty(key)) {
+          formData.append(key, data[key]);
+        }
+      }
+
       const res = await fetch(`${BASE_URL}/${url}`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          // Do not set Content-Type for FormData
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(data), // Convert data to JSON
+        body: formData, // Send as FormData
       });
 
       console.log(res);
@@ -43,4 +48,4 @@ const usePostDataTokenJson = () => {
   return { response, loading, error, postData, setError };
 };
 
-export default usePostDataTokenJson;
+export default usePostDataTokenForm;

@@ -16,7 +16,7 @@ import DisplayAddress from "./Components/DisplayAddress";
 const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
   const { cart } = useContext(UserCartContext);
   // context
-  const { userToken } = useContext(UserLoginContext);
+  const { userToken, userIsSignIn } = useContext(UserLoginContext);
   // handling fetching and posting data
   const { fetchData } = useGetDataToken();
   const [billingIsValid, setBillingIsValid] = useState(false);
@@ -27,7 +27,8 @@ const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
   const [addShippingIdToCartLoading, setAddShippingIdToCartLoading] =
     useState(false);
   const [isError, setIsError] = useState(false);
-  // intial call billing addrees to check if the user have valid billing, if yes we display the addrss, if no we open a form to add a bolling address
+
+  // initial call to check if the user has valid billing
   const getBillingAddress = async () => {
     try {
       setIsLoading(true);
@@ -40,16 +41,34 @@ const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
         setBillingIsValid(billingData?.data?.billing_addresses[0]?.is_valid);
       }
     } catch (error) {
+      console.error("Error fetching billing address:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Only fetch billing address if user is signed in
   useEffect(() => {
-    getBillingAddress();
-  }, []);
+    if (userIsSignIn) {
+      getBillingAddress();
+    }
+  }, [userIsSignIn]);
 
-  // state and useEffect to update the view after the user add billing address and display the addrss, we do this process when the user don't have a valid billing address,
+  // Check if we should redirect back to cart review
+  useEffect(() => {
+    // If user is not signed in, redirect back to cart review
+    // This ensures users can't directly access shipping without being signed in
+    if (!userIsSignIn) {
+      onSelectingTabs(1);
+    }
+
+    // If cart is empty, redirect back to cart review
+    if (!cart || cart.length === 0) {
+      onSelectingTabs(1);
+    }
+  }, [userIsSignIn, cart, onSelectingTabs]);
+
+  // Update the view after the user adds a billing address
   const [isSuccess, setIsSucces] = useState(false);
   const handleSuccess = () => {
     setIsSucces(true);
@@ -62,9 +81,28 @@ const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
 
   const addShippingIdToCart = async () => {
     try {
+      // Validate that we have a shipping ID before proceeding
+      if (!shippingId) {
+        setIsError(true);
+        setTimeout(() => {
+          setIsError(false);
+        }, 2000);
+        return;
+      }
+
+      // Validate that we have a cart ID
+      if (!cart?.cart_id) {
+        setIsError(true);
+        setTimeout(() => {
+          setIsError(false);
+        }, 2000);
+        return;
+      }
+
       setAddShippingIdToCartLoading(true);
+
       const addShippingIdToCartData = await postData(
-        `yokohama/shipping/confirm?shipping_id=${shippingId}&order_id=${cart?.cart_id}`,
+        `yokohama/shipping/confirm?shipping_id=${shippingId}&order_id=${cart.cart_id}`,
         userToken
       );
 
@@ -78,7 +116,6 @@ const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
         }, 2000);
       }
     } catch (error) {
-      console.log(error);
       setIsError(true);
       setTimeout(() => {
         setIsError(false);
@@ -97,8 +134,10 @@ const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
             <p className="mt-2">Loading data...</p>
           </div>
         )}
-        {cart?.length === 0 && <EmptyCart />}
-        {cart?.cart_items?.length > 0 && !isLoading && (
+
+        {(!cart || cart.length === 0) && !isLoading && <EmptyCart />}
+
+        {cart && cart.length > 0 && !isLoading && (
           <div className="flex flex-col lg:flex-row gap-16">
             {!billingIsValid && (
               <AddressForm
@@ -110,16 +149,14 @@ const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
               />
             )}
             {billingIsValid && (
-              <DisplayAddress
-                getShippingAddressId={setShippingId}
-                // confirmSwitchHandler={confirmSwitchHandler}
-              />
+              <DisplayAddress getShippingAddressId={setShippingId} />
             )}
             {billingIsValid && (
               <CartSummuryDetails
                 addShippingIdToCartIsError={isError}
                 addShippingIdToCartLoading={addShippingIdToCartLoading}
                 addShippingIdToCart={addShippingIdToCart}
+                shippingId={shippingId}
               />
             )}
           </div>

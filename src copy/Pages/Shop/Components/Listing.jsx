@@ -66,6 +66,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   );
 };
 const Listing = ({ data, totalPages, currentPage, onPageChange }) => {
+  console.log(data);
   return (
     <div className="col-span-3 relative z-[0]">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-24">
@@ -133,7 +134,7 @@ const Listing = ({ data, totalPages, currentPage, onPageChange }) => {
                 <div className="flex-[1] relative">
                   <img
                     className="w-3/4 h-3/4 mx-auto md:w-full md:h-full"
-                    src={image}
+                    src={images}
                     alt=""
                   />
                   {quantity?.free_quantity === 0 &&

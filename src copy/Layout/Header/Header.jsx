@@ -28,7 +28,7 @@ const Header = ({ isHomePage }) => {
       <div className="hidden lg:block text-white flex-1 min-w-full px-[1.6rem] lg:px-[3rem]">
         <div className="xl:px-[2rem] xxl:px-[4rem] flex items-center justify-end gap-x-4 capitalize font-medium text-sm">
           <div className="flex items-center justify-end pt-3">
-            <CartIcon itemCount={cart?.cart_items?.length} />
+            <CartIcon itemCount={cart?.length || 0} />
             <UserMenu
               userIsSignIn={userIsSignIn}
               userData={userData}

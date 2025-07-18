@@ -6,6 +6,8 @@ const usePostToken = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const postData = async (url, token) => {
+    console.log("Posting data to:", url);
+    console.log("Posting data to:", token);
     setLoading(true);
     try {
       const res = await fetch(`${BASE_URL}/${url}`, {

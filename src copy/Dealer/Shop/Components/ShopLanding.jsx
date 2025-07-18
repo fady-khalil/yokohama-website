@@ -13,6 +13,7 @@ import Pagination from "./Pagination";
 // context
 import { DealerLoginContext } from "context/Auth/DealerContext";
 import { DealerCartContext } from "context/DealerCart/DealerCartContext";
+
 const ShopLanding = ({ selectedId }) => {
   const { fetchData, error } = useGetDataToken();
   const [data, setData] = useState([]);
@@ -41,8 +42,16 @@ const ShopLanding = ({ selectedId }) => {
 
   // context
   const { dealerToken } = useContext(DealerLoginContext);
-  const { AddToCart, cart, updateCart, removeFromCart, updateCartLoading } =
-    useContext(DealerCartContext);
+  const {
+    AddToCart,
+    cart,
+    updateCart,
+    removeFromCart,
+    updateCartLoading,
+    isLocalCartMode,
+    addToLocalCart,
+    localCart,
+  } = useContext(DealerCartContext);
 
   const getData = async (page = 1) => {
     setIsLoading(true);
@@ -94,16 +103,79 @@ const ShopLanding = ({ selectedId }) => {
   }, [selectedId]);
 
   // cart
-  const addToCartHandler = async (id) => {
+  const addToCartHandler = async (idOrProduct) => {
+    // Handle either a product ID or a full product object
+    const id = typeof idOrProduct === "object" ? idOrProduct.id : idOrProduct;
+
+    console.log("addToCartHandler called with:", idOrProduct);
+    console.log("Product ID:", id);
+
     setAddToCartLoadingItems((prev) => ({ ...prev, [id]: true }));
     try {
-      await AddToCart(id);
-      if (quantities[id] > 1) {
-        await updateCart(id, quantities[id]);
+      // Get product data for the popup (if we just have an id)
+      let product;
+      if (typeof idOrProduct === "object") {
+        product = idOrProduct;
+        console.log("Using provided product object:", product);
+      } else {
+        // Find the product in the data
+        // First, log the structure of data to understand it
+        console.log("Data structure:", data);
+
+        // Try to find the product based on the actual structure
+        if (Array.isArray(data?.data)) {
+          // If data.data is an array of products directly
+          product = data.data.find((p) => p.id === id);
+        } else if (data?.data?.products) {
+          // If data.data has a products array directly
+          product = data.data.products.find((p) => p.id === id);
+        } else if (data?.data?.data) {
+          // If data.data.data is the actual array (nested data)
+          product = data.data.data.find((p) => p.id === id);
+        } else {
+          // Try to find in nested category structure if it exists
+          product = data?.data
+            ?.find((category) => category.products?.some((p) => p.id === id))
+            ?.products?.find((p) => p.id === id);
+        }
+
+        console.log("Found product by ID:", product);
       }
 
-      // Get product data for the popup
-      const product = data?.products?.find((product) => product.id === id);
+      if (!product) {
+        console.error("Product not found:", id);
+        return;
+      }
+
+      // If in local cart mode, add to local cart
+      if (isLocalCartMode) {
+        console.log("Using local cart mode for product:", product.name);
+
+        // Create a proper product object for the local cart
+        const cartProduct = {
+          ...product,
+          id: product.id,
+          product_id: product.id,
+          quantity: quantities[id] || 1,
+          name: product.name,
+          price: product.dealer_price?.price,
+          retail_price: product.dealer_price?.retail_price,
+          currency: product.currency || "$",
+          image: product.image || null,
+        };
+
+        console.log("Adding to local cart:", cartProduct);
+        addToLocalCart(cartProduct);
+      } else {
+        // Use Odoo cart API
+        console.log("Using Odoo cart API for product:", id);
+        await AddToCart(id);
+        if (quantities[id] > 1) {
+          await updateCart(id, quantities[id]);
+        }
+      }
+
+      // Show popup
       if (product) {
         setPopupProduct(product);
         setShowPopup(true);
@@ -113,6 +185,8 @@ const ShopLanding = ({ selectedId }) => {
           setShowPopup(false);
         }, 3000);
       }
+    } catch (error) {
+      console.error("Error in addToCartHandler:", error);
     } finally {
       setAddToCartLoadingItems((prev) => ({ ...prev, [id]: false }));
     }
@@ -124,7 +198,11 @@ const ShopLanding = ({ selectedId }) => {
     }
 
     // Find the product
-    const product = data?.data?.find((p) => p.id === productId);
+    const product = data?.data
+      ?.find((category) =>
+        category.products?.some((product) => product.id === productId)
+      )
+      ?.products?.find((product) => product.id === productId);
 
     // Check if new quantity exceeds available stock
     if (product && newQuantity > product.quantity?.free_quantity) {
@@ -141,13 +219,26 @@ const ShopLanding = ({ selectedId }) => {
 
     setQuantities((prev) => ({ ...prev, [productId]: newQuantity }));
 
-    // Only update cart if the product is already in cart
-    if (cart?.cart_items?.some((item) => item.product_id === productId)) {
-      setLoadingItems((prev) => ({ ...prev, [productId]: true }));
-      try {
-        await updateCart(productId, newQuantity);
-      } finally {
-        setLoadingItems((prev) => ({ ...prev, [productId]: false }));
+    // Update cart based on mode
+    if (isLocalCartMode) {
+      // Find product in local cart
+      const existingProductIndex = localCart.findIndex(
+        (item) => item.id === productId || item.product_id === productId
+      );
+
+      if (existingProductIndex >= 0) {
+        // Update existing product in local cart
+        updateCart(productId, newQuantity);
+      }
+    } else {
+      // Only update cart if the product is already in cart
+      if (cart?.cart_items?.some((item) => item.product_id === productId)) {
+        setLoadingItems((prev) => ({ ...prev, [productId]: true }));
+        try {
+          await updateCart(productId, newQuantity);
+        } finally {
+          setLoadingItems((prev) => ({ ...prev, [productId]: false }));
+        }
       }
     }
   };

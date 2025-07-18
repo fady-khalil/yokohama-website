@@ -1,77 +1,99 @@
 import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import CartTabs from "./Components/CartTabs";
 import CartReview from "./Cart/CartReview";
 import ShippingAndPayment from "./ShippingAndBilling/ShippingAndPayment";
-import Reciept from "./Receipt/Reciept";
+import Receipt from "./Receipt/Reciept"; // <-- Make sure this path is correct
 import { UserCartContext } from "context/User/CartContext";
 import { UserLoginContext } from "context/Auth/UserLoginContext";
 
 const MyCart = () => {
+  const navigate = useNavigate();
   const [selectedTabs, setSelectedTabs] = useState(1);
-  const { userIsSignIn } = useContext(UserLoginContext);
-
-  const selectedTabsHandler = (id) => {
-    setSelectedTabs(id);
-  };
-  const [selectedComponent, setSelectedComponent] = useState(<CartReview />);
-
-  // confirm swicth
   const [shippingId, setShippingId] = useState();
-  const getShippingAddressId = (shippingId) => {
-    setShippingId(shippingId);
+  const { userIsSignIn } = useContext(UserLoginContext);
+  const { hasOdooCart, transferCartToOdoo, cart, isLoading } =
+    useContext(UserCartContext);
+
+  // Handle cash on delivery flow
+  const handleCashOnDelivery = async () => {
+    if (!userIsSignIn) {
+      // User must be signed in for COD
+      navigate("/auth/login?redirect=my-cart");
+      return;
+    }
+
+    // Transfer local cart to Odoo and redirect to home
+    const success = await transferCartToOdoo();
+    if (success) {
+      navigate("/");
+    }
   };
 
-  // Determine if user should be able to navigate to specific tabs
-  const canAccessShipping = userIsSignIn;
+  // Handle pay now flow
+  const handlePayNow = async () => {
+    if (!userIsSignIn) {
+      // User must be signed in for payment
+      navigate("/auth/login?redirect=my-cart");
+      return;
+    }
+
+    // Transfer local cart to Odoo and move to shipping page
+    const success = await transferCartToOdoo();
+    if (success) {
+      setSelectedTabs(2);
+    }
+  };
+
+  // Get shipping address ID for receipt stage
+  const getShippingAddressId = (id) => {
+    setShippingId(id);
+  };
+
+  // Determine if user can access specific tabs
+  const canAccessShipping =
+    userIsSignIn && (hasOdooCart || (cart && cart.length > 0));
   const canAccessReceipt = canAccessShipping && shippingId;
 
+  // Handle tab navigation with validation
   const handleTabChange = (tabId) => {
-    // Only allow tab navigation based on conditions
-    if (tabId === 2 && !canAccessShipping) {
-      return; // Don't allow navigation to shipping if not signed in without existing cart
-    }
-
-    if (tabId === 3 && !canAccessReceipt) {
-      return; // Don't allow navigation to receipt without shipping info
-    }
-
-    selectedTabsHandler(tabId);
+    if (tabId === 2 && !canAccessShipping) return;
+    if (tabId === 3 && !canAccessReceipt) return;
+    setSelectedTabs(tabId);
   };
 
-  const components = [
-    {
-      id: 1,
-      component: <CartReview onSelectingTabs={selectedTabsHandler} />,
-    },
-    {
-      id: 2,
-      component: (
-        <ShippingAndPayment
-          onSelectingTabs={selectedTabsHandler}
-          getShippingAddressId={getShippingAddressId}
-        />
-      ),
-    },
-    {
-      id: 3,
-      component: (
-        <Reciept
-          onSelectingTabs={selectedTabsHandler}
-          shippingId={shippingId}
-        />
-      ),
-    },
-  ];
-
-  useEffect(() => {
-    const activeComponent = components.find((comp) => comp.id === selectedTabs);
-    setSelectedComponent(activeComponent ? activeComponent.component : null);
-  }, [selectedTabs]);
+  // Determine which component to render based on selected tab
+  const renderTabContent = () => {
+    switch (selectedTabs) {
+      case 1:
+        return (
+          <CartReview
+            onSelectingTabs={setSelectedTabs}
+            onCashOnDelivery={handleCashOnDelivery}
+            onPayNow={handlePayNow}
+            showCashOption={!hasOdooCart}
+          />
+        );
+      case 2:
+        return (
+          <ShippingAndPayment
+            onSelectingTabs={setSelectedTabs}
+            getShippingAddressId={getShippingAddressId}
+          />
+        );
+      case 3:
+        return (
+          <Receipt onSelectingTabs={setSelectedTabs} shippingId={shippingId} />
+        );
+      default:
+        return <CartReview onSelectingTabs={setSelectedTabs} />;
+    }
+  };
 
   return (
-    <section className="">
+    <section>
       <CartTabs activeTabs={selectedTabs} onSelectingTabs={handleTabChange} />
-      {selectedComponent}
+      {renderTabContent()}
     </section>
   );
 };

@@ -8,7 +8,7 @@ const CartSummuryDetails = ({
   addShippingIdToCartIsError,
   shippingId,
 }) => {
-  const { cart } = useContext(UserCartContext);
+  const { cart, cartSummary } = useContext(UserCartContext);
   return (
     <div className="flex-1 h-fit lg:sticky lg:top-10 bg-dark border-t-4 border-primary p-6">
       {addShippingIdToCartIsError && (
@@ -44,11 +44,19 @@ const CartSummuryDetails = ({
         <div className="mt-3">
           <span className="flex items-center justify-between text-[#ddd]">
             <p>Subtotal</p>
-            <p>{cart?.invoice_details?.[0]?.amount_total}$</p>
+            <p>
+              {" "}
+              {cartSummary?.[0]?.untaxed_amount_total}{" "}
+              {cartSummary?.[0]?.currency || "USD"}
+            </p>
           </span>
           <span className="flex items-center justify-between text-[#ddd]">
             <p>Tax Vat</p>
-            <p>{cart?.invoice_details?.[0]?.amount_tax}$</p>
+            <p>
+              {" "}
+              {cartSummary?.[0]?.amount_tax || 0}{" "}
+              {cartSummary?.[0]?.currency || "USD"}
+            </p>
           </span>
           <span className="flex items-center justify-between text-[#ddd]">
             <p>Shipping Charge</p>
@@ -63,7 +71,8 @@ const CartSummuryDetails = ({
             Total
           </p>
           <p className="text-white text-xl rb-bold mt-4 mb-2">
-            {cart?.invoice_details?.[0]?.amount_total}$
+            {cartSummary?.[0]?.amount_total}{" "}
+            {cartSummary?.[0]?.currency || "USD"}
           </p>
         </span>
 

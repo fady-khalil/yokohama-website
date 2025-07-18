@@ -20,15 +20,14 @@ const DisplayReceipt = ({
   const now = new Date();
   const formattedDate = now.toLocaleDateString("en-US");
 
-  const totalSubtotal = cartData?.cart_items?.reduce(
-    (total, order) => total + order.subtotal,
+  const totalSubtotal = cartData?.reduce(
+    (total, order) => total + (order.subtotal || 0),
     0
   );
 
   const { fetchData } = useGetDataToken();
   const { postData } = usePostToken();
   const { userToken } = useContext(UserLoginContext);
-  const { setPaymentRef, setOrderId } = useContext(UserCartContext);
   const [isLoading, setIsLoading] = useState(false);
   const [isCashOnDeliveryLoading, setIsCashOnDeliveryLoading] = useState(false);
   const navigate = useNavigate();
@@ -42,9 +41,9 @@ const DisplayReceipt = ({
       );
 
       if (data) {
-        setPaymentRef(data?.payment_ref);
-        setOrderId(data?.order_id);
         window.location.href = data?.url_payment;
+        localStorage.setItem("payment_ref", data?.payment_ref);
+        localStorage.setItem("order_id", data?.order_id);
       }
     } catch (error) {
     } finally {
@@ -132,7 +131,7 @@ const DisplayReceipt = ({
             </tr>
           </thead>
           <tbody>
-            {cartData?.cart_items?.map((order, index) => (
+            {cartData?.map((order, index) => (
               <tr className="border-b" key={index}>
                 <td className="py-6 rb-bold text-center">{order.name}</td>
                 <td className="py-6 rb-bold text-center">
@@ -152,7 +151,7 @@ const DisplayReceipt = ({
             <p>Subtotal</p>
             <p>
               {Number(
-                cartData?.invoice_details?.[0].untaxed_amount_total
+                cartData?.invoice_details?.[0]?.untaxed_amount_total || 0
               ).toFixed(2)}{" "}
               $
             </p>
@@ -160,7 +159,10 @@ const DisplayReceipt = ({
           <span className="flex items-center justify-between text-[#333] rb-bold border-b pb-2">
             <p>Taxes </p>
             <p>
-              {Number(cartData?.invoice_details?.[0]?.amount_tax).toFixed(2)} $
+              {Number(cartData?.invoice_details?.[0]?.amount_tax || 0).toFixed(
+                2
+              )}{" "}
+              $
             </p>
           </span>
           <span className="flex items-center justify-between text-[#333] rb-bold border-b pb-2">
@@ -170,7 +172,9 @@ const DisplayReceipt = ({
           <span className="flex items-center justify-between text-[#333] rb-bold border-b pb-2">
             <p>Total</p>
             <p>
-              {Number(cartData?.invoice_details?.[0]?.amount_total).toFixed(2)}{" "}
+              {Number(
+                cartData?.invoice_details?.[0]?.amount_total || 0
+              ).toFixed(2)}{" "}
               $
             </p>
           </span>
@@ -182,12 +186,12 @@ const DisplayReceipt = ({
             >
               {isLoading ? <Spinner /> : " Pay Now"}
             </button>
-            <button
+            {/* <button
               onClick={confirmCashOnDeliveryOrderHandler}
               className="flex-1 bg-primary py-2 text-white  flex items-center justify-center "
             >
               {isCashOnDeliveryLoading ? <Spinner /> : " Cash on delivery"}
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

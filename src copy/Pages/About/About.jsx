@@ -22,7 +22,7 @@ const About = () => {
 
     try {
       const result = await fetchData(`yokohama/content/AboutUs`);
-      setData(result?.data[0]);
+      setData(result?.data[0] || []);
     } catch (error) {
       setIsError(true);
     } finally {

@@ -14,7 +14,7 @@ import AddressForm from "form/AddressForm";
 import DisplayAddress from "./Components/DisplayAddress";
 
 const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
-  const { cart } = useContext(UserCartContext);
+  const { cart, intialCart } = useContext(UserCartContext);
   // context
   const { userToken, userIsSignIn } = useContext(UserLoginContext);
   // handling fetching and posting data
@@ -80,6 +80,8 @@ const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
   }, [isSuccess]);
 
   const addShippingIdToCart = async () => {
+    console.log("Add Shipping ID to Cart Response:", shippingId);
+    console.log("Add Shipping ID to Cart Response:", intialCart);
     try {
       // Validate that we have a shipping ID before proceeding
       if (!shippingId) {
@@ -91,7 +93,7 @@ const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
       }
 
       // Validate that we have a cart ID
-      if (!cart?.cart_id) {
+      if (!intialCart?.cart_id) {
         setIsError(true);
         setTimeout(() => {
           setIsError(false);
@@ -102,7 +104,7 @@ const ShippingAndPayment = ({ onSelectingTabs, getShippingAddressId }) => {
       setAddShippingIdToCartLoading(true);
 
       const addShippingIdToCartData = await postData(
-        `yokohama/shipping/confirm?shipping_id=${shippingId}&order_id=${cart.cart_id}`,
+        `yokohama/shipping/confirm?shipping_id=${shippingId}&order_id=${intialCart.cart_id}`,
         userToken
       );
 

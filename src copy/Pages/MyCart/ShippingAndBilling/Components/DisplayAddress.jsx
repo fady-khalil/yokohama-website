@@ -32,16 +32,21 @@ const DisplayAddress = ({ getShippingAddressId }) => {
 
   // fetching the address
   const getShippingAndBillingData = async () => {
-    const billingData = await fetchData(
-      "yokohama/shipping/billing_addresses",
-      userToken
-    );
-    setBillingData(billingData);
-    const shippingData = await fetchData(
-      "yokohama/shipping/shipping_addresses",
-      userToken
-    );
-    setShippingData(shippingData);
+    try {
+      const billingData = await fetchData(
+        "yokohama/shipping/billing_addresses",
+        userToken
+      );
+      setBillingData(billingData);
+
+      const shippingData = await fetchData(
+        "yokohama/shipping/shipping_addresses",
+        userToken
+      );
+      setShippingData(shippingData);
+    } catch (error) {
+      // Handle error silently
+    }
   };
   useEffect(() => {
     getShippingAndBillingData();
@@ -51,13 +56,19 @@ const DisplayAddress = ({ getShippingAddressId }) => {
   const [selectedShingAddress, setSelectedShingAddress] = useState("");
 
   useEffect(() => {
-    setSelectedShingAddress(ShippingInfo?.[0].id);
-    getShippingAddressId(ShippingInfo?.[0].id);
+    // Only set the shipping address if we have shipping data and at least one address
+    if (ShippingInfo && ShippingInfo.length > 0 && ShippingInfo[0].id) {
+      const firstShippingId = ShippingInfo[0].id;
+      setSelectedShingAddress(firstShippingId);
+      getShippingAddressId(firstShippingId);
+    }
   }, [shippingData]);
 
   const handleSelectingId = (shippingID) => {
-    setSelectedShingAddress(shippingID);
-    getShippingAddressId(shippingID);
+    if (shippingID) {
+      setSelectedShingAddress(shippingID);
+      getShippingAddressId(shippingID);
+    }
   };
 
   return (
@@ -88,8 +99,8 @@ const DisplayAddress = ({ getShippingAddressId }) => {
           </button>
         </div>
         <div className="flex gap-10 flex-wrap">
-          {ShippingInfo &&
-            ShippingInfo?.map((item, index) => (
+          {ShippingInfo && ShippingInfo.length > 0 ? (
+            ShippingInfo.map((item, index) => (
               <button
                 onClick={() => handleSelectingId(item.id)}
                 key={index}
@@ -104,7 +115,15 @@ const DisplayAddress = ({ getShippingAddressId }) => {
                 <p>{item?.email}</p>
                 <p>{item?.street}</p>
               </button>
-            ))}
+            ))
+          ) : (
+            <div className="bg-gray-100 p-6 text-center">
+              <p className="text-gray-600">No shipping addresses available.</p>
+              <p className="text-gray-600">
+                Please add a new address to continue.
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
