@@ -30,29 +30,29 @@ const FooterLinks = () => {
       mega: true,
       list: data,
     },
-    {
-      name: "About",
-      mega: true,
-      about: true,
-      pages: [
-        {
-          name: "Brand Overview",
-          slug: "brand_overview",
-        },
-        {
-          name: "ًًWhy us",
-          slug: "why-us",
-        },
-        {
-          name: "Mission and Values",
-          slug: "mission_and_values",
-        },
-        {
-          name: "Distribution Channels",
-          slug: "distribution_channels",
-        },
-      ],
-    },
+    // {
+    //   name: "About",
+    //   mega: true,
+    //   about: true,
+    //   pages: [
+    //     {
+    //       name: "Brand Overview",
+    //       slug: "brand_overview",
+    //     },
+    //     {
+    //       name: "ًًWhy us",
+    //       slug: "why-us",
+    //     },
+    //     {
+    //       name: "Mission and Values",
+    //       slug: "mission_and_values",
+    //     },
+    //     {
+    //       name: "Distribution Channels",
+    //       slug: "distribution_channels",
+    //     },
+    //   ],
+    // },
 
     {
       name: "Safety",

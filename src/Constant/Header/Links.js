@@ -69,10 +69,6 @@ const GetLinks = () => {
           slug: "brand_overview",
         },
         {
-          name: "What we Offer",
-          slug: "what-we-offer",
-        },
-        {
           name: "Why us",
           slug: "why-us",
         },
