@@ -53,11 +53,8 @@ const Channels = () => {
             className="py-24 mt-12  gap-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-center justify-between"
             // style={{ backgroundImage: `url(${channelBg})` }}
           >
-            {data?.map(({ logo, title }, index) => (
-              <div
-                className="flex flex-col gap-y-2 items-center text-white"
-                key={index}
-              >
+            {data?.map(({ logo, description }, index) => (
+              <div className="flex flex-col gap-y-2 items-center " key={index}>
                 <img
                   className="w-20 h-20 mx-auto object-contain"
                   src={logo}
@@ -66,7 +63,7 @@ const Channels = () => {
 
                 <div
                   className="rb-medium"
-                  dangerouslySetInnerHTML={{ __html: title }}
+                  dangerouslySetInnerHTML={{ __html: description }}
                 />
               </div>
             ))}
