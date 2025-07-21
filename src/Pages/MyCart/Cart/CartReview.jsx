@@ -12,9 +12,44 @@ const CartReview = ({
   showCashOption = true,
 }) => {
   const { userIsSignIn } = useContext(UserLoginContext);
-  const { cart, cartSummary, isLoading } = useContext(UserCartContext);
+  const { cart, cartSummary, isLoading, hasOdooCart } =
+    useContext(UserCartContext);
 
   const cartItems = Array.isArray(cart) ? cart : [];
+
+  // Helper functions for cart calculations when not using Odoo cart
+  const calculateSubtotal = () => {
+    return cartItems
+      .reduce((total, item) => {
+        const price = parseFloat(item.price || 0);
+        const quantity = parseInt(item.quantity || 1);
+        return total + price * quantity;
+      }, 0)
+      .toFixed(2);
+  };
+
+  const calculateTax = () => {
+    // Fixed tax rate of 11%
+    const TAX_RATE = 0.11;
+
+    return cartItems
+      .reduce((total, item) => {
+        const price = parseFloat(item.price || 0);
+        const quantity = parseInt(item.quantity || 1);
+        // Use fixed tax rate instead of item.tax_rate
+        return total + price * quantity * TAX_RATE;
+      }, 0)
+      .toFixed(2);
+  };
+
+  const calculateTotal = () => {
+    const subtotal = parseFloat(calculateSubtotal());
+    const tax = parseFloat(calculateTax());
+    return (subtotal + tax).toFixed(2);
+  };
+
+  // Get currency from Odoo or use default
+  const currency = cartSummary?.[0]?.currency || "USD";
 
   // Empty cart state
   if (!isLoading && cartItems.length === 0) {
@@ -48,10 +83,36 @@ const CartReview = ({
         {/* Cart Items */}
         <div className="flex-[3] mb-24">
           <h2 className="text-2xl font-medium mb-2">Shopping Cart</h2>
-          <p className="text-red-600">
-            Your order is now being processed. You can still add or modify your
-            products. Our team will contact you shortly to move forward.{" "}
-          </p>
+          {hasOdooCart && (
+            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4 rounded-md shadow-sm">
+              <div className="flex items-start">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-blue-500 mr-3 mt-0.5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <div>
+                  <p className="font-medium text-blue-800">
+                    Your order is being processed
+                  </p>
+                  <p className="text-sm text-blue-600 mt-1">
+                    You can still modify your cart. Or pay now and close the
+                    deal. <br /> Our team will contact you shortly to finalize
+                    your order.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
           <div className="space-y-4">
             {cartItems.map((item) => (
               <CartItem key={item.id || item.product_id} product={item} />
@@ -67,26 +128,32 @@ const CartReview = ({
               <div className="flex justify-between">
                 <span>Subtotal:</span>
                 <span>
-                  {cartSummary?.[0]?.untaxed_amount_total}{" "}
-                  {cartSummary?.[0]?.currency || "USD"}
+                  {hasOdooCart
+                    ? cartSummary?.[0]?.untaxed_amount_total
+                    : calculateSubtotal()}{" "}
+                  {currency}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span>Tax:</span>
                 <span>
-                  {cartSummary?.[0]?.amount_tax || 0}{" "}
-                  {cartSummary?.[0]?.currency || "USD"}
+                  {hasOdooCart
+                    ? cartSummary?.[0]?.amount_tax || 0
+                    : calculateTax()}{" "}
+                  {currency}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span>Shipping:</span>
-                <span>0 {cartSummary?.[0]?.currency || "USD"}</span>
+                <span>0 {currency}</span>
               </div>
               <div className="border-t pt-2 mt-2 flex justify-between font-bold">
                 <span>Total:</span>
                 <span>
-                  {cartSummary?.[0]?.amount_total}{" "}
-                  {cartSummary?.[0]?.currency || "USD"}
+                  {hasOdooCart
+                    ? cartSummary?.[0]?.amount_total
+                    : calculateTotal()}{" "}
+                  {currency}
                 </span>
               </div>
             </div>

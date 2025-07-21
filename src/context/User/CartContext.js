@@ -96,8 +96,7 @@ export const UserCartProvider = ({ children }) => {
   /**
    * Load cart from Odoo backend
    */
-  const fetchOdooCart = async () => {
-    console.log("Fetching Odoo cart...");
+  const fetchOdooCart = React.useCallback(async () => {
     if (!userIsSignIn || !userToken) {
       return null;
     }
@@ -119,7 +118,7 @@ export const UserCartProvider = ({ children }) => {
       console.error("Error fetching Odoo cart:", error);
       return null;
     }
-  };
+  }, [userIsSignIn, userToken, fetchData]);
 
   /**
    * Load cart from localStorage
@@ -232,7 +231,6 @@ export const UserCartProvider = ({ children }) => {
           qty: quantity,
         },
       ];
-      console.log({ products: formattedProducts });
 
       const response = await postDataJson(
         "yokohama/cart/add-multiple",
@@ -258,15 +256,17 @@ export const UserCartProvider = ({ children }) => {
    * Add multiple products to Odoo cart via API in one request
    */
   const addMultipleToOdooCart = async (products) => {
+    console.log("Adding multiple products to Odoo cart:", products);
     if (!userIsSignIn || !userToken) {
       return false;
     }
 
     try {
-      // Format products into the required structure
+      // Format products into the required structure - use qty directly from the input products
+      // since they're already properly formatted in transferCartToOdoo
       const formattedProducts = products.map((product) => ({
-        product_id: product.id || product.product_id,
-        qty: product.quantity,
+        product_id: product.product_id || product.id,
+        qty: product.qty || product.quantity,
       }));
 
       const response = await postDataJson(
@@ -298,7 +298,9 @@ export const UserCartProvider = ({ children }) => {
     setIsLoading(true);
 
     try {
+      console.log(cart, "from transferCartToOdoo");
       // Format all local cart items for the bulk add endpoint
+      // Make sure we're consistent with field names - use product_id and qty
       const products = cart.map((item) => ({
         product_id: item.id || item.product_id,
         qty: item.quantity,
@@ -332,8 +334,6 @@ export const UserCartProvider = ({ children }) => {
    */
   const updateQuantity = async (productId, newQuantity) => {
     setLoadingItems((prev) => ({ ...prev, [productId]: true }));
-
-    console.log("Updating quantity for product:", productId, "to", newQuantity);
 
     try {
       if (hasOdooCart) {
@@ -466,7 +466,7 @@ export const UserCartProvider = ({ children }) => {
 
   useEffect(() => {
     fetchOdooCart();
-  }, [userIsSignIn]);
+  }, [userIsSignIn, fetchOdooCart]);
 
   // Context value
   const contextValue = {

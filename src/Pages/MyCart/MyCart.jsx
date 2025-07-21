@@ -38,6 +38,11 @@ const MyCart = () => {
       return;
     }
 
+    if (hasOdooCart) {
+      // If Odoo cart exists, redirect to shipping page
+      setSelectedTabs(2);
+      return;
+    }
     // Transfer local cart to Odoo and move to shipping page
     const success = await transferCartToOdoo();
     if (success) {

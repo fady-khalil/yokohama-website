@@ -18,7 +18,9 @@ const Channels = () => {
 
     try {
       const result = await fetchData(`yokohama/content/distributionchannels`);
-      setData(result?.data[0]?.distributionchannels_ids);
+      setData(result?.data);
+
+      console.log("Distribution Channels Data:", result);
     } catch (error) {
       setIsError(true);
     } finally {

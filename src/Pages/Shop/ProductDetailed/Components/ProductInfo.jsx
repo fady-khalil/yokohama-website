@@ -28,6 +28,7 @@ import { UserWishlistContext } from "context/User/WishlistContext";
 const POPUP_TIMEOUT = 5000;
 
 const ProductInfo = ({ product }) => {
+  console.log("ProductInfo", product);
   const navigate = useNavigate();
   const { userIsSignIn, userData } = useContext(UserLoginContext);
   const {
