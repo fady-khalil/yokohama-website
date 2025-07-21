@@ -6,6 +6,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Pagination, Navigation } from "swiper/modules";
 const OurClients = ({ data }) => {
+  console.log("Our Clients Data:", data);
   return (
     <section className="py-primary">
       <Container>
@@ -50,7 +51,7 @@ const OurClients = ({ data }) => {
           {data?.map((image, index) => (
             <SwiperSlide key={index}>
               <div className={"w-3/4 flex items-center justify-center mx-auto"}>
-                <img className="" src={image} alt="" />
+                <img className="" src={image?.logo_url} alt="" />
               </div>
             </SwiperSlide>
           ))}

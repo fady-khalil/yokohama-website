@@ -25,6 +25,7 @@ const Brand = ({ hero, statics, story, content }) => {
     try {
       const result = await fetchData(`yokohama/content/brand_overview`);
 
+      console.log("Brand Overview Data:", result);
       setData(result?.data[0]);
       setClientData(result?.client_logos);
     } catch (error) {
