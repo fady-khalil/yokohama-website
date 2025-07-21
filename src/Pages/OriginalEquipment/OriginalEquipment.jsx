@@ -25,7 +25,7 @@ const OriginalEquipment = () => {
     setIsError(false);
 
     try {
-      const data = await fetchData("yokohama/content/safety");
+      const data = await fetchData("yokohama/content/equepments");
       setData(data?.data);
       setSelectedContent(data?.data?.[0]);
     } catch (error) {
