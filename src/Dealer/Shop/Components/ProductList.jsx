@@ -164,10 +164,10 @@ const ProductList = ({
               <div className="flex-1">{product.pattern}</div>
               {/* <div className="flex-1">{product.pattern}</div> */}
               <div className="flex-1 text-center">
-                ${product.dealer_price.price?.toFixed(2)}
+                ${product.dealer_price?.retail_price.toFixed(2)}
               </div>
               <div className="flex-1 text-center">
-                ${product.dealer_price?.retail_price.toFixed(2)}
+                ${product.dealer_price.price?.toFixed(2)}
               </div>
               <div
                 className={`flex-1 ${

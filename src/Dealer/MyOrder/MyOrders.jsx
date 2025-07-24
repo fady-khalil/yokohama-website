@@ -18,7 +18,6 @@ const MyOrders = () => {
     try {
       const data = await fetchData("yokohama/cart/orders", dealerToken);
 
-      console.log(data);
       setData(data?.data?.cart_items);
     } catch (error) {
       setIsError(true);
@@ -35,7 +34,7 @@ const MyOrders = () => {
     <section>
       <Container>
         <div className="text-4xl rb-bold text-center my-secondary">
-          <h1>My Balacne</h1>
+          <h1>My Balance</h1>
         </div>
 
         {isLoading ? (

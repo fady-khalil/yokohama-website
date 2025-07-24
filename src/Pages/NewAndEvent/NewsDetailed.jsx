@@ -17,6 +17,7 @@ const NewsDetailed = () => {
     setIsError(false);
 
     try {
+      console.log("Fetching data for slug:", slug);
       const data = await fetchData(`yokohama/content/news/${slug}`);
       setData(data?.data[0]);
     } catch (error) {
@@ -29,6 +30,8 @@ const NewsDetailed = () => {
   useEffect(() => {
     getData();
   }, []);
+
+  console.log(data);
   if (isLoading) return <IsLoading />;
   if (isError || error) return <IsError />;
   if (data) {
@@ -37,7 +40,7 @@ const NewsDetailed = () => {
         <Container>
           <div className="flex items-center gap-x-20">
             <div className="flex-1">
-              <img src={data?.image} alt="" />
+              <img className="w-full" src={data?.image} alt="" />
             </div>
             <div className="flex-1">
               <p>{data?.date}</p>

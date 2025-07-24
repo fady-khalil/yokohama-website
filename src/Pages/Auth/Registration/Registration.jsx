@@ -297,7 +297,7 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
             errorMessage="Passwords do not match. Please re-enter the same password."
           />
         </span>
-        {/* check box */}
+        {/* check box 
         <div className="flex flex-col gap-y-6">
           <span>
             <input
@@ -327,6 +327,7 @@ const Registration = ({ onToggleForms, onHandleClose }) => {
             </label>
           </span>
         </div>
+        */}
       </form>
       <div className="mt-8 lg:mt-16 flex flex-col lg:flex-row lg:items-center gap-y-2">
         <MainButton isLoading={loading} onClick={submitForm} isSmall={true}>
