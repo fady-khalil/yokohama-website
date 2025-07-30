@@ -53,15 +53,25 @@ const Slider = ({ data }) => {
         modules={[Autoplay, Navigation]}
         className="heroSlider rounded-2xl"
       >
-        {data?.map(({ image }, indx) => (
-          <SwiperSlide key={indx} className="h-full  rounded-2xl">
-            <div className={` h-full w-full  rounded-2xl`}>
-              <img src={image} className="w-full  h-full rounded-2xl" alt="" />
+        {data?.map(({ image, video }, indx) => (
+          <SwiperSlide key={indx} className="h-full rounded-2xl">
+            <div className={`h-full w-full rounded-2xl`}>
+              {video ? (
+                <video
+                  src={video}
+                  className="w-full h-full rounded-2xl object-cover"
+                  controls
+                  autoPlay
+                  muted
+                  loop
+                />
+              ) : (
+                <img src={image} className="w-full h-full rounded-2xl" alt="" />
+              )}
             </div>
           </SwiperSlide>
         ))}
       </Swiper>
-      )
     </section>
   );
 };

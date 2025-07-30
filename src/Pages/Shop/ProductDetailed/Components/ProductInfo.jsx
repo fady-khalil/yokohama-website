@@ -262,7 +262,7 @@ const ProductInfo = ({ product }) => {
   return (
     <Container>
       {/* Breadcrumb Navigation */}
-      <div className="flex items-center py-4 mb-2">
+      <div className="flex items-center justify-center w-full border   py-4 mb-2">
         <button
           onClick={handleGoBack}
           className="flex items-center text-primary hover:underline"

@@ -48,6 +48,7 @@ const Search = () => {
       }
 
       const data = await response.json();
+      console.log(data);
       setData(data);
       setTotalPages(data.total_pages || 1);
       setPrevSearchInput(searchInput);
