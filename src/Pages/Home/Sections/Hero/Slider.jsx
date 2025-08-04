@@ -44,33 +44,40 @@ const Slider = ({ data }) => {
         }}
         speed={1000}
         loop={true}
-        autoplay={{
-          delay: 3000,
-          disableOnInteraction: false,
-          pauseOnMouseEnter: true,
-          pauseOnMouseLeave: true,
-        }}
-        modules={[Autoplay, Navigation]}
+        // autoplay={{
+        //   delay: 3000,
+        //   disableOnInteraction: false,
+        //   pauseOnMouseEnter: true,
+        //   pauseOnMouseLeave: true,
+        // }}
+        modules={[Navigation]}
         className="heroSlider rounded-2xl"
       >
-        {data?.map(({ image, video }, indx) => (
-          <SwiperSlide key={indx} className="h-full rounded-2xl">
-            <div className={`h-full w-full rounded-2xl`}>
-              {video ? (
-                <video
-                  src={video}
-                  className="w-full h-full rounded-2xl object-cover"
-                  controls
-                  autoPlay
-                  muted
-                  loop
-                />
-              ) : (
-                <img src={image} className="w-full h-full rounded-2xl" alt="" />
-              )}
-            </div>
-          </SwiperSlide>
-        ))}
+        {data &&
+          Array.isArray(data) &&
+          data
+            .sort((a, b) => (a.sequence || 0) - (b.sequence || 0))
+            .map(({ image, video }, indx) => (
+              <SwiperSlide key={indx} className="h-full rounded-2xl">
+                <div className={`h-full w-full rounded-2xl`}>
+                  {video ? (
+                    <video
+                      src={video}
+                      className="w-full h-full rounded-2xl object-cover"
+                      autoPlay
+                      muted
+                      loop
+                    />
+                  ) : (
+                    <img
+                      src={image}
+                      className="w-full h-full rounded-2xl"
+                      alt=""
+                    />
+                  )}
+                </div>
+              </SwiperSlide>
+            ))}
       </Swiper>
     </section>
   );
