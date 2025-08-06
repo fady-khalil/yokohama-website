@@ -68,7 +68,7 @@ const FooterLinks = () => {
       path: "original-equipment",
     },
     {
-      name: "News and news",
+      name: "News and Events",
       path: "news-and-event",
     },
   ];

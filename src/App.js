@@ -12,7 +12,7 @@ const App = () => {
   return (
     <div className="App">
       <a
-        href="https://wa.me/971553953784"
+        href="https://wa.me/+96176911311"
         target="_blank"
         rel="noopener noreferrer"
         className="fixed right-2 bottom-24 bg-[#25D366] rounded-full p-2 z-[10000] animate-pulse"
