@@ -25,12 +25,12 @@ const Shop = () => {
       const response = await fetchData("yokohama/ctegories/all");
       const fetchedData = response?.data || [];
 
-      const mergedData = fetchedData.map((item, index) => ({
-        ...item,
-        image: images[index] || images[images.length - 1],
-      }));
+      // const mergedData = fetchedData.map((item, index) => ({
+      //   ...item,
+      //   image: images[index] || images[images.length - 1],
+      // }));
 
-      setData(mergedData);
+      setData(fetchedData);
     } catch (error) {
       setIsError(true);
     } finally {
